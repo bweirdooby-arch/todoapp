@@ -1,0 +1,3476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Premium productivity and time management app">
+    <title>Productivity • Daily Planner</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            /* Premium Dark Theme Colors */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --surface: #1a1a24;
+            --surface-elevated: #20202e;
+            --surface-hover: #252533;
+
+            /* Accent Colors */
+            --accent-primary: #8b7ef8;
+            --accent-secondary: #f093fb;
+            --accent-gradient: linear-gradient(135deg, #8b7ef8 0%, #f093fb 100%);
+
+            /* Semantic Colors */
+            --success: #4ade80;
+            --success-bg: rgba(74, 222, 128, 0.1);
+            --danger: #f87171;
+            --danger-bg: rgba(248, 113, 113, 0.1);
+            --warning: #fbbf24;
+            --warning-bg: rgba(251, 191, 36, 0.1);
+            --info: #60a5fa;
+            --info-bg: rgba(96, 165, 250, 0.1);
+
+            /* Text Colors */
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --text-inverse: #18181b;
+
+            /* Border & Divider */
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-medium: rgba(255, 255, 255, 0.1);
+            --divider: rgba(255, 255, 255, 0.08);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px rgba(139, 126, 248, 0.3);
+
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Layout */
+            --nav-height: 72px;
+            --max-width: 1200px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            font-size: 15px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(139, 126, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 20%, rgba(240, 147, 251, 0.06) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(5deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(-5deg);
+            }
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .text-sm {
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .text-xs {
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .font-bold {
+            font-weight: 600;
+        }
+
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+
+        .mb-2 {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mt-2 {
+            margin-top: var(--spacing-sm);
+        }
+
+        .mt-4 {
+            margin-top: var(--spacing-md);
+        }
+
+        .p-4 {
+            padding: var(--spacing-md);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Status Dots */
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+            display: inline-block;
+            margin-right: var(--spacing-sm);
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .bg-prod {
+            background-color: var(--success);
+        }
+
+        .bg-nonprod {
+            background-color: var(--danger);
+        }
+
+        .bg-uncontrol {
+            background-color: var(--warning);
+        }
+
+        .bg-unassigned {
+            background-color: var(--text-tertiary);
+        }
+
+        /* Main Container */
+        #app-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: calc(var(--nav-height) + var(--spacing-xl));
+            position: relative;
+            z-index: 1;
+        }
+
+        #app-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #app-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #app-container::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: var(--radius-full);
+        }
+
+        #app-container::-webkit-scrollbar-thumb:hover {
+            background: var(--border-subtle);
+        }
+
+        /* Date Scroller */
+        .date-scroller {
+            display: flex;
+            overflow-x: auto;
+            padding: var(--spacing-lg) var(--spacing-md);
+            gap: var(--spacing-sm);
+            background: var(--surface);
+            border-bottom: 1px solid var(--divider);
+            scrollbar-width: none;
+            justify-content: center;
+        }
+
+        .date-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .date-chip {
+            min-width: 56px;
+            height: 64px;
+            background: var(--surface-elevated);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            border: 1px solid var(--border-subtle);
+            flex-shrink: 0;
+        }
+
+        .date-chip:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-medium);
+            transform: translateY(-2px);
+        }
+
+        .date-chip.active {
+            background: var(--accent-gradient);
+            border-color: transparent;
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .date-chip span:first-child {
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .date-chip span:last-child {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+            background: transparent;
+        }
+
+        .dashboard-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            transition: all var(--transition-base);
+        }
+
+        .stat-card:hover {
+            background: var(--surface-elevated);
+            border-color: var(--border-medium);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card .text-secondary {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: var(--spacing-sm);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Task Banners */
+        .current-task-banner {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-md) var(--spacing-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .next-task-banner {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-sm) var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Task List */
+        .task-list {
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
+        }
+
+        .task-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--text-tertiary);
+            transition: all var(--transition-base);
+        }
+
+        .task-card:hover {
+            background: var(--surface-elevated);
+            border-color: var(--border-medium);
+            transform: translateX(2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .task-card.prod {
+            border-left-color: var(--success);
+        }
+
+        .task-card.non-prod {
+            border-left-color: var(--danger);
+        }
+
+        .task-card.uncontrol {
+            border-left-color: var(--warning);
+        }
+
+        .task-card.not-doable {
+            background: var(--danger-bg);
+            border-color: var(--danger);
+            border-left-color: var(--danger);
+        }
+
+        .task-card.done {
+            opacity: 0.6;
+        }
+
+        .task-card.done .task-title {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        /* Hero Task - Most Important */
+        .task-card.hero {
+            background: linear-gradient(135deg, rgba(139, 126, 248, 0.15) 0%, rgba(240, 147, 251, 0.15) 100%);
+            border: 2px solid var(--accent-primary);
+            border-left: 4px solid var(--accent-primary);
+            box-shadow: var(--shadow-lg), 0 0 30px rgba(139, 126, 248, 0.3);
+            position: relative;
+            overflow: visible;
+        }
+
+        .task-card.hero::before {
+            content: '⭐';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .task-card.hero .task-title {
+            font-weight: 700;
+            font-size: 17px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .task-card.hero:hover {
+            transform: translateX(6px) scale(1.02);
+            box-shadow: var(--shadow-xl), 0 0 40px rgba(139, 126, 248, 0.4);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+
+        .task-time {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        /* Task Buttons - Icon Only */
+        .task-btn {
+            flex: 0 0 auto;
+            min-width: 40px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+        }
+
+        .task-btn:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-medium);
+            transform: translateY(-1px);
+        }
+
+        .task-btn.done-btn {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .task-btn.done-btn:hover {
+            background: #22c55e;
+            box-shadow: var(--shadow-md);
+        }
+
+        .task-btn.delete-btn:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .task-btn.not-doable-btn:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        /* Hero Button Styles */
+        .task-btn.mark-hero-btn {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .task-btn.mark-hero-btn:hover {
+            background: #7c6fe0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .task-btn.hero-btn {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: var(--text-inverse);
+        }
+
+        .task-btn.hero-btn:hover {
+            background: #f59e0b;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Timesheet */
+        .timesheet-container {
+            padding: var(--spacing-md);
+        }
+
+        .timesheet-summary {
+            background: var(--surface);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--surface-elevated);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: var(--spacing-xs);
+        }
+
+        .time-slot {
+            display: flex;
+            height: 60px;
+            border-bottom: 1px solid #2c2c2c;
+            position: relative;
+        }
+
+        .time-label {
+            width: 70px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            padding-top: 5px;
+            padding-left: 10px;
+        }
+
+        .time-block {
+            flex: 1;
+            margin: 2px;
+            border-radius: 6px;
+            background: var(--surface-variant);
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            position: relative;
+        }
+
+        .time-block.filled {
+            font-weight: 500;
+        }
+
+        .time-block.prod {
+            background: rgba(74, 222, 128, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .time-block.non-prod {
+            background: rgba(248, 113, 113, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .time-block.uncontrol {
+            background: rgba(250, 204, 21, 0.2);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .time-block:hover {
+            opacity: 0.8;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) var(--spacing-lg);
+            height: 250px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Period Selector */
+        .period-selector {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            margin: var(--spacing-lg);
+            background: var(--surface-elevated);
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .period-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .period-btn:hover {
+            color: var(--text-primary);
+            background: var(--surface-hover);
+        }
+
+        .period-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Analytics Card */
+        .analytics-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) var(--spacing-lg);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .analytics-item {
+            background: var(--surface-variant);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .analytics-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .analytics-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: rgba(10, 10, 15, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            background: rgba(129, 140, 248, 0.1);
+        }
+
+        .nav-item i {
+            font-size: 1.4rem;
+        }
+
+        .nav-item span {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        #main-fab {
+            position: fixed;
+            bottom: calc(var(--nav-height) + 15px);
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            box-shadow: 0 8px 24px rgba(129, 140, 248, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+            transition: transform 0.2s;
+        }
+
+        #main-fab:active {
+            transform: scale(0.95);
+        }
+
+        #main-fab i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+        }
+
+        .close-btn:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Form Inputs */
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all var(--transition-base);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            background: var(--surface-hover);
+            box-shadow: 0 0 0 3px rgba(139, 126, 248, 0.1);
+        }
+
+        .time-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Primary Button (Add Task, Save, etc.) */
+        .btn-primary {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Secondary Button */
+        .btn-secondary {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: var(--spacing-sm);
+            transition: all var(--transition-base);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-medium);
+        }
+
+        .task-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Task Type Buttons */
+        .task-type-btn {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: var(--surface-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-weight: 500;
+        }
+
+        .task-type-btn:hover {
+            border-color: var(--border-medium);
+            background: var(--surface-hover);
+        }
+
+        .task-type-btn.active {
+            background: rgba(139, 126, 248, 0.15);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Settings List */
+        .settings-list {
+            padding: 0 var(--spacing-lg);
+        }
+
+        .setting-item {
+            background: var(--surface);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all var(--transition-base);
+        }
+
+        .setting-item:hover {
+            background: var(--surface-elevated);
+            border-color: var(--border-medium);
+        }
+
+        .auth-form {
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            background: var(--surface-variant);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .task-select-item {
+            padding: 15px;
+            background: var(--surface-variant);
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--unassigned);
+        }
+
+        .task-select-item.prod {
+            border-left-color: var(--success);
+        }
+
+        .task-select-item.non-prod {
+            border-left-color: var(--danger);
+        }
+
+        .task-select-item.uncontrol {
+            border-left-color: var(--warning);
+        }
+
+        .task-select-item:hover {
+            background: var(--surface-color);
+        }
+
+        .routine-days {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .day-chip {
+            padding: 8px 12px;
+            background: var(--surface-variant);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .day-chip.selected {
+            background: rgba(129, 140, 248, 0.2);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .manual-fill-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: 500;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 600px) {
+            :root {
+                --nav-height: 60px;
+                --spacing-xs: 3px;
+                --spacing-sm: 6px;
+                --spacing-md: 12px;
+                --spacing-lg: 16px;
+                --spacing-xl: 20px;
+                --spacing-2xl: 32px;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            /* Dashboard Header */
+            .dashboard-header {
+                padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+            }
+
+            .dashboard-header h2 {
+                font-size: 20px;
+                margin-bottom: var(--spacing-sm);
+            }
+
+            /* Stats Grid */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--spacing-sm);
+            }
+
+            .stat-card {
+                padding: var(--spacing-md);
+            }
+
+            .stat-card .text-secondary {
+                font-size: 10px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+                margin-top: 4px;
+            }
+
+            /* Date Scroller */
+            .date-scroller {
+                padding: var(--spacing-md) var(--spacing-sm);
+                gap: 6px;
+            }
+
+            .date-chip {
+                min-width: 48px;
+                height: 56px;
+            }
+
+            .date-chip span:first-child {
+                font-size: 10px;
+            }
+
+            .date-chip span:last-child {
+                font-size: 16px;
+            }
+
+            /* Task Banners */
+            .current-task-banner,
+            .next-task-banner {
+                padding: var(--spacing-md);
+                margin: var(--spacing-sm) var(--spacing-md);
+            }
+
+            .current-task-banner h3,
+            .next-task-banner h3 {
+                font-size: 14px;
+            }
+
+            .current-task-banner p,
+            .next-task-banner p {
+                font-size: 12px;
+            }
+
+            /* Task Cards */
+            .task-list {
+                padding: 0 var(--spacing-md) var(--spacing-md);
+            }
+
+            .task-card {
+                padding: var(--spacing-md);
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .task-card.hero::before {
+                font-size: 18px;
+                top: -6px;
+                right: -6px;
+            }
+
+            .task-title {
+                font-size: 14px;
+            }
+
+            .task-card.hero .task-title {
+                font-size: 15px;
+            }
+
+            .task-time {
+                font-size: 12px;
+            }
+
+            .task-actions {
+                gap: 6px;
+                margin-top: 8px;
+            }
+
+            .task-btn {
+                min-width: 36px;
+                width: 36px;
+                height: 36px;
+                padding: 0;
+                font-size: 14px;
+            }
+
+            /* Bottom Navigation */
+            .bottom-nav {
+                height: var(--nav-height);
+                padding: 0 10px;
+            }
+
+            .nav-item {
+                padding: 6px;
+            }
+
+            .nav-item i {
+                font-size: 1.2rem;
+            }
+
+            .nav-item span {
+                font-size: 0.65rem;
+            }
+
+            /* FAB Button */
+            #main-fab {
+                width: 50px;
+                height: 50px;
+                bottom: calc(var(--nav-height) + 12px);
+                right: 15px;
+            }
+
+            #main-fab i {
+                font-size: 1.3rem;
+            }
+
+            /* Modal */
+            .modal {
+                padding: 15px;
+            }
+
+            .modal-content {
+                padding: var(--spacing-lg);
+                max-height: 90vh;
+            }
+
+            .modal-header h3 {
+                font-size: 18px;
+            }
+
+            .close-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 16px;
+            }
+
+            /* Form Elements */
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .task-type-btn {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            /* Analytics */
+            .analytics-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .analytics-item {
+                padding: 12px;
+            }
+
+            .analytics-label {
+                font-size: 11px;
+            }
+
+            .analytics-value {
+                font-size: 1.5rem;
+            }
+
+            .analytics-card {
+                padding: var(--spacing-md);
+                margin: var(--spacing-sm) var(--spacing-md);
+            }
+
+            .analytics-card h3 {
+                font-size: 16px;
+            }
+
+            /* Period Selector */
+            .period-selector {
+                margin: var(--spacing-md);
+                padding: 4px;
+            }
+
+            .period-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+
+            /* Timesheet */
+            .timesheet-container {
+                padding: var(--spacing-sm);
+            }
+
+            .timesheet-summary {
+                padding: var(--spacing-md);
+                margin: var(--spacing-sm);
+            }
+
+            .timesheet-summary h3 {
+                font-size: 16px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--spacing-sm);
+            }
+
+            .summary-item {
+                padding: 10px;
+            }
+
+            .summary-item .text-secondary {
+                font-size: 11px;
+            }
+
+            .summary-value {
+                font-size: 18px;
+            }
+
+            .time-slot {
+                height: 50px;
+            }
+
+            .time-label {
+                width: 55px;
+                font-size: 11px;
+                padding-left: 6px;
+            }
+
+            .time-block {
+                font-size: 12px;
+                padding-left: 6px;
+            }
+
+            /* Chart Container */
+            .chart-container {
+                padding: var(--spacing-md);
+                margin: var(--spacing-sm) var(--spacing-md);
+                height: 200px;
+            }
+
+            /* Settings */
+            .settings-list {
+                padding: 0 var(--spacing-md);
+            }
+
+            .setting-item {
+                padding: var(--spacing-md);
+                margin-bottom: 6px;
+            }
+
+            .setting-item h4 {
+                font-size: 14px;
+            }
+
+            .setting-item p {
+                font-size: 12px;
+            }
+
+            /* Legend */
+            .legend {
+                padding: 8px 12px;
+                gap: 10px;
+            }
+
+            .legend-item {
+                font-size: 11px;
+            }
+
+            .dot {
+                width: 6px;
+                height: 6px;
+            }
+
+            /* Task Select Items */
+            .task-select-item {
+                padding: 12px;
+                margin-bottom: 8px;
+            }
+
+            .task-select-item h4 {
+                font-size: 14px;
+            }
+
+            .task-select-item p {
+                font-size: 12px;
+            }
+
+            /* Day Chips */
+            .day-chip {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            /* Utility Text Classes */
+            .text-sm {
+                font-size: 12px;
+            }
+
+            .text-xs {
+                font-size: 11px;
+            }
+
+            /* App Container */
+            #app-container {
+                padding-bottom: calc(var(--nav-height) + var(--spacing-lg));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container"></div>
+
+    <button id="main-fab">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" data-view="todo">
+            <i class="fas fa-list-check"></i>
+            <span>To Do</span>
+        </div>
+        <div class="nav-item" data-view="timesheet">
+            <i class="fas fa-clock"></i>
+            <span>Timesheet</span>
+        </div>
+        <div class="nav-item" data-view="analytics">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
+        </div>
+        <div class="nav-item" data-view="manage">
+            <i class="fas fa-cog"></i>
+            <span>Manage</span>
+        </div>
+        <div class="nav-item" data-view="account">
+            <i class="fas fa-user"></i>
+            <span>Account</span>
+        </div>
+    </nav>
+
+    <!-- Add Task Modal -->
+    <div id="modal-add-task" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Task</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="task-type-selector">
+                <button class="task-type-btn active" id="btn-type-adhoc" onclick="app.setTaskType('adhoc')">
+                    <i class="fas fa-calendar-day"></i> Ad-hoc
+                </button>
+                <button class="task-type-btn" id="btn-type-routine" onclick="app.setTaskType('routine')">
+                    <i class="fas fa-repeat"></i> Routine
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" id="inp-task-name" placeholder="Enter task name">
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select id="inp-task-category"></select>
+            </div>
+
+            <div id="adhoc-options">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="inp-task-date">
+                </div>
+                <div class="form-group">
+                    <label>Time Block</label>
+                    <div class="time-row">
+                        <div>
+                            <label class="text-xs text-secondary">From</label>
+                            <select id="inp-task-time-from"></select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-secondary">To</label>
+                            <select id="inp-task-time-to"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="routine-options" class="hidden">
+                <div class="form-group">
+                    <label>Frequency</label>
+                    <select id="inp-routine-freq">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="custom">Custom Days</option>
+                    </select>
+                </div>
+                <div class="form-group" id="custom-days-group" style="display:none;">
+                    <label>Select Days</label>
+                    <div class="routine-days">
+                        <div class="day-chip" data-day="0">Sun</div>
+                        <div class="day-chip" data-day="1">Mon</div>
+                        <div class="day-chip" data-day="2">Tue</div>
+                        <div class="day-chip" data-day="3">Wed</div>
+                        <div class="day-chip" data-day="4">Thu</div>
+                        <div class="day-chip" data-day="5">Fri</div>
+                        <div class="day-chip" data-day="6">Sat</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Time Block</label>
+                    <div class="time-row">
+                        <div>
+                            <label class="text-xs text-secondary">From</label>
+                            <select id="inp-routine-time-from"></select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-secondary">To</label>
+                            <select id="inp-routine-time-to"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="inp-task-hero" style="width: auto; margin: 0;">
+                <label for="inp-task-hero" style="margin: 0; cursor: pointer;">
+                    <i class="fas fa-star" style="color: var(--accent-primary); margin-right: 5px;"></i>
+                    Mark as Hero Task (Most Important)
+                </label>
+            </div>
+
+
+            <button class="btn-primary" onclick="app.saveTask()">Save Task</button>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="modal-edit-task" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Task</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" id="edit-task-name">
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select id="edit-task-category"></select>
+            </div>
+
+            <button class="btn-primary" onclick="app.saveEditTask()">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Reschedule Task Modal -->
+    <div id="modal-reschedule" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reschedule Task</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>New Date</label>
+                <input type="date" id="reschedule-date">
+            </div>
+
+            <div class="form-group">
+                <label>Time Block</label>
+                <div class="time-row">
+                    <div>
+                        <label class="text-xs text-secondary">From</label>
+                        <select id="reschedule-time-from"></select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-secondary">To</label>
+                        <select id="reschedule-time-to"></select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="app.saveReschedule()">Reschedule</button>
+        </div>
+    </div>
+
+    <!-- Fill Time Details Modal (for completing task without time) -->
+    <div id="modal-fill-time" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete Task</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <p class="text-secondary mb-4">Please fill in the time details to complete this task</p>
+
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="fill-time-date">
+            </div>
+
+            <div class="form-group">
+                <label>Time Block</label>
+                <div class="time-row">
+                    <div>
+                        <label class="text-xs text-secondary">From</label>
+                        <select id="fill-time-from"></select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-secondary">To</label>
+                        <select id="fill-time-to"></select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary" title="Mark as Done" onclick="app.completeTaskWithTime()">Complete Task</button>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="modal-category" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Category</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>Category Name</label>
+                <input type="text" id="inp-cat-name" placeholder="e.g., Study, Exercise">
+            </div>
+
+            <div class="form-group">
+                <label>Type</label>
+                <select id="inp-cat-type">
+                    <option value="productive">Productive</option>
+                    <option value="non-productive">Non-Productive</option>
+                    <option value="uncontrollable">Uncontrollable</option>
+                </select>
+            </div>
+
+            <button class="btn-primary" onclick="app.saveCategory()">Save Category</button>
+        </div>
+    </div>
+
+    <!-- Manual Timesheet Fill Modal -->
+    <div id="modal-manual-fill" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Fill Timesheet Manually</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" id="manual-task-name" placeholder="Enter task name">
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select id="manual-category"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Time Block</label>
+                <div class="time-row">
+                    <div>
+                        <label class="text-xs text-secondary">From</label>
+                        <select id="manual-time-from"></select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-secondary">To</label>
+                        <select id="manual-time-to"></select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="app.saveManualFill()">Fill Timesheet</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs (v8 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAH1TJ8zrVa9eEOmvLfs_P3kQMgAIz-4z0",
+            authDomain: "to-do-app-d8c31.firebaseapp.com",
+            projectId: "to-do-app-d8c31",
+            storageBucket: "to-do-app-d8c31.firebasestorage.app",
+            messagingSenderId: "359032109138",
+            appId: "1:359032109138:web:cfff48514ec81db4d7c78b",
+            measurementId: "G-26DN67VB0V"
+        };
+
+        let firebaseApp, auth, db;
+        try {
+            if (!firebase) throw new Error('Firebase scripts not loaded!');
+            firebaseApp = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+            console.log('Firebase initialized successfully');
+
+            // Add analytics if script loaded
+            if (firebase.analytics) {
+                firebase.analytics();
+            }
+        } catch (error) {
+            console.error('Firebase failed:', error);
+            alert('Firebase Initialization Failed: ' + error.message + '\n\nPlease check your internet connection and verify script tags.');
+        }
+
+        // Time utilities
+        const TIME_SLOTS = [];
+        for (let hour = 0; hour < 24; hour++) {
+            TIME_SLOTS.push(`${hour.toString().padStart(2, '0')}:00`);
+            TIME_SLOTS.push(`${hour.toString().padStart(2, '0')}:30`);
+        }
+
+        function populateTimeSelect(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Select time</option>';
+            TIME_SLOTS.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                select.appendChild(option);
+            });
+        }
+
+        function timeToMinutes(time) {
+            if (!time) return 0;
+            const [hours, minutes] = time.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function minutesToTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        }
+
+        // Database Manager
+        class DatabaseManager {
+            constructor() {
+                this.data = this.loadLocalData();
+                this.currentUser = null;
+            }
+
+            loadLocalData() {
+                const stored = localStorage.getItem('productivityData');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                return {
+                    categories: [
+                        { id: '1', name: 'Study', type: 'productive' },
+                        { id: '2', name: 'Exercise', type: 'productive' },
+                        { id: '3', name: 'Sleep', type: 'uncontrollable' },
+                        { id: '4', name: 'Social Media', type: 'non-productive' }
+                    ],
+                    tasks: [],
+                    routines: [],
+                    timesheet: {},
+                    routineStatus: {}
+                };
+            }
+
+            saveLocalData() {
+                localStorage.setItem('productivityData', JSON.stringify(this.data));
+            }
+
+            async syncWithFirebase() {
+                if (!this.currentUser || !db) return;
+                try {
+                    const userDoc = await db.collection('users').doc(this.currentUser.uid).get();
+                    if (userDoc.exists) {
+                        this.data = userDoc.data();
+                    }
+                } catch (error) {
+                    console.error('Firebase sync error:', error);
+                }
+            }
+
+            async saveToFirebase() {
+                if (!this.currentUser || !db) return;
+                try {
+                    await db.collection('users').doc(this.currentUser.uid).set(this.data);
+                    console.log('Saved to Firebase successfully');
+                } catch (error) {
+                    console.error('Firebase save error:', error);
+                    if (error.code === 'permission-denied') {
+                        alert('DATABASE ERROR: Permission Denied!\n\nYour Firestore Database Rules are blocking writes.\n\nPlease fix your Rules in the Firebase Console:\n1. Go to Build -> Firestore Database -> Rules\n2. Change "allow read, write: if false;" to "allow read, write: if true;" (for testing) OR "if request.auth != null;"');
+                    } else {
+                        // Only alert for other errors if it's not a network offline issue (optional)
+                        // But for now, let's be noisy to debug
+                        alert('Error saving to cloud: ' + error.message);
+                    }
+                }
+            }
+
+            getCategories() {
+                return this.data.categories;
+            }
+
+            addCategory(category) {
+                category.id = Date.now().toString();
+                this.data.categories.push(category);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            getCategoryById(id) {
+                return this.data.categories.find(c => c.id === id);
+            }
+
+            addTask(task) {
+                task.id = Date.now().toString();
+                task.status = 'pending';
+                task.createdAt = new Date().toISOString();
+                this.data.tasks.push(task);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            getTasks(date) {
+                const tasks = this.data.tasks.filter(t => t.date === date);
+                const routineTasks = this.getRoutineTasksForDate(date);
+                const allTasks = [...tasks, ...routineTasks];
+
+                // Sort: pending first, then done
+                return allTasks.sort((a, b) => {
+                    if (a.status === 'pending' && b.status !== 'pending') return -1;
+                    if (a.status !== 'pending' && b.status === 'pending') return 1;
+                    if (a.status === 'not-doable' && b.status === 'done') return -1;
+                    if (a.status === 'done' && b.status === 'not-doable') return 1;
+
+                    // Within same status, sort by time
+                    if (!a.timeFrom) return 1;
+                    if (!b.timeFrom) return -1;
+                    return timeToMinutes(a.timeFrom) - timeToMinutes(b.timeFrom);
+                });
+            }
+
+            getRoutineTasksForDate(date) {
+                const dateObj = new Date(date);
+                const dayOfWeek = dateObj.getDay();
+
+                return this.data.routines
+                    .filter(routine => {
+                        if (routine.freq === 'daily') return true;
+                        if (routine.freq === 'weekly') return dayOfWeek === 1;
+                        if (routine.freq === 'custom' && routine.days) {
+                            return routine.days.includes(dayOfWeek);
+                        }
+                        return false;
+                    })
+                    .map(routine => ({
+                        ...routine,
+                        id: `routine-${routine.id}-${date}`,
+                        date: date,
+                        isRoutine: true,
+                        status: this.getRoutineTaskStatus(routine.id, date)
+                    }));
+            }
+
+            getRoutineTaskStatus(routineId, date) {
+                const key = `${routineId}-${date}`;
+                return this.data.routineStatus?.[key] || 'pending';
+            }
+
+            updateTask(id, updates) {
+                const task = this.data.tasks.find(t => t.id === id);
+                if (task) {
+                    Object.assign(task, updates);
+                    if (updates.status === 'done') {
+                        task.completedAt = new Date().toISOString();
+                        // Auto-fill timesheet
+                        this.autoFillTimesheet(task);
+                    } else if (updates.status === 'pending') {
+                        // Clear completedAt when undoing
+                        delete task.completedAt;
+                    }
+                } else if (id.startsWith('routine-')) {
+                    const [, routineId, date] = id.split('-');
+                    const parts = id.split('-');
+                    const actualRoutineId = parts[1];
+                    const actualDate = parts.slice(2).join('-');
+
+                    if (!this.data.routineStatus) this.data.routineStatus = {};
+                    const key = `${actualRoutineId}-${actualDate}`;
+                    this.data.routineStatus[key] = updates.status;
+
+                    // Auto-fill timesheet for routine task
+                    if (updates.status === 'done') {
+                        const routine = this.data.routines.find(r => r.id === actualRoutineId);
+                        if (routine && routine.timeFrom && routine.timeTo) {
+                            this.fillTimesheetBlock(actualDate, routine.timeFrom, routine.timeTo, id, routine.categoryId, routine.name);
+                        }
+                    }
+                }
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            autoFillTimesheet(task) {
+                if (task.timeFrom && task.timeTo && task.date) {
+                    this.fillTimesheetBlock(task.date, task.timeFrom, task.timeTo, task.id, task.categoryId, task.name);
+                }
+            }
+
+            fillTimesheetBlock(date, timeFrom, timeTo, taskId, categoryId, taskName) {
+                if (!this.data.timesheet[date]) {
+                    this.data.timesheet[date] = {};
+                }
+
+                const startMinutes = timeToMinutes(timeFrom);
+                const endMinutes = timeToMinutes(timeTo);
+
+                for (let minutes = startMinutes; minutes < endMinutes; minutes += 30) {
+                    const timeSlot = minutesToTime(minutes);
+                    this.data.timesheet[date][timeSlot] = {
+                        taskId,
+                        categoryId,
+                        taskName,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            deleteTask(id) {
+                this.data.tasks = this.data.tasks.filter(t => t.id !== id);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            addRoutine(routine) {
+                routine.id = Date.now().toString();
+                this.data.routines.push(routine);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            getTimesheet(date) {
+                return this.data.timesheet[date] || {};
+            }
+
+            moveUncompletedTasks() {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+                const today = new Date().toISOString().split('T')[0];
+
+                const yesterdayTasks = this.data.tasks.filter(t => t.date === yesterdayStr && t.status === 'pending');
+
+                yesterdayTasks.forEach(task => {
+                    task.date = today;
+                    task.movedFrom = yesterdayStr;
+                });
+
+                // Mark uncompleted routine tasks as not-doable
+                const yesterdayRoutines = this.getRoutineTasksForDate(yesterdayStr);
+                yesterdayRoutines.forEach(routine => {
+                    if (routine.status === 'pending') {
+                        const [, routineId] = routine.id.split('-');
+                        const key = `${routineId}-${yesterdayStr}`;
+                        if (!this.data.routineStatus) this.data.routineStatus = {};
+                        this.data.routineStatus[key] = 'not-doable';
+                    }
+                });
+
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            getTaskStatsForPeriod(startDate, endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const tasks = this.data.tasks.filter(t => {
+                    const taskDate = new Date(t.date);
+                    return taskDate >= start && taskDate <= end;
+                });
+
+                const total = tasks.length;
+                const completed = tasks.filter(t => t.status === 'done').length;
+                const completedOnTime = tasks.filter(t => {
+                    if (t.status !== 'done' || !t.timeFrom || !t.completedAt) return false;
+                    const taskDateTime = new Date(`${t.date}T${t.timeTo || t.timeFrom}`);
+                    const completedDateTime = new Date(t.completedAt);
+                    return completedDateTime <= taskDateTime;
+                }).length;
+                const completedLate = completed - completedOnTime;
+                const pending = tasks.filter(t => t.status === 'pending').length;
+                const notDoable = tasks.filter(t => t.status === 'not-doable').length;
+
+                return { total, completed, completedOnTime, completedLate, pending, notDoable };
+            }
+
+            getRoutineStatsForPeriod(startDate, endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+                const stats = {};
+                this.data.routines.forEach(routine => {
+                    const category = this.getCategoryById(routine.categoryId);
+                    const categoryName = category ? category.name : 'Unknown';
+
+                    let assignedDays = 0;
+                    let completedDays = 0;
+
+                    for (let i = 0; i < days; i++) {
+                        const currentDate = new Date(start);
+                        currentDate.setDate(start.getDate() + i);
+                        const dateStr = currentDate.toISOString().split('T')[0];
+                        const dayOfWeek = currentDate.getDay();
+
+                        let shouldAppear = false;
+                        if (routine.freq === 'daily') shouldAppear = true;
+                        else if (routine.freq === 'weekly' && dayOfWeek === 1) shouldAppear = true;
+                        else if (routine.freq === 'custom' && routine.days?.includes(dayOfWeek)) shouldAppear = true;
+
+                        if (shouldAppear) {
+                            assignedDays++;
+                            const status = this.getRoutineTaskStatus(routine.id, dateStr);
+                            if (status === 'done') completedDays++;
+                        }
+                    }
+
+                    if (!stats[categoryName]) {
+                        stats[categoryName] = { assigned: 0, completed: 0 };
+                    }
+                    stats[categoryName].assigned += assignedDays;
+                    stats[categoryName].completed += completedDays;
+                });
+
+                return stats;
+            }
+
+            getTimesheetStatsForPeriod(startDate, endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const stats = { productive: 0, nonProductive: 0, uncontrollable: 0, unassigned: 0 };
+
+                let currentDate = new Date(start);
+                while (currentDate <= end) {
+                    const dateStr = currentDate.toISOString().split('T')[0];
+                    const daySheet = this.getTimesheet(dateStr);
+
+                    TIME_SLOTS.forEach(slot => {
+                        const entry = daySheet[slot];
+                        if (entry) {
+                            const category = this.getCategoryById(entry.categoryId);
+                            if (category) {
+                                if (category.type === 'productive') stats.productive++;
+                                else if (category.type === 'non-productive') stats.nonProductive++;
+                                else if (category.type === 'uncontrollable') stats.uncontrollable++;
+                            }
+                        } else {
+                            stats.unassigned++;
+                        }
+                    });
+
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+
+                // Convert to hours
+                stats.productive = (stats.productive * 0.5).toFixed(1);
+                stats.nonProductive = (stats.nonProductive * 0.5).toFixed(1);
+                stats.uncontrollable = (stats.uncontrollable * 0.5).toFixed(1);
+                stats.unassigned = (stats.unassigned * 0.5).toFixed(1);
+
+                return stats;
+            }
+
+            getCategoryBreakdownForPeriod(startDate, endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const breakdown = {};
+
+                let currentDate = new Date(start);
+                while (currentDate <= end) {
+                    const dateStr = currentDate.toISOString().split('T')[0];
+                    const daySheet = this.getTimesheet(dateStr);
+
+                    TIME_SLOTS.forEach(slot => {
+                        const entry = daySheet[slot];
+                        if (entry) {
+                            const category = this.getCategoryById(entry.categoryId);
+                            if (category) {
+                                if (!breakdown[category.name]) {
+                                    breakdown[category.name] = 0;
+                                }
+                                breakdown[category.name] += 0.5; // 30 min slots
+                            }
+                        }
+                    });
+
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+
+                return breakdown;
+            }
+        }
+
+        // Main App
+        class App {
+            constructor() {
+                this.db = new DatabaseManager();
+                this.selectedDate = new Date().toISOString().split('T')[0];
+                this.currentView = 'todo';
+                this.addingTaskType = 'adhoc';
+                this.selectedPeriod = 'week';
+                this.container = document.getElementById('app-container');
+                this.selectedRoutineDays = [];
+                this.editingTaskId = null;
+                this.reschedulingTaskId = null;
+                this.fillingTimeTaskId = null;
+
+                this.db.moveUncompletedTasks();
+                this.initEventListeners();
+                this.populateAllTimeSelects();
+                this.render();
+
+                // Auto-refresh every minute to update productive hours in real-time
+                setInterval(() => {
+                    if (this.currentView === 'todo') {
+                        const today = new Date().toISOString().split('T')[0];
+                        if (this.selectedDate === today) {
+                            this.render();
+                        }
+                    }
+                }, 60000); // Update every 60 seconds
+            }
+
+            populateAllTimeSelects() {
+                populateTimeSelect('inp-task-time-from');
+                populateTimeSelect('inp-task-time-to');
+                populateTimeSelect('inp-routine-time-from');
+                populateTimeSelect('inp-routine-time-to');
+                populateTimeSelect('reschedule-time-from');
+                populateTimeSelect('reschedule-time-to');
+                populateTimeSelect('fill-time-from');
+                populateTimeSelect('fill-time-to');
+                populateTimeSelect('manual-time-from');
+                populateTimeSelect('manual-time-to');
+            }
+
+            initEventListeners() {
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        this.currentView = item.dataset.view;
+                        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                        item.classList.add('active');
+                        this.render();
+                    });
+                });
+
+                document.getElementById('main-fab').addEventListener('click', () => {
+                    if (this.currentView === 'todo') {
+                        this.openAddTaskModal();
+                    } else if (this.currentView === 'timesheet') {
+                        this.openManualFillModal();
+                    } else if (this.currentView === 'manage') {
+                        document.getElementById('modal-category').classList.add('open');
+                    }
+                });
+
+                const freqSelect = document.getElementById('inp-routine-freq');
+                freqSelect.addEventListener('change', (e) => {
+                    const customDaysGroup = document.getElementById('custom-days-group');
+                    if (e.target.value === 'custom') {
+                        customDaysGroup.style.display = 'block';
+                    } else {
+                        customDaysGroup.style.display = 'none';
+                    }
+                });
+
+                document.querySelectorAll('.day-chip').forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        chip.classList.toggle('selected');
+                        const day = parseInt(chip.dataset.day);
+                        if (chip.classList.contains('selected')) {
+                            if (!this.selectedRoutineDays.includes(day)) {
+                                this.selectedRoutineDays.push(day);
+                            }
+                        } else {
+                            this.selectedRoutineDays = this.selectedRoutineDays.filter(d => d !== day);
+                        }
+                    });
+                });
+
+                if (auth) {
+                    auth.onAuthStateChanged((user) => {
+                        if (user) {
+                            this.db.currentUser = user;
+                            this.db.syncWithFirebase();
+                            this.render();
+                        }
+                    });
+                }
+            }
+
+            render() {
+                switch (this.currentView) {
+                    case 'todo':
+                        this.renderTodo();
+                        break;
+                    case 'timesheet':
+                        this.renderTimesheet();
+                        break;
+                    case 'analytics':
+                        this.renderAnalytics();
+                        break;
+                    case 'manage':
+                        this.renderManage();
+                        break;
+                    case 'account':
+                        this.renderAccount();
+                        break;
+                }
+            }
+
+            renderTodo() {
+                const tasks = this.db.getTasks(this.selectedDate);
+                const now = new Date();
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+                const currentDate = now.toISOString().split('T')[0];
+
+                let currentTask = null;
+                let nextTask = null;
+
+                if (this.selectedDate === currentDate) {
+                    for (let task of tasks) {
+                        if (task.timeFrom && task.status === 'pending') {
+                            const taskStartMinutes = timeToMinutes(task.timeFrom);
+                            const taskEndMinutes = timeToMinutes(task.timeTo);
+
+                            if (taskStartMinutes <= currentMinutes && currentMinutes < taskEndMinutes) {
+                                currentTask = task;
+                            } else if (taskStartMinutes > currentMinutes && !nextTask) {
+                                nextTask = task;
+                            }
+                        }
+                    }
+                }
+
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(t => t.status === 'done').length;
+
+                let productiveHours = 0;
+                let nonProductiveHours = 0;
+                let uncontrollableHours = 0;
+
+                const timesheet = this.db.getTimesheet(this.selectedDate);
+                // Only count hours for today's date in real-time
+                if (this.selectedDate === currentDate) {
+                    Object.keys(timesheet).forEach(slot => {
+                        const slotMinutes = timeToMinutes(slot);
+                        if (slotMinutes < currentMinutes) {
+                            const entry = timesheet[slot];
+                            const category = this.db.getCategoryById(entry.categoryId);
+                            if (category) {
+                                if (category.type === 'productive') productiveHours += 0.5;
+                                else if (category.type === 'non-productive') nonProductiveHours += 0.5;
+                                else if (category.type === 'uncontrollable') uncontrollableHours += 0.5;
+                            }
+                        }
+                    });
+                } else {
+                    // For past/future dates, count all filled slots
+                    Object.keys(timesheet).forEach(slot => {
+                        const entry = timesheet[slot];
+                        const category = this.db.getCategoryById(entry.categoryId);
+                        if (category) {
+                            if (category.type === 'productive') productiveHours += 0.5;
+                            else if (category.type === 'non-productive') nonProductiveHours += 0.5;
+                            else if (category.type === 'uncontrollable') uncontrollableHours += 0.5;
+                        }
+                    });
+                }
+
+                let html = `
+                    <div class="dashboard-header" style="padding-bottom: 0;">
+                        <h2>My Tasks</h2>
+                    </div>`;
+
+                html += `<div class="date-scroller" style="border-bottom: none; padding-top: 10px;">`;
+                for (let i = -3; i <= 3; i++) {
+                    const date = new Date();
+                    date.setDate(date.getDate() + i);
+                    const dateStr = date.toISOString().split('T')[0];
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const dayNum = date.getDate();
+                    const isActive = dateStr === this.selectedDate;
+
+                    html += `
+                        <div class="date-chip ${isActive ? 'active' : ''}" onclick="app.selectDate('${dateStr}')">
+                            <span>${dayName}</span>
+                            <span>${dayNum}</span>
+                        </div>`;
+                }
+                html += `</div>`;
+
+                html += `
+                    <div style="padding: 10px 20px 20px;">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="text-secondary text-sm">Tasks Done</div>
+                                <div class="stat-value">${completedTasks}/${totalTasks}</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-secondary text-sm">Productive Hrs</div>
+                                <div class="stat-value" style="color: var(--success);">${productiveHours.toFixed(1)}h</div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                if (currentTask) {
+                    const category = this.db.getCategoryById(currentTask.categoryId);
+                    html += `
+                        <div class="current-task-banner">
+                            <div class="text-sm" style="opacity: 0.9;">⏰ Current Task</div>
+                            <div class="font-bold" style="font-size: 1.2rem; margin-top: 5px;">${currentTask.name}</div>
+                            <div class="text-sm mt-2" style="opacity: 0.8;">
+                                <i class="fas fa-clock"></i> ${currentTask.timeFrom} - ${currentTask.timeTo}
+                                ${category ? ' • ' + category.name : ''}
+                            </div>
+                        </div>`;
+                }
+
+                if (nextTask) {
+                    const category = this.db.getCategoryById(nextTask.categoryId);
+                    html += `
+                        <div class="next-task-banner">
+                            <div class="text-sm" style="opacity: 0.9;">📅 Next Up</div>
+                            <div class="font-bold" style="margin-top: 5px;">${nextTask.name}</div>
+                            <div class="text-xs mt-2" style="opacity: 0.8;">
+                                <i class="fas fa-clock"></i> ${nextTask.timeFrom} - ${nextTask.timeTo}
+                                ${category ? ' • ' + category.name : ''}
+                            </div>
+                        </div>`;
+                }
+
+                html += `<div class="task-list">`;
+                if (tasks.length === 0) {
+                    html += `<div class="text-center text-secondary p-4">No tasks for this day. Tap + to add one!</div>`;
+                } else {
+                    tasks.forEach(task => {
+                        const category = this.db.getCategoryById(task.categoryId);
+                        const categoryClass = category ? category.type.replace('-', '-') : '';
+                        const typeClass = categoryClass === 'productive' ? 'prod' :
+                            categoryClass === 'non-productive' ? 'non-prod' :
+                                categoryClass === 'uncontrollable' ? 'uncontrol' : '';
+
+                        const statusClass = task.status === 'done' ? 'done' :
+                            task.status === 'not-doable' ? 'not-doable' : '';
+
+                        const heroClass = task.isHero ? 'hero' : '';
+
+                        html += `
+                            <div class="task-card ${typeClass} ${statusClass} ${heroClass}">
+                                <div class="task-header">
+                                    <div class="task-info">
+                                        <div class="task-title">${task.name}</div>
+                                        <div class="task-time">
+                                            ${task.timeFrom ? `<i class="fas fa-clock"></i> ${task.timeFrom} - ${task.timeTo}` : 'No time set'}
+                                            ${category ? ' • ' + category.name : ''}
+                                            ${task.isRoutine ? ' <i class="fas fa-repeat"></i>' : ''}
+                                            ${task.movedFrom ? ' <i class="fas fa-arrow-right"></i> Moved' : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    ${task.status === 'done' ? `
+                                        <button class="task-btn" style="background: var(--warning);" title="Undo" onclick="app.undoTask('${task.id}')">
+                                            <i class="fas fa-undo"></i>
+                                        </button>
+                                    ` : ''}
+                                    ${task.status !== 'done' ? `
+                                        <button class="task-btn done-btn" title="Mark as Done" onclick="app.completeTask('${task.id}')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    ` : ''}
+                                    ${!task.isRoutine && task.status !== 'done' ? `
+                                        <button class="task-btn" title="Edit Task" onclick="app.openEditModal('${task.id}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="task-btn" title="Reschedule" onclick="app.openRescheduleModal('${task.id}')">
+                                            <i class="fas fa-calendar"></i>
+                                        </button>
+                                        <button class="task-btn not-doable-btn" title="Not Doable" onclick="app.markNotDoable('${task.id}')">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                        <button class="task-btn delete-btn" title="Delete" onclick="app.deleteTask('${task.id}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    ` : ''}
+                                    ${task.isRoutine && task.status !== 'done' ? `
+                                        <button class="task-btn not-doable-btn" title="Not Doable" onclick="app.markNotDoable('${task.id}')">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>`;
+                    });
+                }
+                html += `</div>`;
+
+                this.container.innerHTML = html;
+            }
+
+            selectDate(date) {
+                this.selectedDate = date;
+                this.render();
+            }
+
+            completeTask(id) {
+                const task = this.db.data.tasks.find(t => t.id === id);
+                const isRoutine = id.startsWith('routine-');
+
+                // Check if task has time set
+                let hasTime = false;
+                let taskTimeFrom = '';
+                let taskTimeTo = '';
+
+                if (isRoutine) {
+                    // For routine tasks, get the routine data
+                    const parts = id.split('-');
+                    const routineId = parts[1];
+                    const routine = this.db.data.routines.find(r => r.id === routineId);
+                    hasTime = routine && routine.timeFrom && routine.timeTo;
+                    if (routine) {
+                        taskTimeFrom = routine.timeFrom || '';
+                        taskTimeTo = routine.timeTo || '';
+                    }
+                } else {
+                    hasTime = task && task.timeFrom && task.timeTo;
+                    if (task) {
+                        taskTimeFrom = task.timeFrom || '';
+                        taskTimeTo = task.timeTo || '';
+                    }
+                }
+
+                // If no time is set, show the fill-time modal
+                if (!hasTime) {
+                    this.fillingTimeTaskId = id;
+                    document.getElementById('fill-time-date').value = this.selectedDate;
+                    // Pre-fill with task's original time if available
+                    document.getElementById('fill-time-from').value = taskTimeFrom;
+                    document.getElementById('fill-time-to').value = taskTimeTo;
+                    document.getElementById('modal-fill-time').classList.add('open');
+                } else {
+                    this.db.updateTask(id, { status: 'done' });
+                    this.render();
+                }
+            }
+
+            completeTaskWithTime() {
+                const date = document.getElementById('fill-time-date').value;
+                const timeFrom = document.getElementById('fill-time-from').value;
+                const timeTo = document.getElementById('fill-time-to').value;
+
+                if (!date || !timeFrom || !timeTo) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                if (timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                    alert('End time must be after start time');
+                    return;
+                }
+
+                const isRoutine = this.fillingTimeTaskId.startsWith('routine-');
+
+                if (isRoutine) {
+                    // For routine tasks, update the routine with time and mark this instance as done
+                    const parts = this.fillingTimeTaskId.split('-');
+                    const routineId = parts[1];
+                    const routine = this.db.data.routines.find(r => r.id === routineId);
+
+                    if (routine) {
+                        // Update the routine with time information
+                        routine.timeFrom = timeFrom;
+                        routine.timeTo = timeTo;
+                        this.db.saveLocalData();
+                        this.db.saveToFirebase();
+                    }
+
+                    // Mark this specific instance as done
+                    this.db.updateTask(this.fillingTimeTaskId, { status: 'done' });
+                } else {
+                    // For regular tasks, update with time and mark as done
+                    this.db.updateTask(this.fillingTimeTaskId, {
+                        date,
+                        timeFrom,
+                        timeTo,
+                        status: 'done'
+                    });
+                }
+
+                this.closeModals();
+                this.render();
+            }
+
+            markNotDoable(id) {
+                if (confirm('Mark this task as not doable?')) {
+                    this.db.updateTask(id, { status: 'not-doable' });
+                    this.render();
+                }
+            }
+
+            toggleHero(id) {
+                const task = this.db.data.tasks.find(t => t.id === id);
+                if (!task) return;
+
+                // If marking as hero, unmark all other tasks first
+                if (!task.isHero) {
+                    this.db.data.tasks.forEach(t => {
+                        if (t.isHero) {
+                            t.isHero = false;
+                        }
+                    });
+                    task.isHero = true;
+                } else {
+                    // Unmark this task as hero
+                    task.isHero = false;
+                }
+
+                this.db.saveLocalData();
+                this.db.saveToFirebase();
+                this.render();
+            }
+
+            openEditModal(id) {
+                const task = this.db.data.tasks.find(t => t.id === id);
+                if (!task) return;
+
+                this.editingTaskId = id;
+                document.getElementById('edit-task-name').value = task.name;
+
+                const catSelect = document.getElementById('edit-task-category');
+                catSelect.innerHTML = '';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    opt.selected = c.id === task.categoryId;
+                    catSelect.appendChild(opt);
+                });
+
+                document.getElementById('modal-edit-task').classList.add('open');
+            }
+
+            saveEditTask() {
+                const name = document.getElementById('edit-task-name').value.trim();
+                const categoryId = document.getElementById('edit-task-category').value;
+
+                if (!name) {
+                    alert('Task name is required');
+                    return;
+                }
+
+                this.db.updateTask(this.editingTaskId, { name, categoryId });
+                this.closeModals();
+                this.render();
+            }
+
+            openRescheduleModal(id) {
+                const task = this.db.data.tasks.find(t => t.id === id);
+                if (!task) return;
+
+                this.reschedulingTaskId = id;
+                document.getElementById('reschedule-date').value = task.date || this.selectedDate;
+                document.getElementById('reschedule-time-from').value = task.timeFrom || '';
+                document.getElementById('reschedule-time-to').value = task.timeTo || '';
+
+                document.getElementById('modal-reschedule').classList.add('open');
+            }
+
+            saveReschedule() {
+                const date = document.getElementById('reschedule-date').value;
+                const timeFrom = document.getElementById('reschedule-time-from').value;
+                const timeTo = document.getElementById('reschedule-time-to').value;
+
+                if (!date) {
+                    alert('Date is required');
+                    return;
+                }
+
+                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                    alert('End time must be after start time');
+                    return;
+                }
+
+                this.db.updateTask(this.reschedulingTaskId, { date, timeFrom, timeTo });
+                this.closeModals();
+                this.render();
+            }
+
+            deleteTask(id) {
+                if (confirm('Delete this task?')) {
+                    this.db.deleteTask(id);
+                    this.render();
+                }
+            }
+
+            undoTask(id) {
+                const isRoutine = id.startsWith('routine-');
+
+                if (isRoutine) {
+                    // For routine tasks, we need to clear the timesheet and update status
+                    const parts = id.split('-');
+                    const routineId = parts[1];
+                    const date = parts.slice(2).join('-');
+                    const routine = this.db.data.routines.find(r => r.id === routineId);
+
+                    // Clear timesheet entries for this routine task
+                    if (routine && routine.timeFrom && routine.timeTo) {
+                        this.clearTimesheetBlock(date, routine.timeFrom, routine.timeTo, id);
+                    }
+                } else {
+                    // For regular tasks, clear timesheet entries
+                    const task = this.db.data.tasks.find(t => t.id === id);
+                    if (task && task.timeFrom && task.timeTo && task.date) {
+                        this.clearTimesheetBlock(task.date, task.timeFrom, task.timeTo, id);
+                    }
+                }
+
+                // Update task status back to pending
+                this.db.updateTask(id, { status: 'pending' });
+                this.render();
+            }
+
+            clearTimesheetBlock(date, timeFrom, timeTo, taskId) {
+                if (!this.db.data.timesheet[date]) return;
+
+                const startMinutes = timeToMinutes(timeFrom);
+                const endMinutes = timeToMinutes(timeTo);
+
+                for (let minutes = startMinutes; minutes < endMinutes; minutes += 30) {
+                    const timeSlot = minutesToTime(minutes);
+                    const entry = this.db.data.timesheet[date][timeSlot];
+
+                    // Only clear if this slot belongs to the task being undone
+                    if (entry && entry.taskId === taskId) {
+                        delete this.db.data.timesheet[date][timeSlot];
+                    }
+                }
+
+                this.db.saveLocalData();
+                this.db.saveToFirebase();
+            }
+
+            renderTimesheet() {
+                const timesheet = this.db.getTimesheet(this.selectedDate);
+                const now = new Date();
+                const currentDate = now.toISOString().split('T')[0];
+
+                let productive = 0, nonProductive = 0, uncontrollable = 0, unassigned = 0;
+
+                TIME_SLOTS.forEach(slot => {
+                    const entry = timesheet[slot];
+                    if (entry) {
+                        const category = this.db.getCategoryById(entry.categoryId);
+                        if (category) {
+                            if (category.type === 'productive') productive += 0.5;
+                            else if (category.type === 'non-productive') nonProductive += 0.5;
+                            else if (category.type === 'uncontrollable') uncontrollable += 0.5;
+                        }
+                    } else {
+                        unassigned += 0.5;
+                    }
+                });
+
+                let html = `
+                    <div class="dashboard-header">
+                        <h2>Timesheet</h2>
+                    </div>`;
+
+                html += `<div class="date-scroller">`;
+                for (let i = -3; i <= 3; i++) {
+                    const date = new Date();
+                    date.setDate(date.getDate() + i);
+                    const dateStr = date.toISOString().split('T')[0];
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const dayNum = date.getDate();
+                    const isActive = dateStr === this.selectedDate;
+
+                    html += `
+                        <div class="date-chip ${isActive ? 'active' : ''}" onclick="app.selectDate('${dateStr}')">
+                            <span>${dayName}</span>
+                            <span>${dayNum}</span>
+                        </div>`;
+                }
+                html += `</div>`;
+
+                html += `
+                    <div class="timesheet-summary">
+                        <h3>Day Summary</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="text-xs text-secondary">Productive</div>
+                                <div class="summary-value" style="color: var(--success);">${productive.toFixed(1)}h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="text-xs text-secondary">Non-Productive</div>
+                                <div class="summary-value" style="color: var(--danger);">${nonProductive.toFixed(1)}h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="text-xs text-secondary">Uncontrollable</div>
+                                <div class="summary-value" style="color: var(--warning);">${uncontrollable.toFixed(1)}h</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="text-xs text-secondary">Unassigned</div>
+                                <div class="summary-value" style="color: var(--unassigned);">${unassigned.toFixed(1)}h</div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                // Add task-wise summary
+                const taskSummary = {};
+                TIME_SLOTS.forEach(slot => {
+                    const entry = timesheet[slot];
+                    if (entry && entry.taskName) {
+                        if (!taskSummary[entry.taskName]) {
+                            taskSummary[entry.taskName] = {
+                                hours: 0,
+                                categoryId: entry.categoryId
+                            };
+                        }
+                        taskSummary[entry.taskName].hours += 0.5;
+                    }
+                });
+
+                if (Object.keys(taskSummary).length > 0) {
+                    html += `
+                        <div class="timesheet-summary" style="margin-top: 10px;">
+                            <h3>Task Summary</h3>
+                            <div style="margin-top: 10px;">`;
+
+                    Object.entries(taskSummary).forEach(([taskName, data]) => {
+                        const category = this.db.getCategoryById(data.categoryId);
+                        const dotColor = category ?
+                            (category.type === 'productive' ? '#4ade80' :
+                                category.type === 'non-productive' ? '#f87171' : '#facc15') : '#3f3f46';
+
+                        html += `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--surface-variant); margin-bottom: 8px; border-radius: 8px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span class="dot" style="background: ${dotColor};"></span>
+                                    <span>${taskName}</span>
+                                </div>
+                                <span class="font-bold">${data.hours.toFixed(1)}h</span>
+                            </div>`;
+                    });
+
+                    html += `
+                            </div>
+                        </div>`;
+                }
+
+
+
+                html += `
+                    <div class="legend">
+                        <div class="legend-item"><span class="dot bg-prod"></span> Productive</div>
+                        <div class="legend-item"><span class="dot bg-nonprod"></span> Non-Productive</div>
+                        <div class="legend-item"><span class="dot bg-uncontrol"></span> Uncontrollable</div>
+                        <div class="legend-item"><span class="dot bg-unassigned"></span> Unassigned</div>
+                    </div>`;
+
+                html += `<div class="timesheet-container">`;
+                TIME_SLOTS.forEach(slot => {
+                    const entry = timesheet[slot];
+                    let blockClass = '';
+                    let blockText = 'Empty';
+
+                    if (entry) {
+                        const category = this.db.getCategoryById(entry.categoryId);
+
+                        if (category) {
+                            if (category.type === 'productive') blockClass = 'prod filled';
+                            else if (category.type === 'non-productive') blockClass = 'non-prod filled';
+                            else if (category.type === 'uncontrollable') blockClass = 'uncontrol filled';
+
+                            blockText = entry.taskName || category.name;
+                        }
+                    }
+
+                    html += `
+                        <div class="time-slot">
+                            <div class="time-label">${slot}</div>
+                            <div class="time-block ${blockClass}">
+                                ${blockText}
+                            </div>
+                        </div>`;
+                });
+                html += `</div>`;
+
+                this.container.innerHTML = html;
+            }
+
+            openManualFillModal() {
+                const catSelect = document.getElementById('manual-category');
+                catSelect.innerHTML = '';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    catSelect.appendChild(opt);
+                });
+
+                document.getElementById('modal-manual-fill').classList.add('open');
+            }
+
+            saveManualFill() {
+                const taskName = document.getElementById('manual-task-name').value.trim();
+                const categoryId = document.getElementById('manual-category').value;
+                const timeFrom = document.getElementById('manual-time-from').value;
+                const timeTo = document.getElementById('manual-time-to').value;
+
+                if (!taskName || !timeFrom || !timeTo) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                if (timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                    alert('End time must be after start time');
+                    return;
+                }
+
+                this.db.fillTimesheetBlock(this.selectedDate, timeFrom, timeTo, 'manual-' + Date.now(), categoryId, taskName);
+                this.closeModals();
+                this.render();
+            }
+
+            renderAnalytics() {
+                let html = `
+                    <div class="dashboard-header">
+                        <h2>Analytics</h2>
+                    </div>
+                    
+                    <div class="period-selector">
+                        <button class="period-btn ${this.selectedPeriod === 'week' ? 'active' : ''}" onclick="app.setPeriod('week')">Week</button>
+                        <button class="period-btn ${this.selectedPeriod === 'month' ? 'active' : ''}" onclick="app.setPeriod('month')">Month</button>
+                        <button class="period-btn ${this.selectedPeriod === 'year' ? 'active' : ''}" onclick="app.setPeriod('year')">Year</button>
+                    </div>`;
+
+                const endDate = new Date();
+                const startDate = new Date();
+                if (this.selectedPeriod === 'week') {
+                    startDate.setDate(endDate.getDate() - 7);
+                } else if (this.selectedPeriod === 'month') {
+                    startDate.setDate(endDate.getDate() - 30);
+                } else {
+                    startDate.setDate(endDate.getDate() - 365);
+                }
+
+                const startStr = startDate.toISOString().split('T')[0];
+                const endStr = endDate.toISOString().split('T')[0];
+
+                const taskStats = this.db.getTaskStatsForPeriod(startStr, endStr);
+                html += `
+                    <div class="analytics-card">
+                        <h3>Task Summary</h3>
+                        <div class="analytics-grid">
+                            <div class="analytics-item">
+                                <div class="analytics-label">Total Tasks</div>
+                                <div class="analytics-value">${taskStats.total}</div>
+                            </div>
+                            <div class="analytics-item">
+                                <div class="analytics-label">Completed</div>
+                                <div class="analytics-value" style="color: var(--success);">${taskStats.completed}</div>
+                            </div>
+                            <div class="analytics-item">
+                                <div class="analytics-label">On Time</div>
+                                <div class="analytics-value" style="color: var(--primary-color);">${taskStats.completedOnTime}</div>
+                            </div>
+                            <div class="analytics-item">
+                                <div class="analytics-label">Completed Late</div>
+                                <div class="analytics-value" style="color: var(--warning);">${taskStats.completedLate}</div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                const routineStats = this.db.getRoutineStatsForPeriod(startStr, endStr);
+                html += `
+                    <div class="analytics-card">
+                        <h3>Routine Tasks</h3>`;
+
+                if (Object.keys(routineStats).length === 0) {
+                    html += `<p class="text-secondary text-center mt-4">No routine tasks in this period</p>`;
+                } else {
+                    html += `<div style="margin-top: 15px;">`;
+                    Object.entries(routineStats).forEach(([category, stats]) => {
+                        const percentage = stats.assigned > 0 ? Math.round((stats.completed / stats.assigned) * 100) : 0;
+                        html += `
+                            <div style="margin-bottom: 20px;">
+                                <div class="flex justify-between mb-2">
+                                    <span class="font-bold">${category}</span>
+                                    <span class="text-secondary">${stats.completed}/${stats.assigned} days</span>
+                                </div>
+                                <div style="background: var(--surface-variant); height: 8px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: var(--primary-color); height: 100%; width: ${percentage}%;"></div>
+                                </div>
+                            </div>`;
+                    });
+                    html += `</div>`;
+                }
+                html += `</div>`;
+
+                const timeStats = this.db.getTimesheetStatsForPeriod(startStr, endStr);
+                html += `
+                    <h3 class="p-4">Time Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>`;
+
+                const categoryBreakdown = this.db.getCategoryBreakdownForPeriod(startStr, endStr);
+                html += `
+                    <h3 class="p-4">Category Breakdown (Hours)</h3>
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>`;
+
+                this.container.innerHTML = html;
+
+                setTimeout(() => {
+                    const ctxPie = document.getElementById('pieChart').getContext('2d');
+                    new Chart(ctxPie, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Productive', 'Non-Productive', 'Uncontrollable', 'Unassigned'],
+                            datasets: [{
+                                data: [
+                                    parseFloat(timeStats.productive),
+                                    parseFloat(timeStats.nonProductive),
+                                    parseFloat(timeStats.uncontrollable),
+                                    parseFloat(timeStats.unassigned)
+                                ],
+                                backgroundColor: ['#4ade80', '#f87171', '#facc15', '#3f3f46'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                    labels: { color: 'white', padding: 15 }
+                                }
+                            }
+                        }
+                    });
+
+                    const categories = Object.keys(categoryBreakdown);
+                    const hours = Object.values(categoryBreakdown);
+
+                    // Get colors based on category type
+                    const barColors = categories.map(catName => {
+                        const category = this.db.getCategories().find(c => c.name === catName);
+                        if (!category) return '#818cf8';
+                        if (category.type === 'productive') return '#4ade80';
+                        if (category.type === 'non-productive') return '#f87171';
+                        if (category.type === 'uncontrollable') return '#facc15';
+                        return '#818cf8';
+                    });
+
+                    const ctxBar = document.getElementById('barChart').getContext('2d');
+                    new Chart(ctxBar, {
+                        type: 'bar',
+                        data: {
+                            labels: categories,
+                            datasets: [{
+                                label: 'Hours',
+                                data: hours,
+                                backgroundColor: barColors,
+                                borderRadius: 5
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: { ticks: { color: 'white' } },
+                                y: { ticks: { color: 'white' }, beginAtZero: true }
+                            },
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                }, 100);
+            }
+
+            setPeriod(period) {
+                this.selectedPeriod = period;
+                this.render();
+            }
+
+            renderManage() {
+                const cats = this.db.getCategories();
+                let html = `
+                    <div class="dashboard-header">
+                        <h2>Manage</h2>
+                    </div>
+                    
+                    <!-- Pomodoro Timer -->
+                    <div class="analytics-card" style="margin: 15px 20px;">
+                        <h3>🍅 Pomodoro Timer</h3>
+                        <div id="pomodoro-display" style="text-align: center; margin: 30px 0;">
+                            <div style="font-size: 4rem; font-weight: bold; color: var(--primary-color); font-family: 'Space Mono', monospace;" id="timer-display">25:00</div>
+                            <div style="font-size: 1.2rem; color: var(--text-secondary); margin-top: 10px;" id="timer-status">Focus Time</div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                            <button class="task-btn" style="flex: 1; max-width: 120px; background: var(--success);" onclick="app.startPomodoro()" id="start-btn">
+                                <i class="fas fa-play"></i> Start
+                            </button>
+                            <button class="task-btn" style="flex: 1; max-width: 120px; background: var(--warning); display: none;" onclick="app.pausePomodoro()" id="pause-btn">
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button class="task-btn" style="flex: 1; max-width: 120px; background: var(--danger);" onclick="app.resetPomodoro()" id="reset-btn">
+                                <i class="fas fa-stop"></i> Reset
+                            </button>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label>Focus Time (minutes)</label>
+                            <input type="number" id="focus-time" value="25" min="1" max="60" style="width: 100%; padding: 10px; background: var(--surface-variant); border: 1px solid transparent; border-radius: 8px; color: var(--text-primary);">
+                        </div>
+                        <div class="form-group">
+                            <label>Rest Time (minutes)</label>
+                            <input type="number" id="rest-time" value="5" min="1" max="30" style="width: 100%; padding: 10px; background: var(--surface-variant); border: 1px solid transparent; border-radius: 8px; color: var(--text-primary);">
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-header" style="margin-top: 20px;">
+                        <h2>Categories</h2>
+                    </div>
+                    <div class="settings-list">`;
+
+                cats.forEach(c => {
+                    const dotColor = c.type === 'productive' ? '#4ade80' : c.type === 'non-productive' ? '#f87171' : '#facc15';
+                    html += `
+                        <div class="setting-item">
+                            <div>
+                                <span class="dot" style="background:${dotColor}"></span>
+                                <b>${c.name}</b>
+                            </div>
+                            <div class="text-sm text-secondary">${c.type}</div>
+                        </div>`;
+                });
+
+                html += `</div>`;
+                this.container.innerHTML = html;
+
+                // Initialize pomodoro settings
+                if (!this.pomodoroTimer) {
+                    this.pomodoroTimer = {
+                        interval: null,
+                        timeLeft: 25 * 60,
+                        isRunning: false,
+                        isFocusMode: true
+                    };
+                }
+            }
+
+            renderAccount() {
+                this.container.innerHTML = `
+                    <div class="dashboard-header"><h2>Account</h2></div>
+                    <div class="auth-form">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-user-circle" style="font-size: 4rem; color: var(--accent-primary)"></i>
+                        </div>
+                        <input type="email" id="email-input" placeholder="Email Address">
+                        <input type="password" id="password-input" placeholder="Password">
+                        <button class="btn-primary" onclick="app.handleAuth()">Sign In / Register</button>
+                        <p class="text-center text-sm text-secondary mt-4">
+                            ${this.db.currentUser ? 'Signed in as: ' + this.db.currentUser.email : 'Sign in to sync across devices'}
+                        </p>
+                        ${this.db.currentUser ? '<button class="btn-secondary" onclick="app.signOut()">Sign Out</button>' : ''}
+                    </div>`;
+            }
+
+            async handleAuth() {
+                if (!auth) {
+                    alert('Firebase not configured. Update firebaseConfig in the code.');
+                    return;
+                }
+
+                const email = document.getElementById('email-input').value;
+                const password = document.getElementById('password-input').value;
+
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    alert('Signed in successfully!');
+                    this.render();
+                } catch (error) {
+                    // Check for user-not-found OR invalid-credential (new Firebase behavior)
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                        try {
+                            // Try creating an account
+                            await auth.createUserWithEmailAndPassword(email, password);
+                            alert('Account created and signed in!');
+                            this.render();
+                        } catch (createError) {
+                            // If email exists, it means the original error was likely a wrong password
+                            if (createError.code === 'auth/email-already-in-use') {
+                                alert('Account exists but incorrect password. Please try again.');
+                            } else {
+                                alert('Error creating account: ' + createError.message);
+                            }
+                        }
+                    } else {
+                        alert('Error: ' + error.message);
+                    }
+                }
+            }
+
+            async signOut() {
+                if (auth) {
+                    await auth.signOut();
+                    this.db.currentUser = null;
+                    alert('Signed out successfully');
+                    this.render();
+                }
+            }
+
+            openAddTaskModal() {
+                const modal = document.getElementById('modal-add-task');
+                const catSelect = document.getElementById('inp-task-category');
+
+                catSelect.innerHTML = '';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    catSelect.appendChild(opt);
+                });
+
+                document.getElementById('inp-task-date').value = this.selectedDate;
+                document.getElementById('inp-task-name').value = '';
+                document.getElementById('inp-task-time-from').value = '';
+                document.getElementById('inp-task-time-to').value = '';
+                document.getElementById('inp-routine-time-from').value = '';
+                document.getElementById('inp-routine-time-to').value = '';
+                document.getElementById('inp-task-hero').checked = false;
+
+                this.selectedRoutineDays = [];
+                document.querySelectorAll('.day-chip').forEach(chip => chip.classList.remove('selected'));
+
+                modal.classList.add('open');
+            }
+
+            closeModals() {
+                document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+            }
+
+            setTaskType(type) {
+                this.addingTaskType = type;
+                document.getElementById('btn-type-adhoc').className = `task-type-btn ${type === 'adhoc' ? 'active' : ''}`;
+                document.getElementById('btn-type-routine').className = `task-type-btn ${type === 'routine' ? 'active' : ''}`;
+
+                if (type === 'routine') {
+                    document.getElementById('routine-options').classList.remove('hidden');
+                    document.getElementById('adhoc-options').classList.add('hidden');
+                } else {
+                    document.getElementById('routine-options').classList.add('hidden');
+                    document.getElementById('adhoc-options').classList.remove('hidden');
+                }
+            }
+
+            saveTask() {
+                const name = document.getElementById('inp-task-name').value.trim();
+                const catId = document.getElementById('inp-task-category').value;
+
+                if (!name) {
+                    alert('Task name is required');
+                    return;
+                }
+
+                const isHero = document.getElementById('inp-task-hero').checked;
+
+                if (this.addingTaskType === 'adhoc') {
+                    const date = document.getElementById('inp-task-date').value || this.selectedDate;
+                    const timeFrom = document.getElementById('inp-task-time-from').value;
+                    const timeTo = document.getElementById('inp-task-time-to').value;
+
+                    if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                        alert('End time must be after start time');
+                        return;
+                    }
+
+                    // If marking as hero, unmark all other tasks first
+                    if (isHero) {
+                        this.db.data.tasks.forEach(t => {
+                            if (t.isHero) {
+                                t.isHero = false;
+                            }
+                        });
+                    }
+
+                    this.db.addTask({
+                        name,
+                        categoryId: catId,
+                        date,
+                        timeFrom,
+                        timeTo,
+                        type: 'adhoc',
+                        isHero: isHero
+                    });
+                } else {
+                    const freq = document.getElementById('inp-routine-freq').value;
+                    const timeFrom = document.getElementById('inp-routine-time-from').value;
+                    const timeTo = document.getElementById('inp-routine-time-to').value;
+
+                    if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                        alert('End time must be after start time');
+                        return;
+                    }
+
+                    const routineData = {
+                        name,
+                        categoryId: catId,
+                        freq,
+                        timeFrom,
+                        timeTo
+                    };
+
+                    if (freq === 'custom') {
+                        if (this.selectedRoutineDays.length === 0) {
+                            alert('Please select at least one day for custom routine');
+                            return;
+                        }
+                        routineData.days = this.selectedRoutineDays;
+                    }
+
+                    this.db.addRoutine(routineData);
+                }
+
+                this.closeModals();
+                this.render();
+            }
+
+            saveCategory() {
+                const name = document.getElementById('inp-cat-name').value.trim();
+                const type = document.getElementById('inp-cat-type').value;
+
+                if (!name) {
+                    alert('Category name is required');
+                    return;
+                }
+
+                this.db.addCategory({ name, type });
+                document.getElementById('inp-cat-name').value = '';
+                this.closeModals();
+                this.render();
+            }
+
+            // Pomodoro Timer Methods
+            startPomodoro() {
+                if (!this.pomodoroTimer) {
+                    this.pomodoroTimer = {
+                        interval: null,
+                        timeLeft: 25 * 60,
+                        isRunning: false,
+                        isFocusMode: true
+                    };
+                }
+
+                if (!this.pomodoroTimer.isRunning) {
+                    this.pomodoroTimer.isRunning = true;
+
+                    // Update buttons
+                    document.getElementById('start-btn').style.display = 'none';
+                    document.getElementById('pause-btn').style.display = 'block';
+
+                    this.pomodoroTimer.interval = setInterval(() => {
+                        this.pomodoroTimer.timeLeft--;
+                        this.updateTimerDisplay();
+
+                        if (this.pomodoroTimer.timeLeft <= 0) {
+                            this.pomodoroTimerComplete();
+                        }
+                    }, 1000);
+                }
+            }
+
+            pausePomodoro() {
+                if (this.pomodoroTimer && this.pomodoroTimer.isRunning) {
+                    this.pomodoroTimer.isRunning = false;
+                    clearInterval(this.pomodoroTimer.interval);
+
+                    // Update buttons
+                    document.getElementById('start-btn').style.display = 'block';
+                    document.getElementById('pause-btn').style.display = 'none';
+                }
+            }
+
+            resetPomodoro() {
+                if (this.pomodoroTimer) {
+                    clearInterval(this.pomodoroTimer.interval);
+                    this.pomodoroTimer.isRunning = false;
+                    this.pomodoroTimer.isFocusMode = true;
+
+                    const focusTime = parseInt(document.getElementById('focus-time')?.value || 25);
+                    this.pomodoroTimer.timeLeft = focusTime * 60;
+
+                    // Update buttons
+                    document.getElementById('start-btn').style.display = 'block';
+                    document.getElementById('pause-btn').style.display = 'none';
+
+                    this.updateTimerDisplay();
+                }
+            }
+
+            updateTimerDisplay() {
+                const minutes = Math.floor(this.pomodoroTimer.timeLeft / 60);
+                const seconds = this.pomodoroTimer.timeLeft % 60;
+                const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                const timerDisplay = document.getElementById('timer-display');
+                const timerStatus = document.getElementById('timer-status');
+
+                if (timerDisplay) {
+                    timerDisplay.textContent = display;
+                    timerDisplay.style.color = this.pomodoroTimer.isFocusMode ? 'var(--primary-color)' : 'var(--success)';
+                }
+
+                if (timerStatus) {
+                    timerStatus.textContent = this.pomodoroTimer.isFocusMode ? 'Focus Time' : 'Rest Time';
+                }
+            }
+
+            pomodoroTimerComplete() {
+                clearInterval(this.pomodoroTimer.interval);
+                this.pomodoroTimer.isRunning = false;
+
+                // Play notification sound (browser beep)
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE');
+                audio.play().catch(() => { }); // Ignore errors if audio doesn't play
+
+                // Switch modes
+                if (this.pomodoroTimer.isFocusMode) {
+                    // Switch to rest
+                    const restTime = parseInt(document.getElementById('rest-time')?.value || 5);
+                    this.pomodoroTimer.timeLeft = restTime * 60;
+                    this.pomodoroTimer.isFocusMode = false;
+                    alert('Focus session complete! Time for a break.');
+                } else {
+                    // Switch to focus
+                    const focusTime = parseInt(document.getElementById('focus-time')?.value || 25);
+                    this.pomodoroTimer.timeLeft = focusTime * 60;
+                    this.pomodoroTimer.isFocusMode = true;
+                    alert('Break complete! Ready for another focus session?');
+                }
+
+                // Update display
+                this.updateTimerDisplay();
+
+                // Update buttons
+                document.getElementById('start-btn').style.display = 'block';
+                document.getElementById('pause-btn').style.display = 'none';
+            }
+        }
+
+        const app = new App();
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('ServiceWorker registered:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+
+        // Install PWA prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWA install prompt ready');
+        });
+    </script>
+</body>
+
+</html>
