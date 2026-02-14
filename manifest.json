@@ -2,8 +2,8 @@
   "name": "Productivity Planner",
   "short_name": "Planner",
   "description": "Premium productivity and time management app",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/todoapp/",
+  "scope": "/todoapp/",
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#8b7ef8",
@@ -26,4 +26,5 @@
   "categories": ["productivity", "lifestyle"],
   "screenshots": []
 }
+
 
