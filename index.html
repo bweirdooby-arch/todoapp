@@ -1544,13 +1544,21 @@
                 <div class="form-group">
                     <label>Time Block</label>
                     <div class="time-row">
-                        <div>
+                        <div style="flex: 1; padding-right: 5px;">
                             <label class="text-xs text-secondary">From</label>
-                            <select id="inp-task-time-from"></select>
+                            <div class="time-input-group" id="inp-task-time-from-group">
+                                <select id="inp-task-time-from-h"></select>
+                                <select id="inp-task-time-from-m"></select>
+                                <select id="inp-task-time-from-p"></select>
+                            </div>
                         </div>
-                        <div>
+                        <div style="flex: 1; padding-left: 5px;">
                             <label class="text-xs text-secondary">To</label>
-                            <select id="inp-task-time-to"></select>
+                            <div class="time-input-group" id="inp-task-time-to-group">
+                                <select id="inp-task-time-to-h"></select>
+                                <select id="inp-task-time-to-m"></select>
+                                <select id="inp-task-time-to-p"></select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1577,16 +1585,34 @@
                         <div class="day-chip" data-day="6">Sat</div>
                     </div>
                 </div>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <div style="flex: 1;">
+                        <label>Start Date</label>
+                        <input type="date" id="inp-routine-start-date">
+                    </div>
+                    <div style="flex: 1;">
+                        <label>End Date (Optional)</label>
+                        <input type="date" id="inp-routine-end-date">
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label>Time Block</label>
+                    <label>Routine Time</label>
                     <div class="time-row">
-                        <div>
+                        <div style="flex: 1; padding-right: 5px;">
                             <label class="text-xs text-secondary">From</label>
-                            <select id="inp-routine-time-from"></select>
+                            <div class="time-input-group" id="inp-routine-time-from-group">
+                                <select id="inp-routine-time-from-h"></select>
+                                <select id="inp-routine-time-from-m"></select>
+                                <select id="inp-routine-time-from-p"></select>
+                            </div>
                         </div>
-                        <div>
+                        <div style="flex: 1; padding-left: 5px;">
                             <label class="text-xs text-secondary">To</label>
-                            <select id="inp-routine-time-to"></select>
+                            <div class="time-input-group" id="inp-routine-time-to-group">
+                                <select id="inp-routine-time-to-h"></select>
+                                <select id="inp-routine-time-to-m"></select>
+                                <select id="inp-routine-time-to-p"></select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1622,6 +1648,14 @@
                 <select id="edit-task-category"></select>
             </div>
 
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="edit-task-hero" style="width: auto; margin: 0;">
+                <label for="edit-task-hero" style="margin: 0; cursor: pointer;">
+                    <i class="fas fa-star" style="color: var(--accent-primary); margin-right: 5px;"></i>
+                    Mark as Hero Task
+                </label>
+            </div>
+
             <button class="btn-primary" onclick="app.saveEditTask()">Save Changes</button>
         </div>
     </div>
@@ -1642,15 +1676,31 @@
             <div class="form-group">
                 <label>Time Block</label>
                 <div class="time-row">
-                    <div>
+                    <div style="flex: 1; padding-right: 5px;">
                         <label class="text-xs text-secondary">From</label>
-                        <select id="reschedule-time-from"></select>
+                        <div class="time-input-group" id="reschedule-time-from-group">
+                            <select id="reschedule-time-from-h"></select>
+                            <select id="reschedule-time-from-m"></select>
+                            <select id="reschedule-time-from-p"></select>
+                        </div>
                     </div>
-                    <div>
+                    <div style="flex: 1; padding-left: 5px;">
                         <label class="text-xs text-secondary">To</label>
-                        <select id="reschedule-time-to"></select>
+                        <div class="time-input-group" id="reschedule-time-to-group">
+                            <select id="reschedule-time-to-h"></select>
+                            <select id="reschedule-time-to-m"></select>
+                            <select id="reschedule-time-to-p"></select>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="reschedule-task-hero" style="width: auto; margin: 0;">
+                <label for="reschedule-task-hero" style="margin: 0; cursor: pointer;">
+                    <i class="fas fa-star" style="color: var(--accent-primary); margin-right: 5px;"></i>
+                    Mark as Hero Task
+                </label>
             </div>
 
             <button class="btn-primary" onclick="app.saveReschedule()">Reschedule</button>
@@ -1675,13 +1725,21 @@
             <div class="form-group">
                 <label>Time Block</label>
                 <div class="time-row">
-                    <div>
+                    <div style="flex: 1; padding-right: 5px;">
                         <label class="text-xs text-secondary">From</label>
-                        <select id="fill-time-from"></select>
+                        <div class="time-input-group" id="fill-time-from-group">
+                            <select id="fill-time-from-h"></select>
+                            <select id="fill-time-from-m"></select>
+                            <select id="fill-time-from-p"></select>
+                        </div>
                     </div>
-                    <div>
+                    <div style="flex: 1; padding-left: 5px;">
                         <label class="text-xs text-secondary">To</label>
-                        <select id="fill-time-to"></select>
+                        <div class="time-input-group" id="fill-time-to-group">
+                            <select id="fill-time-to-h"></select>
+                            <select id="fill-time-to-m"></select>
+                            <select id="fill-time-to-p"></select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1716,6 +1774,75 @@
         </div>
     </div>
 
+    <!-- Edit Routine Modal -->
+    <div id="modal-edit-routine" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Routine</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>Routine Name</label>
+                <input type="text" id="edit-routine-name">
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select id="edit-routine-category"></select>
+            </div>
+
+            <div class="form-group" style="display: flex; gap: 10px;">
+                <div style="flex: 1;">
+                    <label>Start Date</label>
+                    <input type="date" id="edit-routine-start-date">
+                </div>
+                <div style="flex: 1;">
+                    <label>End Date</label>
+                    <input type="date" id="edit-routine-end-date">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Pause Routine (Vacation Mode)</label>
+                <div style="display: flex; gap: 10px; align-items: flex-end;">
+                    <button class="task-btn" onclick="app.pauseRoutine(3)" title="Pause for 3 days">3 Days</button>
+                    <button class="task-btn" onclick="app.pauseRoutine(7)" title="Pause for 1 week">1 Week</button>
+                    <div style="flex: 1;">
+                        <input type="date" id="edit-routine-pause-date" placeholder="Pause specific date">
+                    </div>
+                    <button class="task-btn" onclick="app.addPauseException()"><i class="fas fa-plus"></i></button>
+                </div>
+                <p class="text-xs text-secondary mt-2">Pausing hides the routine for these days without ending it.</p>
+                <div id="pause-list" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px;"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Time Block</label>
+                <div class="time-row">
+                    <div style="flex: 1; padding-right: 5px;">
+                        <label class="text-xs text-secondary">From</label>
+                        <div class="time-input-group" id="edit-routine-time-from-group">
+                            <select id="edit-routine-time-from-h"></select>
+                            <select id="edit-routine-time-from-m"></select>
+                            <select id="edit-routine-time-from-p"></select>
+                        </div>
+                    </div>
+                    <div style="flex: 1; padding-left: 5px;">
+                        <label class="text-xs text-secondary">To</label>
+                        <div class="time-input-group" id="edit-routine-time-to-group">
+                            <select id="edit-routine-time-to-h"></select>
+                            <select id="edit-routine-time-to-m"></select>
+                            <select id="edit-routine-time-to-p"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="app.saveEditRoutine()">Save Changes</button>
+        </div>
+    </div>
+
     <!-- Manual Timesheet Fill Modal -->
     <div id="modal-manual-fill" class="modal">
         <div class="modal-content">
@@ -1737,13 +1864,21 @@
             <div class="form-group">
                 <label>Time Block</label>
                 <div class="time-row">
-                    <div>
+                    <div style="flex: 1; padding-right: 5px;">
                         <label class="text-xs text-secondary">From</label>
-                        <select id="manual-time-from"></select>
+                        <div class="time-input-group" id="manual-time-from-group">
+                            <select id="manual-time-from-h"></select>
+                            <select id="manual-time-from-m"></select>
+                            <select id="manual-time-from-p"></select>
+                        </div>
                     </div>
-                    <div>
+                    <div style="flex: 1; padding-left: 5px;">
                         <label class="text-xs text-secondary">To</label>
-                        <select id="manual-time-to"></select>
+                        <div class="time-input-group" id="manual-time-to-group">
+                            <select id="manual-time-to-h"></select>
+                            <select id="manual-time-to-m"></select>
+                            <select id="manual-time-to-p"></select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1794,15 +1929,81 @@
             TIME_SLOTS.push(`${hour.toString().padStart(2, '0')}:30`);
         }
 
-        function populateTimeSelect(selectId) {
-            const select = document.getElementById(selectId);
-            select.innerHTML = '<option value="">Select time</option>';
-            TIME_SLOTS.forEach(time => {
-                const option = document.createElement('option');
-                option.value = time;
-                option.textContent = time;
-                select.appendChild(option);
+        const HOURS_12 = Array.from({ length: 12 }, (_, i) => i + 1); // 1-12
+        const MINUTES_30 = ['00', '30'];
+        const PERIODS = ['AM', 'PM'];
+
+        function populateSplitTimeSelects(baseId) {
+            const hSelect = document.getElementById(baseId + '-h');
+            const mSelect = document.getElementById(baseId + '-m');
+            const pSelect = document.getElementById(baseId + '-p');
+
+            if (!hSelect || !mSelect || !pSelect) return;
+
+            // Clear
+            hSelect.innerHTML = '';
+            mSelect.innerHTML = '';
+            pSelect.innerHTML = '';
+
+            // Populate Hours
+            HOURS_12.forEach(h => {
+                const opt = document.createElement('option');
+                opt.value = h;
+                opt.textContent = h;
+                hSelect.appendChild(opt);
             });
+
+            // Populate Minutes
+            MINUTES_30.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                mSelect.appendChild(opt);
+            });
+
+            // Populate Periods
+            PERIODS.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.textContent = p;
+                pSelect.appendChild(opt);
+            });
+        }
+
+        function getTimeInputValue(baseId) {
+            const h = document.getElementById(baseId + '-h').value;
+            const m = document.getElementById(baseId + '-m').value;
+            const p = document.getElementById(baseId + '-p').value;
+
+            if (!h || !m || !p) return '';
+
+            let hour = parseInt(h);
+            if (p === 'PM' && hour !== 12) hour += 12;
+            if (p === 'AM' && hour === 12) hour = 0;
+
+            return `${hour.toString().padStart(2, '0')}:${m}`;
+        }
+
+        function setTimeInputValue(baseId, time24) {
+            if (!time24) {
+                // Default to empty or some sane default? 
+                // Let's just reset to first options
+                document.getElementById(baseId + '-h').value = '1';
+                document.getElementById(baseId + '-m').value = '00';
+                document.getElementById(baseId + '-p').value = 'AM';
+                return;
+            }
+
+            const [hStr, mStr] = time24.split(':');
+            let hour = parseInt(hStr);
+            const period = hour >= 12 ? 'PM' : 'AM';
+
+            if (hour > 12) hour -= 12;
+            if (hour === 0) hour = 12;
+
+            document.getElementById(baseId + '-h').value = hour;
+            document.getElementById(baseId + '-m').value = mStr;
+            document.getElementById(baseId + '-p').value = period;
         }
 
         function timeToMinutes(time) {
@@ -1815,6 +2016,14 @@
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
             return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+        }
+
+        function formatTime12Hour(time) {
+            if (!time) return '';
+            const [hours, minutes] = time.split(':').map(Number);
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const hours12 = hours % 12 || 12;
+            return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
 
         // Database Manager
@@ -1862,7 +2071,9 @@
             async saveToFirebase() {
                 if (!this.currentUser || !db) return;
                 try {
-                    await db.collection('users').doc(this.currentUser.uid).set(this.data);
+                    // Sanitize data to remove undefined values which Firebase rejects
+                    const cleanData = JSON.parse(JSON.stringify(this.data));
+                    await db.collection('users').doc(this.currentUser.uid).set(cleanData);
                     console.log('Saved to Firebase successfully');
                 } catch (error) {
                     console.error('Firebase save error:', error);
@@ -1925,6 +2136,15 @@
 
                 return this.data.routines
                     .filter(routine => {
+                        // Check Start Date
+                        if (routine.startDate && date < routine.startDate) return false;
+
+                        // Check End Date
+                        if (routine.endDate && date > routine.endDate) return false;
+
+                        // Check Exceptions
+                        if (routine.exceptions && routine.exceptions.includes(date)) return false;
+
                         if (routine.freq === 'daily') return true;
                         if (routine.freq === 'weekly') return dayOfWeek === 1;
                         if (routine.freq === 'custom' && routine.days) {
@@ -2016,9 +2236,30 @@
 
             addRoutine(routine) {
                 routine.id = Date.now().toString();
+                // Ensure array for exceptions
+                routine.exceptions = [];
                 this.data.routines.push(routine);
                 this.saveLocalData();
                 this.saveToFirebase();
+            }
+
+            updateRoutine(id, updates) {
+                const routine = this.data.routines.find(r => r.id === id);
+                if (routine) {
+                    Object.assign(routine, updates);
+                    this.saveLocalData();
+                    this.saveToFirebase();
+                }
+            }
+
+            skipRoutineInstance(routineId, date) {
+                const routine = this.data.routines.find(r => r.id === routineId);
+                if (routine) {
+                    if (!routine.exceptions) routine.exceptions = [];
+                    routine.exceptions.push(date);
+                    this.saveLocalData();
+                    this.saveToFirebase();
+                }
             }
 
             getTimesheet(date) {
@@ -2215,16 +2456,18 @@
             }
 
             populateAllTimeSelects() {
-                populateTimeSelect('inp-task-time-from');
-                populateTimeSelect('inp-task-time-to');
-                populateTimeSelect('inp-routine-time-from');
-                populateTimeSelect('inp-routine-time-to');
-                populateTimeSelect('reschedule-time-from');
-                populateTimeSelect('reschedule-time-to');
-                populateTimeSelect('fill-time-from');
-                populateTimeSelect('fill-time-to');
-                populateTimeSelect('manual-time-from');
-                populateTimeSelect('manual-time-to');
+                populateSplitTimeSelects('inp-task-time-from');
+                populateSplitTimeSelects('inp-task-time-to');
+                populateSplitTimeSelects('inp-routine-time-from');
+                populateSplitTimeSelects('inp-routine-time-to');
+                populateSplitTimeSelects('reschedule-time-from');
+                populateSplitTimeSelects('reschedule-time-to');
+                populateSplitTimeSelects('fill-time-from');
+                populateSplitTimeSelects('fill-time-to');
+                populateSplitTimeSelects('manual-time-from');
+                populateSplitTimeSelects('manual-time-to');
+                populateSplitTimeSelects('edit-routine-time-from');
+                populateSplitTimeSelects('edit-routine-time-to');
             }
 
             initEventListeners() {
@@ -2404,7 +2647,7 @@
                             <div class="text-sm" style="opacity: 0.9;">⏰ Current Task</div>
                             <div class="font-bold" style="font-size: 1.2rem; margin-top: 5px;">${currentTask.name}</div>
                             <div class="text-sm mt-2" style="opacity: 0.8;">
-                                <i class="fas fa-clock"></i> ${currentTask.timeFrom} - ${currentTask.timeTo}
+                                <i class="fas fa-clock"></i> ${formatTime12Hour(currentTask.timeFrom)} - ${formatTime12Hour(currentTask.timeTo)}
                                 ${category ? ' • ' + category.name : ''}
                             </div>
                         </div>`;
@@ -2417,7 +2660,7 @@
                             <div class="text-sm" style="opacity: 0.9;">📅 Next Up</div>
                             <div class="font-bold" style="margin-top: 5px;">${nextTask.name}</div>
                             <div class="text-xs mt-2" style="opacity: 0.8;">
-                                <i class="fas fa-clock"></i> ${nextTask.timeFrom} - ${nextTask.timeTo}
+                                <i class="fas fa-clock"></i> ${formatTime12Hour(nextTask.timeFrom)} - ${formatTime12Hour(nextTask.timeTo)}
                                 ${category ? ' • ' + category.name : ''}
                             </div>
                         </div>`;
@@ -2445,7 +2688,7 @@
                                     <div class="task-info">
                                         <div class="task-title">${task.name}</div>
                                         <div class="task-time">
-                                            ${task.timeFrom ? `<i class="fas fa-clock"></i> ${task.timeFrom} - ${task.timeTo}` : 'No time set'}
+                                            ${task.timeFrom ? `<i class="fas fa-clock"></i> ${formatTime12Hour(task.timeFrom)} - ${formatTime12Hour(task.timeTo)}` : 'No time set'}
                                             ${category ? ' • ' + category.name : ''}
                                             ${task.isRoutine ? ' <i class="fas fa-repeat"></i>' : ''}
                                             ${task.movedFrom ? ' <i class="fas fa-arrow-right"></i> Moved' : ''}
@@ -2478,8 +2721,14 @@
                                         </button>
                                     ` : ''}
                                     ${task.isRoutine && task.status !== 'done' ? `
+                                        <button class="task-btn" title="Reschedule" onclick="app.openRescheduleModal('${task.id}')">
+                                            <i class="fas fa-calendar"></i>
+                                        </button>
                                         <button class="task-btn not-doable-btn" title="Not Doable" onclick="app.markNotDoable('${task.id}')">
                                             <i class="fas fa-ban"></i>
+                                        </button>
+                                        <button class="task-btn delete-btn" title="Skip Occurrence" onclick="app.deleteTask('${task.id}')">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     ` : ''}
                                 </div>
@@ -2528,8 +2777,8 @@
                     this.fillingTimeTaskId = id;
                     document.getElementById('fill-time-date').value = this.selectedDate;
                     // Pre-fill with task's original time if available
-                    document.getElementById('fill-time-from').value = taskTimeFrom;
-                    document.getElementById('fill-time-to').value = taskTimeTo;
+                    setTimeInputValue('fill-time-from', taskTimeFrom);
+                    setTimeInputValue('fill-time-to', taskTimeTo);
                     document.getElementById('modal-fill-time').classList.add('open');
                 } else {
                     this.db.updateTask(id, { status: 'done' });
@@ -2539,8 +2788,8 @@
 
             completeTaskWithTime() {
                 const date = document.getElementById('fill-time-date').value;
-                const timeFrom = document.getElementById('fill-time-from').value;
-                const timeTo = document.getElementById('fill-time-to').value;
+                const timeFrom = getTimeInputValue('fill-time-from');
+                const timeTo = getTimeInputValue('fill-time-to');
 
                 if (!date || !timeFrom || !timeTo) {
                     alert('Please fill all fields');
@@ -2619,6 +2868,7 @@
 
                 this.editingTaskId = id;
                 document.getElementById('edit-task-name').value = task.name;
+                document.getElementById('edit-task-hero').checked = task.isHero || false;
 
                 const catSelect = document.getElementById('edit-task-category');
                 catSelect.innerHTML = '';
@@ -2636,33 +2886,62 @@
             saveEditTask() {
                 const name = document.getElementById('edit-task-name').value.trim();
                 const categoryId = document.getElementById('edit-task-category').value;
+                const isHero = document.getElementById('edit-task-hero').checked;
 
                 if (!name) {
                     alert('Task name is required');
                     return;
                 }
 
-                this.db.updateTask(this.editingTaskId, { name, categoryId });
+                if (isHero) {
+                    this.db.data.tasks.forEach(t => {
+                        if (t.isHero && t.id !== this.editingTaskId) {
+                            t.isHero = false;
+                        }
+                    });
+                }
+
+                this.db.updateTask(this.editingTaskId, { name, categoryId, isHero });
                 this.closeModals();
                 this.render();
             }
 
             openRescheduleModal(id) {
-                const task = this.db.data.tasks.find(t => t.id === id);
-                if (!task) return;
+                let task = this.db.data.tasks.find(t => t.id === id);
+                let date, timeFrom, timeTo;
+
+                if (id.startsWith('routine-')) {
+                    const parts = id.split('-');
+                    const routineId = parts[1];
+                    date = parts.slice(2).join('-'); // Routine instance date
+                    const routine = this.db.data.routines.find(r => r.id === routineId);
+                    if (routine) {
+                        timeFrom = routine.timeFrom;
+                        timeTo = routine.timeTo;
+                    }
+                } else if (task) {
+                    date = task.date;
+                    timeFrom = task.timeFrom;
+                    timeTo = task.timeTo;
+                } else {
+                    return;
+                }
 
                 this.reschedulingTaskId = id;
-                document.getElementById('reschedule-date').value = task.date || this.selectedDate;
-                document.getElementById('reschedule-time-from').value = task.timeFrom || '';
-                document.getElementById('reschedule-time-to').value = task.timeTo || '';
+                document.getElementById('reschedule-date').value = date || this.selectedDate;
+                setTimeInputValue('reschedule-time-from', timeFrom || '');
+                setTimeInputValue('reschedule-time-to', timeTo || '');
+                // For existing tasks, use their hero status. For routines, default to false.
+                document.getElementById('reschedule-task-hero').checked = task ? (task.isHero || false) : false;
 
                 document.getElementById('modal-reschedule').classList.add('open');
             }
 
             saveReschedule() {
                 const date = document.getElementById('reschedule-date').value;
-                const timeFrom = document.getElementById('reschedule-time-from').value;
-                const timeTo = document.getElementById('reschedule-time-to').value;
+                const timeFrom = getTimeInputValue('reschedule-time-from');
+                const timeTo = getTimeInputValue('reschedule-time-to');
+                const isHero = document.getElementById('reschedule-task-hero').checked;
 
                 if (!date) {
                     alert('Date is required');
@@ -2674,15 +2953,55 @@
                     return;
                 }
 
-                this.db.updateTask(this.reschedulingTaskId, { date, timeFrom, timeTo });
+                if (isHero) {
+                    this.db.data.tasks.forEach(t => {
+                        if (t.isHero && t.id !== this.reschedulingTaskId) {
+                            t.isHero = false;
+                        }
+                    });
+                }
+
+                if (this.reschedulingTaskId.startsWith('routine-')) {
+                    const parts = this.reschedulingTaskId.split('-');
+                    const routineId = parts[1];
+                    const originalDate = parts.slice(2).join('-');
+                    const routine = this.db.data.routines.find(r => r.id === routineId);
+
+                    // Skip the original instance
+                    this.db.skipRoutineInstance(routineId, originalDate);
+
+                    // Create new task for new date
+                    this.db.addTask({
+                        name: routine.name,
+                        categoryId: routine.categoryId,
+                        date: date,
+                        timeFrom: timeFrom,
+                        timeTo: timeTo,
+                        type: 'adhoc',
+                        isHero: isHero
+                    });
+                } else {
+                    this.db.updateTask(this.reschedulingTaskId, { date, timeFrom, timeTo, isHero });
+                }
+
                 this.closeModals();
                 this.render();
             }
 
             deleteTask(id) {
-                if (confirm('Delete this task?')) {
-                    this.db.deleteTask(id);
-                    this.render();
+                if (id.startsWith('routine-')) {
+                    if (confirm('Skip this occurrence of the routine?')) {
+                        const parts = id.split('-');
+                        const routineId = parts[1];
+                        const date = parts.slice(2).join('-');
+                        this.db.skipRoutineInstance(routineId, date);
+                        this.render();
+                    }
+                } else {
+                    if (confirm('Delete this task?')) {
+                        this.db.deleteTask(id);
+                        this.render();
+                    }
                 }
             }
 
@@ -2871,7 +3190,7 @@
 
                     html += `
                         <div class="time-slot">
-                            <div class="time-label">${slot}</div>
+                            <div class="time-label">${formatTime12Hour(slot)}</div>
                             <div class="time-block ${blockClass}">
                                 ${blockText}
                             </div>
@@ -3118,9 +3437,52 @@
                         </div>
                     </div>
                     
-                    <div class="dashboard-header" style="margin-top: 20px;">
-                        <h2>Categories</h2>
-                    </div>
+                </div>
+
+                <div class="dashboard-header" style="margin-top: 20px;">
+                    <h2>My Routines</h2>
+                </div>
+                <div class="settings-list">
+                    ${this.db.data.routines.map(r => {
+                    const freqText = r.freq === 'daily' ? 'Daily' :
+                        r.freq === 'weekly' ? 'Weekly (Mon)' :
+                            'Custom Days';
+                    const timeText = r.timeFrom ? `${formatTime12Hour(r.timeFrom)} - ${formatTime12Hour(r.timeTo)}` : 'No time set';
+                    const category = this.db.getCategoryById(r.categoryId);
+                    const categoryName = category ? category.name : 'Unknown';
+
+                    return `
+                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
+                            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 8px;">
+                                <div>
+                                    <b>${r.name}</b>
+                                    <div class="text-xs text-secondary">${categoryName} • ${freqText}</div>
+                                </div>
+                                <button class="task-btn" onclick="app.openEditRoutineModal('${r.id}')" title="Edit Routine">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                                <div class="text-xs text-secondary">
+                                    <i class="fas fa-clock"></i> ${timeText}<br>
+                                    ${r.startDate ? `Start: ${r.startDate}` : ''}
+                                    ${r.endDate ? `<br>End: ${r.endDate}` : ''}
+                                </div>
+                                ${!r.endDate || new Date(r.endDate) >= new Date() ?
+                            `<button class="task-btn delete-btn" style="width: auto; padding: 0 10px; font-size: 12px; height: 30px;" onclick="app.endRoutineNow('${r.id}')">
+                                        End Now
+                                    </button>` :
+                            '<span class="text-xs text-secondary">Ended</span>'
+                        }
+                            </div>
+                        </div>`;
+                }).join('')}
+                    ${this.db.data.routines.length === 0 ? '<div class="text-center text-secondary p-4">No routines created yet.</div>' : ''}
+                </div>
+                
+                <div class="dashboard-header" style="margin-top: 20px;">
+                    <h2>Categories</h2>
+                </div>
                     <div class="settings-list">`;
 
                 cats.forEach(c => {
@@ -3224,10 +3586,12 @@
 
                 document.getElementById('inp-task-date').value = this.selectedDate;
                 document.getElementById('inp-task-name').value = '';
-                document.getElementById('inp-task-time-from').value = '';
-                document.getElementById('inp-task-time-to').value = '';
-                document.getElementById('inp-routine-time-from').value = '';
-                document.getElementById('inp-routine-time-to').value = '';
+                setTimeInputValue('inp-task-time-from', '');
+                setTimeInputValue('inp-task-time-to', '');
+                setTimeInputValue('inp-routine-time-from', '');
+                setTimeInputValue('inp-routine-time-to', '');
+                document.getElementById('inp-routine-start-date').value = this.selectedDate;
+                document.getElementById('inp-routine-end-date').value = '';
                 document.getElementById('inp-task-hero').checked = false;
 
                 this.selectedRoutineDays = [];
@@ -3267,8 +3631,8 @@
 
                 if (this.addingTaskType === 'adhoc') {
                     const date = document.getElementById('inp-task-date').value || this.selectedDate;
-                    const timeFrom = document.getElementById('inp-task-time-from').value;
-                    const timeTo = document.getElementById('inp-task-time-to').value;
+                    const timeFrom = getTimeInputValue('inp-task-time-from');
+                    const timeTo = getTimeInputValue('inp-task-time-to');
 
                     if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
                         alert('End time must be after start time');
@@ -3295,11 +3659,18 @@
                     });
                 } else {
                     const freq = document.getElementById('inp-routine-freq').value;
-                    const timeFrom = document.getElementById('inp-routine-time-from').value;
-                    const timeTo = document.getElementById('inp-routine-time-to').value;
+                    const timeFrom = getTimeInputValue('inp-routine-time-from');
+                    const timeTo = getTimeInputValue('inp-routine-time-to');
+                    const startDate = document.getElementById('inp-routine-start-date').value || this.selectedDate;
+                    const endDate = document.getElementById('inp-routine-end-date').value;
 
                     if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
                         alert('End time must be after start time');
+                        return;
+                    }
+
+                    if (endDate && startDate > endDate) {
+                        alert('End date cannot be before start date');
                         return;
                     }
 
@@ -3308,7 +3679,9 @@
                         categoryId: catId,
                         freq,
                         timeFrom,
-                        timeTo
+                        timeTo,
+                        startDate,
+                        endDate
                     };
 
                     if (freq === 'custom') {
@@ -3445,6 +3818,207 @@
                 // Update buttons
                 document.getElementById('start-btn').style.display = 'block';
                 document.getElementById('pause-btn').style.display = 'none';
+            }
+
+            endRoutineNow(id) {
+                if (confirm('Are you sure you want to end this routine? It will still be active for today, but will stop tomorrow.')) {
+                    const today = new Date().toISOString().split('T')[0];
+                    this.db.updateRoutine(id, { endDate: today });
+                    this.render();
+                }
+            }
+
+            openEditRoutineModal(id) {
+                const routine = this.db.data.routines.find(r => r.id === id);
+                if (!routine) return;
+
+                this.editingRoutineId = id;
+                document.getElementById('edit-routine-name').value = routine.name;
+                document.getElementById('edit-routine-start-date').value = routine.startDate || '';
+                document.getElementById('edit-routine-end-date').value = routine.endDate || '';
+                setTimeInputValue('edit-routine-time-from', routine.timeFrom || '');
+                setTimeInputValue('edit-routine-time-to', routine.timeTo || '');
+
+                const catSelect = document.getElementById('edit-routine-category');
+                catSelect.innerHTML = '';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    opt.selected = c.id === routine.categoryId;
+                    catSelect.appendChild(opt);
+                });
+
+                this.renderEditRoutinePauseList();
+                document.getElementById('modal-edit-routine').classList.add('open');
+            }
+
+            saveEditRoutine() {
+                const name = document.getElementById('edit-routine-name').value.trim();
+                const categoryId = document.getElementById('edit-routine-category').value;
+                const startDate = document.getElementById('edit-routine-start-date').value;
+                const endDate = document.getElementById('edit-routine-end-date').value;
+                const timeFrom = getTimeInputValue('edit-routine-time-from');
+                const timeTo = getTimeInputValue('edit-routine-time-to');
+
+                if (!name) {
+                    alert('Routine name is required');
+                    return;
+                }
+
+                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                    alert('End time must be after start time');
+                    return;
+                }
+
+                if (endDate && startDate && startDate > endDate) {
+                    alert('End date cannot be before start date');
+                    return;
+                }
+
+                const existingRoutine = this.db.data.routines.find(r => r.id === this.editingRoutineId);
+                const scheduleChanged = existingRoutine &&
+                    (existingRoutine.timeFrom !== timeFrom || existingRoutine.timeTo !== timeTo);
+
+                if (scheduleChanged) {
+                    // 1. End old routine yesterday
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const oldEndDate = yesterday.toISOString().split('T')[0];
+
+                    // Update existing routine
+                    this.db.updateRoutine(this.editingRoutineId, { endDate: oldEndDate });
+
+                    // 2. Create new routine starting today
+                    let newStartDate = new Date().toISOString().split('T')[0];
+                    if (startDate > newStartDate) {
+                        newStartDate = startDate;
+                    }
+
+                    const newRoutine = {
+                        name,
+                        categoryId,
+                        freq: existingRoutine.freq, // Freq change not exposed in edit yet, but keep existing
+                        days: existingRoutine.days || [],
+                        timeFrom,
+                        timeTo,
+                        startDate: newStartDate,
+                        endDate: endDate,
+                        exceptions: []
+                    };
+
+                    this.db.addRoutine(newRoutine);
+                } else {
+                    // Update in place
+                    this.db.updateRoutine(this.editingRoutineId, {
+                        name,
+                        categoryId,
+                        startDate,
+                        endDate,
+                        timeFrom, // Even if same, pass it
+                        timeTo
+                    });
+                }
+
+                this.closeModals();
+                this.render();
+            }
+
+            pauseRoutine(days) {
+                if (!this.editingRoutineId) return;
+                const today = new Date();
+
+                for (let i = 0; i < days; i++) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() + i);
+                    const dateStr = date.toISOString().split('T')[0];
+                    this.db.skipRoutineInstance(this.editingRoutineId, dateStr);
+                }
+                this.renderEditRoutinePauseList();
+            }
+
+            addPauseException() {
+                const date = document.getElementById('edit-routine-pause-date').value;
+                if (date && this.editingRoutineId) {
+                    this.db.skipRoutineInstance(this.editingRoutineId, date);
+                    document.getElementById('edit-routine-pause-date').value = '';
+                    this.renderEditRoutinePauseList();
+                }
+            }
+
+            renderEditRoutinePauseList() {
+                const routine = this.db.data.routines.find(r => r.id === this.editingRoutineId);
+                const container = document.getElementById('pause-list');
+                if (!routine || !routine.exceptions || !container) return;
+
+                const today = new Date().toISOString().split('T')[0];
+                const futureExceptions = routine.exceptions.filter(d => d >= today).sort();
+
+                container.innerHTML = futureExceptions.map(date => `
+                    <div class="day-chip selected" style="font-size: 0.8rem; padding: 2px 8px;">
+                        ${date} <span style="cursor: pointer; margin-left: 5px;" onclick="app.removePauseException('${date}')">&times;</span>
+                    </div>
+                `).join('');
+            }
+
+            removePauseException(date) {
+                const routine = this.db.data.routines.find(r => r.id === this.editingRoutineId);
+                if (routine && routine.exceptions) {
+                    routine.exceptions = routine.exceptions.filter(d => d !== date);
+                    this.db.updateRoutine(this.editingRoutineId, { exceptions: routine.exceptions });
+                    this.renderEditRoutinePauseList();
+                }
+            }
+
+            openManualFillModal() {
+                document.getElementById('manual-task-name').value = '';
+
+                const catSelect = document.getElementById('manual-category');
+                catSelect.innerHTML = '';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    catSelect.appendChild(opt);
+                });
+
+                setTimeInputValue('manual-time-from', '');
+                setTimeInputValue('manual-time-to', '');
+
+                document.getElementById('modal-manual-fill').classList.add('open');
+            }
+
+            saveManualFill() {
+                const name = document.getElementById('manual-task-name').value.trim();
+                const categoryId = document.getElementById('manual-category').value;
+                const timeFrom = getTimeInputValue('manual-time-from');
+                const timeTo = getTimeInputValue('manual-time-to');
+
+                if (!name) {
+                    alert('Task name is required');
+                    return;
+                }
+
+                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                    alert('End time must be after start time');
+                    return;
+                }
+
+                if (!timeFrom || !timeTo) {
+                    alert('Both start and end time are required');
+                    return;
+                }
+
+                // Add to timesheet directly
+                // We don't have a task ID, so we might need to create a dummy task or just fill the slot with name
+                // The current data structure expects a taskId for timesheet entries usually, but let's see fillTimesheetBlock
+                // fillTimesheetBlock(date, timeFrom, timeTo, taskId, categoryId, taskName)
+
+                // We'll use a temporary ID or 'manual'
+                this.db.fillTimesheetBlock(this.selectedDate, timeFrom, timeTo, 'manual-' + Date.now(), categoryId, name);
+
+                this.closeModals();
+                this.render();
             }
         }
 
