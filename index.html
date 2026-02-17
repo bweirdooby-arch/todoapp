@@ -2212,9 +2212,17 @@
                 }
 
                 const startMinutes = timeToMinutes(timeFrom);
-                const endMinutes = timeToMinutes(timeTo);
+                let endMinutes = timeToMinutes(timeTo);
+
+                // Handle 12 AM (0 minutes) as end of day if it appears to be a wraparound or end of day
+                if (endMinutes === 0 && startMinutes > 0) {
+                    endMinutes = 24 * 60; // 1440 minutes
+                }
 
                 for (let minutes = startMinutes; minutes < endMinutes; minutes += 30) {
+                    // Safety check: if we somehow go beyond 24h, stop (though 1440 is fine for loop condition as < 1440)
+                    if (minutes >= 24 * 60) break;
+
                     const timeSlot = minutesToTime(minutes);
                     this.data.timesheet[date][timeSlot] = {
                         taskId,
@@ -2223,6 +2231,21 @@
                         timestamp: new Date().toISOString()
                     };
                 }
+
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            clearTimesheetEntries(date, taskId) {
+                if (!this.data.timesheet[date]) return;
+
+                Object.keys(this.data.timesheet[date]).forEach(slot => {
+                    const entry = this.data.timesheet[date][slot];
+                    // Force string comparison to handle any legacy number/string mismatches
+                    if (String(entry.taskId) === String(taskId)) {
+                        delete this.data.timesheet[date][slot];
+                    }
+                });
 
                 this.saveLocalData();
                 this.saveToFirebase();
@@ -2514,6 +2537,13 @@
                     });
                 });
 
+                // Auto-set End Time Listeners
+                this.autoSetEndTime('inp-task-time-from', 'inp-task-time-to');
+                this.autoSetEndTime('inp-routine-time-from', 'inp-routine-time-to');
+                this.autoSetEndTime('reschedule-time-from', 'reschedule-time-to');
+                this.autoSetEndTime('manual-time-from', 'manual-time-to');
+                this.autoSetEndTime('edit-routine-time-from', 'edit-routine-time-to');
+
                 if (auth) {
                     auth.onAuthStateChanged((user) => {
                         if (user) {
@@ -2523,6 +2553,35 @@
                         }
                     });
                 }
+            }
+
+            autoSetEndTime(fromBaseId, toBaseId) {
+                const hSelect = document.getElementById(fromBaseId + '-h');
+                const mSelect = document.getElementById(fromBaseId + '-m');
+                const pSelect = document.getElementById(fromBaseId + '-p');
+
+                const updateToTime = () => {
+                    const fromTime = getTimeInputValue(fromBaseId);
+                    if (!fromTime) return;
+
+                    const minutes = timeToMinutes(fromTime);
+                    const newMinutes = minutes + 30; // Add 30 minutes
+
+                    // Handle midnight wrapping for display
+                    let nextTime;
+                    if (newMinutes >= 24 * 60) {
+                        nextTime = "00:00"; // display as 12:00 AM
+                    } else {
+                        nextTime = minutesToTime(newMinutes);
+                    }
+
+                    setTimeInputValue(toBaseId, nextTime);
+                };
+
+                if (hSelect) hSelect.addEventListener('change', updateToTime);
+                if (mSelect) mSelect.addEventListener('change', updateToTime);
+                if (pSelect) mSelect.addEventListener('change', updateToTime);
+                if (pSelect) pSelect.addEventListener('change', updateToTime);
             }
 
             render() {
@@ -2772,18 +2831,15 @@
                     }
                 }
 
-                // If no time is set, show the fill-time modal
-                if (!hasTime) {
-                    this.fillingTimeTaskId = id;
-                    document.getElementById('fill-time-date').value = this.selectedDate;
-                    // Pre-fill with task's original time if available
-                    setTimeInputValue('fill-time-from', taskTimeFrom);
-                    setTimeInputValue('fill-time-to', taskTimeTo);
-                    document.getElementById('modal-fill-time').classList.add('open');
-                } else {
-                    this.db.updateTask(id, { status: 'done' });
-                    this.render();
-                }
+                // Always open the fill-time modal for review/confirmation
+                this.fillingTimeTaskId = id;
+                document.getElementById('fill-time-date').value = this.selectedDate;
+
+                // Pre-fill with task's original time if available
+                setTimeInputValue('fill-time-from', taskTimeFrom);
+                setTimeInputValue('fill-time-to', taskTimeTo);
+
+                document.getElementById('modal-fill-time').classList.add('open');
             }
 
             completeTaskWithTime() {
@@ -2796,7 +2852,10 @@
                     return;
                 }
 
-                if (timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                let endMinutes = timeToMinutes(timeTo);
+                if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440;
+
+                if (timeToMinutes(timeFrom) >= endMinutes) {
                     alert('End time must be after start time');
                     return;
                 }
@@ -2948,7 +3007,10 @@
                     return;
                 }
 
-                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                let endMinutes = timeToMinutes(timeTo);
+                if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440;
+
+                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= endMinutes) {
                     alert('End time must be after start time');
                     return;
                 }
@@ -3191,7 +3253,7 @@
                     html += `
                         <div class="time-slot">
                             <div class="time-label">${formatTime12Hour(slot)}</div>
-                            <div class="time-block ${blockClass}">
+                            <div class="time-block ${blockClass}" onclick="app.editTimesheetBlock('${slot}')">
                                 ${blockText}
                             </div>
                         </div>`;
@@ -3202,6 +3264,10 @@
             }
 
             openManualFillModal() {
+                this.editingTimesheetTaskId = null; // Reset edit state
+                document.getElementById('manual-task-name').value = '';
+                document.getElementById('manual-fill-submit-btn').textContent = 'Fill Timesheet'; // Reset button text
+
                 const catSelect = document.getElementById('manual-category');
                 catSelect.innerHTML = '';
                 this.db.getCategories().forEach(c => {
@@ -3211,26 +3277,137 @@
                     catSelect.appendChild(opt);
                 });
 
+                setTimeInputValue('manual-time-from', '');
+                setTimeInputValue('manual-time-to', '');
+
+                document.getElementById('modal-manual-fill').classList.add('open');
+            }
+
+            editTimesheetBlock(slot) {
+                console.log('editTimesheetBlock called with slot:', slot);
+                const timesheet = this.db.getTimesheet(this.selectedDate);
+                const entry = timesheet[slot];
+                if (!entry) {
+                    console.log('No entry found for slot:', slot);
+                    return;
+                }
+
+                let taskId = entry.taskId;
+
+                // HEAL LEGACY DATA: If no taskId, assign one to all matching slots
+                if (!taskId) {
+                    taskId = 'manual-' + Date.now();
+                    let updated = false;
+                    Object.keys(timesheet).forEach(s => {
+                        const e = timesheet[s];
+                        if (e.taskName === entry.taskName && e.categoryId === entry.categoryId && !e.taskId) {
+                            e.taskId = taskId;
+                            updated = true;
+                        }
+                    });
+                    if (updated) {
+                        this.db.saveLocalData();
+                        this.db.saveToFirebase();
+                    }
+                }
+
+                // Find start and end time for this block
+                const slots = Object.keys(timesheet).filter(s => timesheet[s].taskId == taskId); // Use loose equality just in case
+                console.log('Found slots for this block:', slots);
+                let minMinutes = Math.min(...slots.map(s => timeToMinutes(s)));
+                let maxMinutes = Math.max(...slots.map(s => timeToMinutes(s))) + 30; // End is last slot start + 30
+
+                // Handle midnight wrapping if needed (though maxMinutes would just be higher)
+
+                const timeFrom = minutesToTime(minMinutes);
+                let timeTo;
+                if (maxMinutes >= 24 * 60) {
+                    timeTo = "00:00"; // 12 AM
+                } else {
+                    timeTo = minutesToTime(maxMinutes);
+                }
+
+                this.editingTimesheetTaskId = taskId; // Set edit state
+                this.editingTimesheetDate = this.selectedDate; // Lock the date
+                this.editingTimesheetOriginalSlots = slots; // Store exact slots to clear
+                console.log('Stored for deletion - TaskId:', taskId, 'Date:', this.selectedDate, 'Slots:', slots);
+
+                // Populate Modal
+                document.getElementById('manual-task-name').value = entry.taskName || '';
+
+                const catSelect = document.getElementById('manual-category');
+                catSelect.innerHTML = '';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    if (c.id === entry.categoryId) opt.selected = true;
+                    catSelect.appendChild(opt);
+                });
+
+                setTimeInputValue('manual-time-from', timeFrom);
+                setTimeInputValue('manual-time-to', timeTo);
+
+                // Change button text
+                const btn = document.getElementById('manual-fill-submit-btn');
+                if (btn) btn.textContent = 'Update Timesheet';
+
                 document.getElementById('modal-manual-fill').classList.add('open');
             }
 
             saveManualFill() {
                 const taskName = document.getElementById('manual-task-name').value.trim();
                 const categoryId = document.getElementById('manual-category').value;
-                const timeFrom = document.getElementById('manual-time-from').value;
-                const timeTo = document.getElementById('manual-time-to').value;
+                const timeFrom = getTimeInputValue('manual-time-from');
+                const timeTo = getTimeInputValue('manual-time-to');
 
                 if (!taskName || !timeFrom || !timeTo) {
                     alert('Please fill all fields');
                     return;
                 }
 
-                if (timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                let endMinutes = timeToMinutes(timeTo);
+                if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440;
+
+                if (timeToMinutes(timeFrom) >= endMinutes) {
                     alert('End time must be after start time');
                     return;
                 }
 
-                this.db.fillTimesheetBlock(this.selectedDate, timeFrom, timeTo, 'manual-' + Date.now(), categoryId, taskName);
+                let taskId;
+                if (this.editingTimesheetTaskId) {
+                    // We are editing, so remove the old entries first by DIRECTLY deleting the slots we found earlier
+                    const dateToClear = this.editingTimesheetDate || this.selectedDate;
+
+                    if (this.editingTimesheetOriginalSlots && this.db.data.timesheet[dateToClear]) {
+                        console.log('Clearing original slots:', this.editingTimesheetOriginalSlots);
+                        this.editingTimesheetOriginalSlots.forEach(slot => {
+                            delete this.db.data.timesheet[dateToClear][slot];
+                        });
+                        // CRITICAL: Save after deletion
+                        this.db.saveLocalData();
+                        this.db.saveToFirebase();
+                    } else {
+                        // Fallback to ID-based clear if slots missing (shouldn't happen)
+                        console.log('Fallback to ID-based clear');
+                        this.db.clearTimesheetEntries(dateToClear, this.editingTimesheetTaskId);
+                    }
+
+                    taskId = this.editingTimesheetTaskId;
+                } else {
+                    taskId = 'manual-' + Date.now();
+                }
+
+                // Fill logic always uses CURRENT selected date (allows moving to new date if we supported that, but typically same)
+                this.db.fillTimesheetBlock(this.selectedDate, timeFrom, timeTo, taskId, categoryId, taskName);
+
+                // Reset state
+                this.editingTimesheetTaskId = null;
+                this.editingTimesheetDate = null;
+                this.editingTimesheetOriginalSlots = null;
+                const btn = document.getElementById('manual-fill-submit-btn');
+                if (btn) btn.textContent = 'Fill Timesheet';
+
                 this.closeModals();
                 this.render();
             }
@@ -3634,7 +3811,10 @@
                     const timeFrom = getTimeInputValue('inp-task-time-from');
                     const timeTo = getTimeInputValue('inp-task-time-to');
 
-                    if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                    let endMinutes = timeToMinutes(timeTo);
+                    if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440; // Handle 12 AM as 24:00
+
+                    if (timeFrom && timeTo && timeToMinutes(timeFrom) >= endMinutes) {
                         alert('End time must be after start time');
                         return;
                     }
@@ -3664,7 +3844,10 @@
                     const startDate = document.getElementById('inp-routine-start-date').value || this.selectedDate;
                     const endDate = document.getElementById('inp-routine-end-date').value;
 
-                    if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                    let endMinutes = timeToMinutes(timeTo);
+                    if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440;
+
+                    if (timeFrom && timeTo && timeToMinutes(timeFrom) >= endMinutes) {
                         alert('End time must be after start time');
                         return;
                     }
@@ -3866,7 +4049,10 @@
                     return;
                 }
 
-                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                let endMinutes = timeToMinutes(timeTo);
+                if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440;
+
+                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= endMinutes) {
                     alert('End time must be after start time');
                     return;
                 }
@@ -3999,7 +4185,10 @@
                     return;
                 }
 
-                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= timeToMinutes(timeTo)) {
+                let endMinutes = timeToMinutes(timeTo);
+                if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440;
+
+                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= endMinutes) {
                     alert('End time must be after start time');
                     return;
                 }
