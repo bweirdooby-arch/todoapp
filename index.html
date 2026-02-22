@@ -1476,6 +1476,449 @@
                 padding-bottom: calc(var(--nav-height) + var(--spacing-lg));
             }
         }
+
+        /* ===== VOICE ASSISTANT ===== */
+        #voice-fab {
+            position: fixed;
+            bottom: calc(var(--nav-height) + 96px);
+            right: 20px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b7ef8 0%, #6c63ff 100%);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 900;
+            box-shadow: 0 4px 20px rgba(139, 126, 248, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #voice-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 28px rgba(139, 126, 248, 0.7);
+        }
+
+        #voice-fab.listening {
+            animation: voicePulse 1.2s ease-in-out infinite;
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            box-shadow: 0 4px 24px rgba(248, 113, 113, 0.6);
+        }
+
+        @keyframes voicePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 24px rgba(248, 113, 113, 0.5);
+            }
+
+            50% {
+                transform: scale(1.12);
+                box-shadow: 0 6px 36px rgba(248, 113, 113, 0.8);
+            }
+        }
+
+        /* Voice Overlay */
+        #voice-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 15, 0.92);
+            backdrop-filter: blur(16px);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        #voice-overlay.active {
+            display: flex;
+        }
+
+        .voice-mic-ring {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(139, 126, 248, 0.4);
+            animation: ringExpand 1.8s ease-out infinite;
+        }
+
+        .voice-ring:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            animation-delay: 0s;
+        }
+
+        .voice-ring:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            animation-delay: 0.6s;
+        }
+
+        .voice-ring:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes ringExpand {
+            0% {
+                transform: scale(0.6);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        .voice-mic-btn {
+            position: relative;
+            z-index: 2;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b7ef8, #6c63ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            box-shadow: 0 0 30px rgba(139, 126, 248, 0.6);
+        }
+
+        #voice-status {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        #voice-transcript {
+            font-size: 14px;
+            color: var(--accent-primary);
+            text-align: center;
+            min-height: 40px;
+            max-width: 320px;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        #voice-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        .voice-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .voice-example-chip {
+            background: var(--surface-elevated);
+            border: 1px solid var(--divider);
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .voice-example-chip:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+
+        #voice-cancel-btn {
+            background: var(--surface);
+            border: 1px solid var(--divider);
+            color: var(--text-secondary);
+            padding: 12px 32px;
+            border-radius: 24px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        #voice-cancel-btn:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+
+        .voice-parsed-preview {
+            background: var(--surface-elevated);
+            border: 1px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 12px 16px;
+            width: 100%;
+            max-width: 320px;
+            display: none;
+        }
+
+        .voice-parsed-preview.visible {
+            display: block;
+        }
+
+        .voice-parsed-preview .vp-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 6px;
+        }
+
+        .voice-parsed-preview .vp-row {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 2px 0;
+        }
+
+        .voice-parsed-preview .vp-row span {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ===== PARKING TAB ===== */
+        .parking-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid #f59e0b;
+            transition: all var(--transition-base);
+        }
+
+        .parking-card:hover {
+            background: var(--surface-elevated);
+            transform: translateX(2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .parking-card.done {
+            opacity: 0.5;
+            border-left-color: var(--success);
+        }
+
+        .parking-card.done .parking-title {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        .parking-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .parking-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .parking-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .parking-badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid;
+            font-weight: 500;
+        }
+
+        .parking-badge.time-badge {
+            color: #60a5fa;
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .parking-badge.deadline-badge {
+            color: #f59e0b;
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .parking-badge.cat-badge {
+            color: var(--text-secondary);
+            border-color: var(--border-medium);
+            background: var(--surface-elevated);
+        }
+
+        /* ===== UNDO BUTTON ===== */
+        .btn-undo {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            border-radius: var(--radius-md);
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-undo:hover {
+            background: var(--border-medium);
+        }
+
+        .btn-undo.undo-empty {
+            opacity: 0.35;
+            cursor: default;
+        }
+
+        /* ===== HABIT TRACKER ===== */
+
+        .habit-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+
+        .habit-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px var(--spacing-lg);
+            border-bottom: 1px solid var(--divider);
+            transition: background var(--transition-fast);
+        }
+
+        .habit-row:hover {
+            background: var(--surface-elevated);
+        }
+
+        .habit-checkbox-wrap {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+        }
+
+        .habit-check-input {
+            display: none;
+        }
+
+        .habit-check-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--border-medium);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-size: 14px;
+            color: transparent;
+        }
+
+        .habit-check-input:checked+.habit-check-label {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .habit-name {
+            flex: 1;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .habit-freq-tag {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: rgba(139, 126, 248, 0.15);
+            color: var(--accent-primary);
+            margin-left: 6px;
+            font-weight: 500;
+        }
+
+        .streak-dots {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .streak-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-medium);
+        }
+
+        .streak-dot.done {
+            background: var(--success);
+            border-color: var(--success);
+            box-shadow: 0 0 4px rgba(74, 222, 128, 0.6);
+        }
+
+        .streak-dot.today {
+            border: 2px solid var(--accent-primary);
+        }
+
+        /* Timesheet Undo bar */
+        .ts-undo-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px var(--spacing-lg);
+        }
+
+        .btn-undo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-full);
+            color: var(--warning);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-undo:hover {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: var(--warning);
+        }
+
+        .btn-undo:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -1486,6 +1929,44 @@
         <i class="fas fa-plus"></i>
     </button>
 
+    <!-- Voice Assistant FAB -->
+    <button id="voice-fab" title="Voice Command" onclick="voiceAssistant.toggle()">
+        <i class="fas fa-microphone"></i>
+    </button>
+
+    <!-- Voice Overlay -->
+    <div id="voice-overlay">
+        <div style="text-align:center;">
+            <div
+                style="font-size:13px;color:var(--accent-primary);font-weight:600;letter-spacing:1px;margin-bottom:8px;">
+                VOICE ASSISTANT</div>
+        </div>
+        <div class="voice-mic-ring">
+            <div class="voice-ring"></div>
+            <div class="voice-ring"></div>
+            <div class="voice-ring"></div>
+            <div class="voice-mic-btn"><i class="fas fa-microphone"></i></div>
+        </div>
+        <div id="voice-status">Listening...</div>
+        <div id="voice-transcript">Say something like "Add meeting tomorrow at 3pm"</div>
+        <div class="voice-parsed-preview" id="voice-preview">
+            <div class="vp-title">✅ I heard:</div>
+            <div class="vp-row" id="vp-name"></div>
+            <div class="vp-row" id="vp-date"></div>
+            <div class="vp-row" id="vp-time"></div>
+            <div class="vp-row" id="vp-cat"></div>
+        </div>
+        <div class="voice-examples">
+            <div class="voice-example-chip">"Add gym tomorrow at 6am to 7am"</div>
+            <div class="voice-example-chip">"Meeting on Friday at 3pm for 1 hour"</div>
+            <div class="voice-example-chip">"Fill timesheet study today 10am to 12pm"</div>
+        </div>
+        <div id="voice-hint">💡 Say the <b>category name</b> (e.g. study, exercise) to auto-select it.<br>Say "fill
+            timesheet" to fill the timesheet instead.</div>
+        <button id="voice-cancel-btn" onclick="voiceAssistant.cancel()">✕ Cancel</button>
+    </div>
+
+
     <nav class="bottom-nav">
         <div class="nav-item active" data-view="todo">
             <i class="fas fa-list-check"></i>
@@ -1495,9 +1976,17 @@
             <i class="fas fa-clock"></i>
             <span>Timesheet</span>
         </div>
+        <div class="nav-item" data-view="parking">
+            <i class="fas fa-circle-pause"></i>
+            <span>Parking</span>
+        </div>
+        <div class="nav-item" data-view="habits">
+            <i class="fas fa-seedling"></i>
+            <span>Habits</span>
+        </div>
         <div class="nav-item" data-view="analytics">
             <i class="fas fa-chart-line"></i>
-            <span>Analytics</span>
+            <span>Stats</span>
         </div>
         <div class="nav-item" data-view="manage">
             <i class="fas fa-cog"></i>
@@ -1505,7 +1994,7 @@
         </div>
         <div class="nav-item" data-view="account">
             <i class="fas fa-user"></i>
-            <span>Account</span>
+            <span>Me</span>
         </div>
     </nav>
 
@@ -1883,7 +2372,119 @@
                 </div>
             </div>
 
-            <button class="btn-primary" onclick="app.saveManualFill()">Fill Timesheet</button>
+            <button class="btn-primary" id="manual-fill-submit-btn" onclick="app.saveManualFill()">Fill
+                Timesheet</button>
+        </div>
+    </div>
+
+    <!-- Add Parked Task Modal -->
+    <div id="modal-add-parked" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🅿️ Park a Task</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" id="park-name" placeholder="What needs to be done?">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="park-desc" rows="3" placeholder="Details, context, why it's parked..."
+                    style="width:100%;padding:12px;background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);font-family:inherit;font-size:14px;resize:vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="park-category"></select>
+            </div>
+            <div style="display:flex;gap:12px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Estimated Time</label>
+                    <select id="park-est-time">
+                        <option value="0.5">30 min</option>
+                        <option value="1">1 hour</option>
+                        <option value="1.5">1.5 hours</option>
+                        <option value="2" selected>2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4">4 hours</option>
+                        <option value="6">6 hours</option>
+                        <option value="8">8 hours</option>
+                        <option value="16">2 days</option>
+                        <option value="40">1 week</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Tentative Deadline</label>
+                    <input type="date" id="park-deadline">
+                </div>
+            </div>
+            <button class="btn-primary" onclick="app.saveParkedTask()">Park It 🅿️</button>
+        </div>
+    </div>
+
+    <!-- Add Habit Modal -->
+    <div id="modal-add-habit" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🌱 New Habit</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="form-group">
+                <label>Habit Name</label>
+                <input type="text" id="habit-name" placeholder="e.g. Morning Walk, Read 10 pages">
+            </div>
+            <div class="form-group">
+                <label>Frequency</label>
+                <select id="habit-freq" onchange="app.onHabitFreqChange()">
+                    <option value="daily">Daily (Every Day)</option>
+                    <option value="weekdays">Weekdays (Mon–Fri)</option>
+                    <option value="weekends">Weekends (Sat–Sun)</option>
+                    <option value="custom">Custom Days</option>
+                </select>
+            </div>
+            <div class="form-group" id="habit-custom-days" style="display:none;">
+                <label>Select Days</label>
+                <div class="routine-days" id="habit-day-chips">
+                    <div class="day-chip hday-chip" data-hday="0">Sun</div>
+                    <div class="day-chip hday-chip" data-hday="1">Mon</div>
+                    <div class="day-chip hday-chip" data-hday="2">Tue</div>
+                    <div class="day-chip hday-chip" data-hday="3">Wed</div>
+                    <div class="day-chip hday-chip" data-hday="4">Thu</div>
+                    <div class="day-chip hday-chip" data-hday="5">Fri</div>
+                    <div class="day-chip hday-chip" data-hday="6">Sat</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="habit-category"></select>
+            </div>
+            <div class="form-group">
+                <label>Start From</label>
+                <input type="date" id="habit-start-date">
+            </div>
+            <button class="btn-primary" onclick="app.saveHabit()">Start Habit 🌱</button>
+        </div>
+    </div>
+
+    <!-- Delete Habit Modal -->
+    <div id="modal-delete-habit" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Remove Habit</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-secondary mb-4" style="font-size:14px;">How would you like to remove this habit?</p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <button class="btn-primary" style="background:var(--danger);border:none;"
+                    onclick="app.deleteHabitPermanently()">🗑️ Delete Permanently<br><small
+                        style="font-weight:400;opacity:0.8;">Removes habit and all history</small></button>
+                <div class="form-group" style="margin:0;">
+                    <label>Stop from date</label>
+                    <input type="date" id="habit-stop-date">
+                </div>
+                <button class="btn-secondary" onclick="app.stopHabitFromDate()">📅 Stop from Date<br><small
+                        style="font-weight:400;opacity:0.8;">Keeps past checkmarks; stops future</small></button>
+            </div>
         </div>
     </div>
 
@@ -2048,7 +2649,10 @@
                     tasks: [],
                     routines: [],
                     timesheet: {},
-                    routineStatus: {}
+                    routineStatus: {},
+                    parkedTasks: [],
+                    habits: [],
+                    habitLogs: {}
                 };
             }
 
@@ -2236,6 +2840,11 @@
                 this.saveToFirebase();
             }
 
+            // CRITICAL: this method is called by renderTimesheet — must exist on DatabaseManager
+            getTimesheet(date) {
+                return (this.data.timesheet && this.data.timesheet[date]) ? this.data.timesheet[date] : {};
+            }
+
             clearTimesheetEntries(date, taskId) {
                 if (!this.data.timesheet[date]) return;
 
@@ -2250,6 +2859,64 @@
                 this.saveLocalData();
                 this.saveToFirebase();
             }
+
+            // ===== PARKING METHODS =====
+            addParkedTask(task) {
+                task.id = Date.now().toString();
+                task.status = 'pending';
+                task.createdAt = new Date().toISOString();
+                if (!this.data.parkedTasks) this.data.parkedTasks = [];
+                this.data.parkedTasks.push(task);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+            deleteParkedTask(id) {
+                this.data.parkedTasks = (this.data.parkedTasks || []).filter(t => t.id !== id);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+            updateParkedTask(id, updates) {
+                const task = (this.data.parkedTasks || []).find(t => t.id === id);
+                if (task) { Object.assign(task, updates); this.saveLocalData(); this.saveToFirebase(); }
+            }
+            getParkedTasks() { return this.data.parkedTasks || []; }
+
+            // ===== HABIT METHODS =====
+            addHabit(habit) {
+                habit.id = Date.now().toString();
+                habit.createdAt = new Date().toISOString();
+                if (!this.data.habits) this.data.habits = [];
+                this.data.habits.push(habit);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+            updateHabit(id, updates) {
+                const h = (this.data.habits || []).find(h => h.id === id);
+                if (h) { Object.assign(h, updates); this.saveLocalData(); this.saveToFirebase(); }
+            }
+            deleteHabit(id) {
+                this.data.habits = (this.data.habits || []).filter(h => h.id !== id);
+                if (this.data.habitLogs) {
+                    Object.keys(this.data.habitLogs).forEach(date => {
+                        if (this.data.habitLogs[date]) delete this.data.habitLogs[date][id];
+                    });
+                }
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+            getHabits() { return this.data.habits || []; }
+            toggleHabitLog(habitId, date) {
+                if (!this.data.habitLogs) this.data.habitLogs = {};
+                if (!this.data.habitLogs[date]) this.data.habitLogs[date] = {};
+                if (this.data.habitLogs[date][habitId]) {
+                    delete this.data.habitLogs[date][habitId];
+                } else {
+                    this.data.habitLogs[date][habitId] = true;
+                }
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+            getHabitLog(date) { return (this.data.habitLogs && this.data.habitLogs[date]) || {}; }
 
             deleteTask(id) {
                 this.data.tasks = this.data.tasks.filter(t => t.id !== id);
@@ -2452,21 +3119,33 @@
         class App {
             constructor() {
                 this.db = new DatabaseManager();
-                this.selectedDate = new Date().toISOString().split('T')[0];
                 this.currentView = 'todo';
-                this.addingTaskType = 'adhoc';
-                this.selectedPeriod = 'week';
-                this.container = document.getElementById('app-container');
-                this.selectedRoutineDays = [];
+                this.selectedDate = new Date().toISOString().split('T')[0];
                 this.editingTaskId = null;
-                this.reschedulingTaskId = null;
+                this.addingTaskType = 'adhoc';
+                this.selectedRoutineDays = [];
+                this.selectedHabitDays = [];
                 this.fillingTimeTaskId = null;
+                this.editingTimesheetTaskId = null;
+                this.container = document.getElementById('app-container');
+                this.selectedPeriod = 'week';
+                this.timesheetUndoStack = [];
+                this.promotingParkedTaskId = null;
+                this.deletingHabitId = null;
+
+                this.render();
+
+                // Keyboard undo shortcut
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'z' && this.currentView === 'timesheet') {
+                        e.preventDefault();
+                        this.undoTimesheet();
+                    }
+                });
 
                 this.db.moveUncompletedTasks();
                 this.initEventListeners();
                 this.populateAllTimeSelects();
-                this.render();
-
                 // Auto-refresh every minute to update productive hours in real-time
                 setInterval(() => {
                     if (this.currentView === 'todo') {
@@ -2494,17 +3173,38 @@
             }
 
             initEventListeners() {
+                // Navigation
                 document.querySelectorAll('.nav-item').forEach(item => {
                     item.addEventListener('click', () => {
-                        this.currentView = item.dataset.view;
-                        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
                         item.classList.add('active');
+                        this.currentView = item.dataset.view;
+                        // NOTE: do NOT clear timesheetUndoStack on tab change — user should be able
+                        // to navigate to other tabs and still come back to undo a fill.
                         this.render();
                     });
                 });
 
+                // Habit day chip selection
+                document.querySelectorAll('#habit-day-chips .hday-chip').forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        const day = parseInt(chip.dataset.hday);
+                        if (!this.selectedHabitDays) this.selectedHabitDays = [];
+                        if (chip.classList.contains('selected')) {
+                            chip.classList.remove('selected');
+                            this.selectedHabitDays = this.selectedHabitDays.filter(d => d !== day);
+                        } else {
+                            chip.classList.add('selected');
+                            this.selectedHabitDays.push(day);
+                        }
+                    });
+                });
                 document.getElementById('main-fab').addEventListener('click', () => {
-                    if (this.currentView === 'todo') {
+                    if (this.currentView === 'parking') {
+                        this.openAddParkedTaskModal();
+                    } else if (this.currentView === 'habits') {
+                        this.openAddHabitModal();
+                    } else if (this.currentView === 'todo') {
                         this.openAddTaskModal();
                     } else if (this.currentView === 'timesheet') {
                         this.openManualFillModal();
@@ -2523,7 +3223,7 @@
                     }
                 });
 
-                document.querySelectorAll('.day-chip').forEach(chip => {
+                document.querySelectorAll('.day-chip:not(.hday-chip)').forEach(chip => {
                     chip.addEventListener('click', () => {
                         chip.classList.toggle('selected');
                         const day = parseInt(chip.dataset.day);
@@ -2544,6 +3244,44 @@
                 this.autoSetEndTime('manual-time-from', 'manual-time-to');
                 this.autoSetEndTime('edit-routine-time-from', 'edit-routine-time-to');
 
+                // ===== SWIPE TO SWITCH TABS =====
+                const TAB_ORDER = ['todo', 'timesheet', 'parking', 'habits', 'analytics', 'manage', 'account'];
+                let swipeStartX = 0;
+                let swipeStartY = 0;
+                let swipeActive = false;
+
+                document.addEventListener('touchstart', (e) => {
+                    // Ignore if inside a modal or a horizontal scrollable element
+                    if (e.target.closest('.modal') || e.target.closest('.modal-content')) return;
+                    swipeStartX = e.touches[0].clientX;
+                    swipeStartY = e.touches[0].clientY;
+                    swipeActive = true;
+                }, { passive: true });
+
+                document.addEventListener('touchend', (e) => {
+                    if (!swipeActive) return;
+                    swipeActive = false;
+                    const dx = e.changedTouches[0].clientX - swipeStartX;
+                    const dy = e.changedTouches[0].clientY - swipeStartY;
+                    // Only act on clear horizontal swipes (dx > 60, and more horizontal than vertical)
+                    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+                    const currentIdx = TAB_ORDER.indexOf(this.currentView);
+                    if (currentIdx === -1) return;
+                    let nextIdx;
+                    if (dx < 0) { // swipe left → next tab
+                        nextIdx = Math.min(currentIdx + 1, TAB_ORDER.length - 1);
+                    } else { // swipe right → previous tab
+                        nextIdx = Math.max(currentIdx - 1, 0);
+                    }
+                    if (nextIdx === currentIdx) return;
+                    const nextView = TAB_ORDER[nextIdx];
+                    this.currentView = nextView;
+                    document.querySelectorAll('.nav-item').forEach(it => {
+                        it.classList.toggle('active', it.dataset.view === nextView);
+                    });
+                    this.render();
+                }, { passive: true });
+
                 if (auth) {
                     auth.onAuthStateChanged((user) => {
                         if (user) {
@@ -2554,6 +3292,7 @@
                     });
                 }
             }
+
 
             autoSetEndTime(fromBaseId, toBaseId) {
                 const hSelect = document.getElementById(fromBaseId + '-h');
@@ -2591,6 +3330,12 @@
                         break;
                     case 'timesheet':
                         this.renderTimesheet();
+                        break;
+                    case 'parking':
+                        this.renderParking();
+                        break;
+                    case 'habits':
+                        this.renderHabits();
                         break;
                     case 'analytics':
                         this.renderAnalytics();
@@ -2668,10 +3413,22 @@
                         <h2>My Tasks</h2>
                     </div>`;
 
+                // Date range picker
+                const todoFrom = this.todoRangeFrom || this.selectedDate;
+                const todoTo = this.todoRangeTo || this.selectedDate;
+                html += `<div style="padding: 6px var(--spacing-lg) 0; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <span class="text-xs text-secondary">From</span>
+                    <input type="date" id="todo-range-from" value="${todoFrom}" onchange="app.setTodoRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                    <span class="text-xs text-secondary">To</span>
+                    <input type="date" id="todo-range-to" value="${todoTo}" onchange="app.setTodoRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                </div>`;
+
+                // Date scroller - centred on selectedDate
+                const selDTodo = new Date(this.selectedDate + 'T00:00:00');
                 html += `<div class="date-scroller" style="border-bottom: none; padding-top: 10px;">`;
                 for (let i = -3; i <= 3; i++) {
-                    const date = new Date();
-                    date.setDate(date.getDate() + i);
+                    const date = new Date(selDTodo);
+                    date.setDate(selDTodo.getDate() + i);
                     const dateStr = date.toISOString().split('T')[0];
                     const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
                     const dayNum = date.getDate();
@@ -3114,6 +3871,363 @@
                 this.db.saveToFirebase();
             }
 
+            // ===== PARKING RENDER =====
+            renderParking() {
+                const tasks = this.db.getParkedTasks();
+                // Sort pending by deadline (earliest first; no deadline goes to end)
+                const pending = tasks.filter(t => t.status !== 'done').sort((a, b) => {
+                    if (!a.deadline && !b.deadline) return 0;
+                    if (!a.deadline) return 1;
+                    if (!b.deadline) return -1;
+                    return a.deadline.localeCompare(b.deadline);
+                });
+                const done = tasks.filter(t => t.status === 'done');
+
+                let html = `
+                    <div class="dashboard-header">
+                        <h2>🅿️ Parking Lot</h2>
+                        <p class="text-secondary text-sm" style="margin-top:4px;">Tasks parked for later — no time allocated yet</p>
+                    </div>`;
+
+                html += `<div style="padding: 0 var(--spacing-lg) var(--spacing-lg);">`;
+
+                if (pending.length === 0) {
+                    html += `<div class="text-center text-secondary p-4" style="margin-top:40px;">
+                        <i class="fas fa-circle-pause" style="font-size:3rem;opacity:0.3;margin-bottom:16px;display:block;"></i>
+                        <div>No parked tasks. Tap + to park one!</div>
+                    </div>`;
+                } else {
+                    pending.forEach(task => {
+                        const cat = this.db.getCategoryById(task.categoryId);
+                        const catName = cat ? cat.name : '';
+                        const dotColor = cat ? (cat.type === 'productive' ? '#4ade80' : cat.type === 'non-productive' ? '#f87171' : '#facc15') : '#71717a';
+                        const deadlineText = task.deadline ? `📅 By ${new Date(task.deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : '';
+                        html += `
+                            <div class="parking-card">
+                                <div class="parking-title">${task.name}</div>
+                                ${task.description ? `<div class="parking-desc">${task.description}</div>` : ''}
+                                <div class="parking-badges">
+                                    ${catName ? `<span class="parking-badge cat-badge"><span class="dot" style="background:${dotColor};margin-right:4px;"></span>${catName}</span>` : ''}
+                                    <span class="parking-badge time-badge">⏱ ~${task.estimatedHours}h</span>
+                                    ${deadlineText ? `<span class="parking-badge deadline-badge">${deadlineText}</span>` : ''}
+                                </div>
+                                <div class="task-actions">
+                                    <button class="task-btn" style="background:var(--accent-primary);border-color:var(--accent-primary);color:white;width:auto;padding:0 12px;font-size:13px;" title="Promote: fill timesheet to complete" onclick="app.promoteParkedTask('${task.id}')">
+                                        <i class="fas fa-rocket"></i> Promote
+                                    </button>
+                                    <button class="task-btn delete-btn" title="Delete" onclick="app.deleteParkedTask('${task.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                    });
+                }
+
+                if (done.length > 0) {
+                    html += `<div style="margin-top:28px;">
+                        <div style="font-size:12px;font-weight:700;color:var(--text-secondary);letter-spacing:.08em;margin-bottom:12px;text-transform:uppercase;display:flex;align-items:center;gap:8px;">
+                            <span style="flex:1;">✅ Completed Parked Tasks (${done.length})</span>
+                        </div>`;
+                    done.forEach(task => {
+                        const cat = this.db.getCategoryById(task.categoryId);
+                        const catName = cat ? cat.name : '';
+                        const dotColor = cat ? (cat.type === 'productive' ? '#4ade80' : cat.type === 'non-productive' ? '#f87171' : '#facc15') : '#71717a';
+                        const promotedDate = task.promotedAt
+                            ? new Date(task.promotedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+                            : '';
+                        html += `
+                            <div style="background:var(--surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:10px;opacity:0.82;display:flex;align-items:center;gap:12px;">
+                                <div style="font-size:20px;color:var(--success);">✅</div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:14px;font-weight:600;text-decoration:line-through;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.name}</div>
+                                    <div style="font-size:11px;color:var(--text-tertiary,var(--text-secondary));margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                                        ${catName ? `<span><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${dotColor};margin-right:3px;"></span>${catName}</span>` : ''}
+                                        ${promotedDate ? `<span>Filled on ${promotedDate}</span>` : ''}
+                                    </div>
+                                </div>
+                                <button class="task-btn" style="flex-shrink:0;background:var(--surface);border:1px solid var(--border-medium);color:var(--text-secondary);padding:0 10px;font-size:12px;width:auto;" title="Move back to pending" onclick="app.reverseParkedTask('${task.id}')">
+                                    <i class="fas fa-rotate-left"></i> Reverse
+                                </button>
+                            </div>`;
+                    });
+                    html += `</div>`;
+                }
+
+
+                html += `</div>`;
+                this.container.innerHTML = html;
+            }
+
+            openAddParkedTaskModal() {
+                const catSelect = document.getElementById('park-category');
+                catSelect.innerHTML = '';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.innerText = c.name;
+                    catSelect.appendChild(opt);
+                });
+                document.getElementById('park-name').value = '';
+                document.getElementById('park-desc').value = '';
+                document.getElementById('park-deadline').value = '';
+                document.getElementById('modal-add-parked').classList.add('open');
+            }
+
+            saveParkedTask() {
+                const name = document.getElementById('park-name').value.trim();
+                if (!name) { alert('Task name is required'); return; }
+                const description = document.getElementById('park-desc').value.trim();
+                const categoryId = document.getElementById('park-category').value;
+                const estimatedHours = parseFloat(document.getElementById('park-est-time').value);
+                const deadline = document.getElementById('park-deadline').value;
+                this.db.addParkedTask({ name, description, categoryId, estimatedHours, deadline });
+                this.closeModals();
+                this.render();
+            }
+
+            deleteParkedTask(id) {
+                if (confirm('Delete this parked task?')) {
+                    this.db.deleteParkedTask(id);
+                    this.render();
+                }
+            }
+
+            reverseParkedTask(id) {
+                // Move the completed parked task back to pending
+                this.db.updateParkedTask(id, { status: 'pending', promotedAt: null });
+                this.render();
+            }
+
+            promoteParkedTask(id) {
+                // Store the parked task id; open the manual fill modal mandatorily
+                this.promotingParkedTaskId = id;
+                // Always promote to TODAY's timesheet, regardless of which date was selected
+                this.selectedDate = new Date().toISOString().split('T')[0];
+                console.log('[promoteParkedTask] id:', id, 'selectedDate set to today:', this.selectedDate);
+                const task = this.db.getParkedTasks().find(t => t.id === id);
+                this.openManualFillModal();
+                setTimeout(() => {
+                    if (task) {
+                        document.getElementById('manual-task-name').value = task.name;
+                        // Pre-select category
+                        const catSel = document.getElementById('manual-category');
+                        if (catSel && task.categoryId) catSel.value = task.categoryId;
+                        // Change button label
+                        const btn = document.getElementById('manual-fill-submit-btn');
+                        if (btn) btn.textContent = '✅ Complete & Fill Timesheet';
+                    }
+                }, 100);
+            }
+
+            // ===== HABITS RENDER =====
+            renderHabits() {
+                const today = new Date().toISOString().split('T')[0];
+                const selDate = this.selectedDate;
+                const selDateObj2 = new Date(selDate + 'T00:00:00');
+                const selDOW2 = selDateObj2.getDay();
+                const allHabits = this.db.getHabits();
+                const selLog = this.db.getHabitLog(selDate);
+
+                // Count active habits for selectedDate
+                const selActive = allHabits.filter(h => {
+                    if (h.startDate && selDate < h.startDate) return false;
+                    if (h.endDate && selDate >= h.endDate) return false;
+                    if (h.freq === 'daily') return true;
+                    if (h.freq === 'weekdays') return selDOW2 >= 1 && selDOW2 <= 5;
+                    if (h.freq === 'weekends') return selDOW2 === 0 || selDOW2 === 6;
+                    if (h.freq === 'custom') return h.days && h.days.includes(selDOW2);
+                    return true;
+                });
+                const selDone = selActive.filter(h => !!selLog[h.id]).length;
+                const selTotal = selActive.length;
+                const pct = selTotal > 0 ? Math.round((selDone / selTotal) * 100) : 0;
+                const isToday = selDate === today;
+                const dateLabel = isToday ? "Today's Progress"
+                    : selDateObj2.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+                let html = `<div class="dashboard-header" style="padding-bottom:0;">
+                    <h2>🌱 Habit Tracker</h2>
+                </div>`;
+
+                // Dashboard summary
+                html += `<div style="margin: 10px var(--spacing-lg) 4px; background: var(--surface-elevated); border-radius: var(--radius-lg); padding: 14px 18px; display:flex; align-items:center; gap:16px;">
+                    <div style="flex:1;">
+                        <div style="font-size:13px; color:var(--text-secondary); margin-bottom:4px;">${dateLabel}</div>
+                        <div style="font-size:22px; font-weight:700; color:var(--success);">${selDone}<span style="font-size:14px;font-weight:400;color:var(--text-secondary);"> / ${selTotal} habits</span></div>
+                        <div style="margin-top:8px; height:6px; background:var(--border-subtle); border-radius:3px; overflow:hidden;">
+                            <div style="height:100%; width:${pct}%; background:var(--success); border-radius:3px; transition:width 0.4s;"></div>
+                        </div>
+                    </div>
+                    <div style="font-size:28px; font-weight:800; color:${pct === 100 ? 'var(--success)' : 'var(--accent-primary)'}">${pct}%</div>
+                </div>`;
+
+                // Date range bar
+                html += `<div style="padding: 6px var(--spacing-lg) 0; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <span class="text-xs text-secondary">From</span>
+                    <input type="date" id="habit-range-from" value="${this.habitRangeFrom || today}" onchange="app.setHabitRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                    <span class="text-xs text-secondary">To</span>
+                    <input type="date" id="habit-range-to" value="${this.habitRangeTo || today}" onchange="app.setHabitRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                </div>`;
+
+                // Date scroller - 7 days centred on selectedDate
+                const selD2 = new Date(this.selectedDate + 'T00:00:00');
+                html += `<div class="date-scroller" style="border-bottom:none;padding-top:10px;">`;
+                for (let i = -3; i <= 3; i++) {
+                    const d = new Date(selD2);
+                    d.setDate(selD2.getDate() + i);
+                    const dateStr = d.toISOString().split('T')[0];
+                    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+                    const dayNum = d.getDate();
+                    const isActive = dateStr === this.selectedDate;
+                    html += `<div class="date-chip ${isActive ? 'active' : ''}" onclick="app.selectDate('${dateStr}')">
+                        <span>${dayName}</span><span>${dayNum}</span>
+                    </div>`;
+                }
+                html += `</div>`;
+
+                // Habit list (reuse selActive + selLog computed above for the dashboard)
+                const habits = allHabits;
+                const log = selLog;    // same date as selectedDate
+                const activeHabits = selActive; // already filtered for selectedDate + freq
+
+
+                html += `<div style="background:var(--surface);border-radius:var(--radius-lg);margin:var(--spacing-md) var(--spacing-lg);border:1px solid var(--border-subtle);overflow:hidden;">`;
+
+                if (activeHabits.length === 0) {
+                    html += `<div class="text-center text-secondary p-4" style="padding:40px 20px;">
+                        <i class="fas fa-seedling" style="font-size:3rem;opacity:0.3;margin-bottom:16px;display:block;"></i>
+                        <div>No habits for this day. Tap + to add one!</div>
+                    </div>`;
+                } else {
+                    activeHabits.forEach(habit => {
+                        const checked = !!log[habit.id];
+                        // Build 7-day streak dots (past 7 days)
+                        let dotsHtml = '<div class="streak-dots">';
+                        for (let i = 6; i >= 0; i--) {
+                            const d = new Date();
+                            d.setDate(d.getDate() - i);
+                            const dStr = d.toISOString().split('T')[0];
+                            const dayLog = this.db.getHabitLog(dStr);
+                            const isDone = !!(dayLog && dayLog[habit.id]);
+                            const isToday = dStr === today;
+                            dotsHtml += `<div class="streak-dot ${isDone ? 'done' : ''}${isToday ? ' today' : ''}" title="${dStr}"></div>`;
+                        }
+                        dotsHtml += '</div>';
+
+                        const freqLabel = { daily: 'Daily', weekdays: 'Weekdays', weekends: 'Weekends', custom: 'Custom' }[habit.freq] || '';
+
+                        const cat = habit.categoryId ? this.db.getCategoryById(habit.categoryId) : null;
+                        const catDot = cat ? `<span style="font-size:11px;margin-left:6px;color:var(--text-secondary);background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-full);padding:2px 7px;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${cat.type === 'productive' ? '#4ade80' : cat.type === 'non-productive' ? '#f87171' : '#facc15'};margin-right:3px;"></span>${cat.name}</span>` : '';
+
+                        html += `
+                            <div class="habit-row">
+                                <div class="habit-checkbox-wrap">
+                                    <input type="checkbox" class="habit-check-input" id="h-${habit.id}" ${checked ? 'checked' : ''} onchange="app.toggleHabit('${habit.id}')">
+                                    <label class="habit-check-label" for="h-${habit.id}"><i class="fas fa-check"></i></label>
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div class="habit-name">${habit.name}<span class="habit-freq-tag">${freqLabel}</span>${catDot}</div>
+                                </div>
+                                ${dotsHtml}
+                                <button class="task-btn delete-btn" style="flex-shrink:0;" title="Remove habit" onclick="app.openDeleteHabitModal('${habit.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>`;
+                    });
+
+                }
+
+                html += `</div>`;
+                this.container.innerHTML = html;
+            }
+
+            setHabitRange() {
+                const from = document.getElementById('habit-range-from');
+                const to = document.getElementById('habit-range-to');
+                if (from) this.habitRangeFrom = from.value;
+                if (to) this.habitRangeTo = to.value;
+                // Update selectedDate to the start of range for consistent dot display
+                if (from && from.value) this.selectedDate = from.value;
+                this.render();
+            }
+
+            setTodoRange() {
+                const from = document.getElementById('todo-range-from');
+                const to = document.getElementById('todo-range-to');
+                if (from && from.value) { this.todoRangeFrom = from.value; this.selectedDate = from.value; }
+                if (to) this.todoRangeTo = to.value;
+                this.render();
+            }
+
+            onHabitFreqChange() {
+                const freq = document.getElementById('habit-freq').value;
+                document.getElementById('habit-custom-days').style.display = freq === 'custom' ? '' : 'none';
+            }
+
+            openAddHabitModal() {
+                document.getElementById('habit-name').value = '';
+                document.getElementById('habit-freq').value = 'daily';
+                document.getElementById('habit-start-date').value = this.selectedDate;
+                document.getElementById('habit-custom-days').style.display = 'none';
+                document.querySelectorAll('#habit-day-chips .hday-chip').forEach(c => c.classList.remove('selected'));
+                this.selectedHabitDays = [];
+                // Populate category dropdown
+                const catSel = document.getElementById('habit-category');
+                catSel.innerHTML = '<option value="">-- No Category --</option>';
+                this.db.getCategories().forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    catSel.appendChild(opt);
+                });
+                document.getElementById('modal-add-habit').classList.add('open');
+            }
+
+            saveHabit() {
+                const name = document.getElementById('habit-name').value.trim();
+                if (!name) { alert('Habit name is required'); return; }
+                const freq = document.getElementById('habit-freq').value;
+                const startDate = document.getElementById('habit-start-date').value || this.selectedDate;
+                const categoryId = document.getElementById('habit-category').value || '';
+                let days = [];
+                if (freq === 'custom') {
+                    days = this.selectedHabitDays || [];
+                    if (days.length === 0) { alert('Please select at least one day'); return; }
+                }
+                this.db.addHabit({ name, freq, days, startDate, categoryId });
+                this.closeModals();
+                this.render();
+            }
+
+            toggleHabit(habitId) {
+                this.db.toggleHabitLog(habitId, this.selectedDate);
+                this.render();
+            }
+
+            openDeleteHabitModal(id) {
+                this.deletingHabitId = id;
+                document.getElementById('habit-stop-date').value = this.selectedDate;
+                document.getElementById('modal-delete-habit').classList.add('open');
+            }
+
+            deleteHabitPermanently() {
+                if (confirm('Permanently delete this habit and all its history?')) {
+                    this.db.deleteHabit(this.deletingHabitId);
+                    this.deletingHabitId = null;
+                    this.closeModals();
+                    this.render();
+                }
+            }
+
+            stopHabitFromDate() {
+                const stopDate = document.getElementById('habit-stop-date').value;
+                if (!stopDate) { alert('Please select a stop date'); return; }
+                this.db.updateHabit(this.deletingHabitId, { endDate: stopDate });
+                this.deletingHabitId = null;
+                this.closeModals();
+                this.render();
+            }
+
             renderTimesheet() {
                 const timesheet = this.db.getTimesheet(this.selectedDate);
                 const now = new Date();
@@ -3135,15 +4249,31 @@
                     }
                 });
 
+                const undoCount = this.timesheetUndoStack ? this.timesheetUndoStack.length : 0;
+                const tsFrom = this.timesheetRangeFrom || this.selectedDate;
+                const tsTo = this.timesheetRangeTo || this.selectedDate;
+
                 let html = `
-                    <div class="dashboard-header">
-                        <h2>Timesheet</h2>
+                    <div class="dashboard-header" style="padding-bottom:0;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h2>Timesheet</h2>
+                            <button class="btn-undo ${undoCount === 0 ? 'undo-empty' : ''}" onclick="app.undoTimesheet()" title="Undo last change (Ctrl+Z)">
+                                <i class="fas fa-undo"></i> Undo ${undoCount > 0 ? '(' + undoCount + ')' : ''}
+                            </button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding-top:8px;">
+                            <span class="text-xs text-secondary">From</span>
+                            <input type="date" id="ts-range-from" value="${tsFrom}" onchange="app.setTimesheetRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                            <span class="text-xs text-secondary">To</span>
+                            <input type="date" id="ts-range-to" value="${tsTo}" onchange="app.setTimesheetRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                        </div>
                     </div>`;
 
+                const selDTs = new Date(this.selectedDate + 'T00:00:00');
                 html += `<div class="date-scroller">`;
                 for (let i = -3; i <= 3; i++) {
-                    const date = new Date();
-                    date.setDate(date.getDate() + i);
+                    const date = new Date(selDTs);
+                    date.setDate(selDTs.getDate() + i);
                     const dateStr = date.toISOString().split('T')[0];
                     const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
                     const dayNum = date.getDate();
@@ -3156,6 +4286,7 @@
                         </div>`;
                 }
                 html += `</div>`;
+
 
                 html += `
                     <div class="timesheet-summary">
@@ -3374,34 +4505,41 @@
                     return;
                 }
 
+                // === CAPTURE state for promote before we clear it ===
+                const wasPromoting = !!this.promotingParkedTaskId;
+                const promotingId = this.promotingParkedTaskId;
+                console.log('[saveManualFill] wasPromoting:', wasPromoting, 'promotingId:', promotingId);
+
+                // === PUSH UNDO SNAPSHOT (before any mutation) ===
+                this.pushUndoSnapshot();
+
                 let taskId;
                 if (this.editingTimesheetTaskId) {
-                    // We are editing, so remove the old entries first by DIRECTLY deleting the slots we found earlier
                     const dateToClear = this.editingTimesheetDate || this.selectedDate;
-
                     if (this.editingTimesheetOriginalSlots && this.db.data.timesheet[dateToClear]) {
-                        console.log('Clearing original slots:', this.editingTimesheetOriginalSlots);
                         this.editingTimesheetOriginalSlots.forEach(slot => {
                             delete this.db.data.timesheet[dateToClear][slot];
                         });
-                        // CRITICAL: Save after deletion
-                        this.db.saveLocalData();
-                        this.db.saveToFirebase();
                     } else {
-                        // Fallback to ID-based clear if slots missing (shouldn't happen)
-                        console.log('Fallback to ID-based clear');
                         this.db.clearTimesheetEntries(dateToClear, this.editingTimesheetTaskId);
                     }
-
                     taskId = this.editingTimesheetTaskId;
                 } else {
                     taskId = 'manual-' + Date.now();
                 }
 
-                // Fill logic always uses CURRENT selected date (allows moving to new date if we supported that, but typically same)
+                // Fill the timesheet block
                 this.db.fillTimesheetBlock(this.selectedDate, timeFrom, timeTo, taskId, categoryId, taskName);
+                console.log('[saveManualFill] filled timesheet for', this.selectedDate);
 
-                // Reset state
+                // If promoting a parked task, mark it done
+                if (promotingId) {
+                    console.log('[saveManualFill] marking parked task done:', promotingId);
+                    this.db.updateParkedTask(promotingId, { status: 'done', promotedAt: new Date().toISOString() });
+                }
+
+                // Reset all editing state
+                this.promotingParkedTaskId = null;
                 this.editingTimesheetTaskId = null;
                 this.editingTimesheetDate = null;
                 this.editingTimesheetOriginalSlots = null;
@@ -3409,6 +4547,55 @@
                 if (btn) btn.textContent = 'Fill Timesheet';
 
                 this.closeModals();
+
+                // Navigate: if this was a promote-from-parking → back to parking
+                if (wasPromoting) {
+                    this.currentView = 'parking';
+                    document.querySelectorAll('.nav-item').forEach(it => {
+                        it.classList.toggle('active', it.dataset.view === 'parking');
+                    });
+                } else {
+                    this.currentView = 'timesheet';
+                }
+                this.render();
+
+            }
+
+            // ===== TIMESHEET UNDO =====
+            pushUndoSnapshot() {
+                if (!this.timesheetUndoStack) this.timesheetUndoStack = [];
+                // Deep-copy the whole date's timesheet data
+                const snapshot = JSON.parse(JSON.stringify(
+                    (this.db.data.timesheet && this.db.data.timesheet[this.selectedDate]) ? this.db.data.timesheet[this.selectedDate] : {}
+                ));
+                this.timesheetUndoStack.push({ date: this.selectedDate, data: snapshot });
+                if (this.timesheetUndoStack.length > 20) this.timesheetUndoStack.shift();
+                console.log('[Undo] pushed snapshot for', this.selectedDate, 'stack size:', this.timesheetUndoStack.length);
+            }
+
+            undoTimesheet() {
+                if (!this.timesheetUndoStack || this.timesheetUndoStack.length === 0) {
+                    console.log('[Undo] stack empty');
+                    return;
+                }
+                const frame = this.timesheetUndoStack.pop();
+                console.log('[Undo] restoring date', frame.date, 'data:', frame.data);
+                // Completely replace the date's data in memory
+                if (!this.db.data.timesheet) this.db.data.timesheet = {};
+                this.db.data.timesheet[frame.date] = JSON.parse(JSON.stringify(frame.data));
+                this.selectedDate = frame.date;
+                // Persist immediately
+                this.db.saveLocalData();
+                // Delay Firebase save slightly to avoid racing a prior in-flight write
+                setTimeout(() => this.db.saveToFirebase(), 150);
+                this.render();
+            }
+
+            setTimesheetRange() {
+                const from = document.getElementById('ts-range-from');
+                const to = document.getElementById('ts-range-to');
+                if (from) { this.timesheetRangeFrom = from.value; this.selectedDate = from.value; }
+                if (to) this.timesheetRangeTo = to.value;
                 this.render();
             }
 
@@ -3750,6 +4937,8 @@
             }
 
             openAddTaskModal() {
+                // If parking-promote is pending, cancel it (user opened add-task manually)
+                this.promotingParkedTaskId = null;
                 const modal = document.getElementById('modal-add-task');
                 const catSelect = document.getElementById('inp-task-category');
 
@@ -3775,6 +4964,19 @@
                 document.querySelectorAll('.day-chip').forEach(chip => chip.classList.remove('selected'));
 
                 modal.classList.add('open');
+            }
+
+            // Override FAB action depending on current view
+            handleFab() {
+                if (this.currentView === 'parking') {
+                    this.openAddParkedTaskModal();
+                } else if (this.currentView === 'habits') {
+                    this.openAddHabitModal();
+                } else if (this.currentView === 'timesheet') {
+                    this.openManualFillModal();
+                } else {
+                    this.openAddTaskModal();
+                }
             }
 
             closeModals() {
@@ -4212,6 +5414,356 @@
         }
 
         const app = new App();
+
+        // ===== VOICE ASSISTANT =====
+        class VoiceAssistant {
+            constructor() {
+                this.recognition = null;
+                this.isListening = false;
+                this._initRecognition();
+            }
+
+            _initRecognition() {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SR) return;
+                this.recognition = new SR();
+                this.recognition.continuous = false;
+                this.recognition.interimResults = true;
+                this.recognition.lang = 'en-US';
+                this.recognition.maxAlternatives = 1;
+
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    document.getElementById('voice-fab').classList.add('listening');
+                    document.getElementById('voice-overlay').classList.add('active');
+                    document.getElementById('voice-status').textContent = 'Listening...';
+                    document.getElementById('voice-transcript').textContent = 'Say something like "Add meeting tomorrow at 3pm"';
+                    document.getElementById('voice-preview').classList.remove('visible');
+                };
+
+                this.recognition.onresult = (event) => {
+                    let interim = '';
+                    let final = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const t = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) final += t;
+                        else interim += t;
+                    }
+                    const display = final || interim;
+                    document.getElementById('voice-transcript').textContent = '"' + display + '"';
+                    if (final) this._process(final.trim());
+                };
+
+                this.recognition.onerror = (event) => {
+                    if (event.error === 'no-speech') {
+                        document.getElementById('voice-status').textContent = 'No speech detected. Try again.';
+                    } else if (event.error === 'not-allowed') {
+                        this._stop();
+                        alert('Microphone access denied. Please allow microphone permission and try again.');
+                    } else {
+                        document.getElementById('voice-status').textContent = 'Error: ' + event.error;
+                    }
+                };
+
+                this.recognition.onend = () => {
+                    this.isListening = false;
+                    document.getElementById('voice-fab').classList.remove('listening');
+                    const status = document.getElementById('voice-status');
+                    if (status.textContent === 'Listening...') {
+                        status.textContent = 'Done. Opening form...';
+                    }
+                };
+            }
+
+            toggle() {
+                if (this.isListening) {
+                    this.cancel();
+                } else {
+                    this.start();
+                }
+            }
+
+            start() {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SR) {
+                    alert('Voice recognition is not supported in this browser.\nPlease use Chrome, Edge, or Safari.');
+                    return;
+                }
+                // Re-init each time to avoid state issues on iOS
+                this._initRecognition();
+                try {
+                    this.recognition.start();
+                } catch (e) {
+                    console.warn('Voice start error:', e);
+                }
+            }
+
+            _stop() {
+                this.isListening = false;
+                document.getElementById('voice-fab').classList.remove('listening');
+                document.getElementById('voice-overlay').classList.remove('active');
+                try { this.recognition && this.recognition.stop(); } catch (e) { }
+            }
+
+            cancel() {
+                this._stop();
+                document.getElementById('voice-status').textContent = 'Cancelled';
+            }
+
+            // ---- NLP Parser ----
+            _parseTime(text) {
+                // Normalise speech recognition output before parsing
+                let t = text.toLowerCase();
+
+                // Convert word-numbers to digits (speech often says "three PM")
+                const wordNums = {
+                    'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6,
+                    'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10, 'eleven': 11, 'twelve': 12
+                };
+                Object.entries(wordNums).forEach(([w, n]) => {
+                    t = t.replace(new RegExp('\\b' + w + '\\b', 'g'), String(n));
+                });
+
+                // Normalise am/pm variants: "a.m.", "a m", "A.M." -> "am", "p.m." -> "pm"
+                t = t.replace(/a\.?\s*m\.?/gi, 'am').replace(/p\.?\s*m\.?/gi, 'pm');
+
+                // Handle "half past X" -> "X:30", "X o'clock" -> "X"
+                t = t.replace(/half past (\d{1,2})/gi, '$1:30');
+                t = t.replace(/(\d{1,2})\s*o'?clock/gi, '$1');
+
+                const toH24 = (h, m, period) => {
+                    h = parseInt(h); m = parseInt(m || 0);
+                    if (period === 'pm' && h !== 12) h += 12;
+                    if (period === 'am' && h === 12) h = 0;
+                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+                };
+
+                // Match: "3pm", "3:30pm", "3 pm", "3:30 pm"
+                const timeRx = /(\d{1,2})(?::(\d{2}))?\s*(am|pm)/gi;
+                const matches = [...t.matchAll(timeRx)];
+
+                let timeFrom = null, timeTo = null;
+                if (matches.length >= 1) timeFrom = toH24(matches[0][1], matches[0][2], matches[0][3]);
+                if (matches.length >= 2) timeTo = toH24(matches[1][1], matches[1][2], matches[1][3]);
+
+                // Handle "for X hour(s)" / "for X minutes" / "for an hour"
+                if (timeFrom && !timeTo) {
+                    // "for an hour", "for 1 hour", "for 1.5 hours", "for 30 minutes"
+                    const forRx = /for\s+(?:an?\s+)?(\d+(?:\.\d+)?)\s*(hour|hr|minute|min)/i;
+                    const forM = t.match(forRx);
+                    if (forM) {
+                        const isHour = /hour|hr/i.test(forM[2]);
+                        const [fH, fM] = timeFrom.split(':').map(Number);
+                        const addMins = isHour ? Math.round(parseFloat(forM[1]) * 60) : parseInt(forM[1]);
+                        const totalMins = Math.min(fH * 60 + fM + addMins, 1439);
+                        timeTo = `${Math.floor(totalMins / 60).toString().padStart(2, '0')}:${(totalMins % 60).toString().padStart(2, '0')}`;
+                    } else if (/for an hour|for one hour/i.test(t)) {
+                        const [fH, fM] = timeFrom.split(':').map(Number);
+                        const totalMins = Math.min(fH * 60 + fM + 60, 1439);
+                        timeTo = `${Math.floor(totalMins / 60).toString().padStart(2, '0')}:${(totalMins % 60).toString().padStart(2, '0')}`;
+                    }
+                }
+                return { timeFrom, timeTo };
+            }
+
+            _parseDate(text) {
+                const t = text.toLowerCase();
+                const now = new Date();
+                const toISO = d => d.toISOString().split('T')[0];
+
+                if (/\btoday\b/.test(t)) return toISO(now);
+                if (/\btomorrow\b/.test(t)) {
+                    const d = new Date(now); d.setDate(d.getDate() + 1); return toISO(d);
+                }
+                if (/\byesterday\b/.test(t)) {
+                    const d = new Date(now); d.setDate(d.getDate() - 1); return toISO(d);
+                }
+
+                // Weekday names
+                const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                for (let i = 0; i < days.length; i++) {
+                    if (t.includes(days[i])) {
+                        const d = new Date(now);
+                        const diff = (i - d.getDay() + 7) % 7 || 7;
+                        d.setDate(d.getDate() + diff);
+                        return toISO(d);
+                    }
+                }
+
+                // "March 5", "5th March", "5 march"
+                const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+                for (let mi = 0; mi < months.length; mi++) {
+                    if (t.includes(months[mi])) {
+                        const numRx = /(\d{1,2})(?:st|nd|rd|th)?/;
+                        const numM = t.match(numRx);
+                        if (numM) {
+                            const d = new Date(now.getFullYear(), mi, parseInt(numM[1]));
+                            if (d < now) d.setFullYear(d.getFullYear() + 1);
+                            return toISO(d);
+                        }
+                    }
+                }
+
+                return toISO(now); // fallback: today
+            }
+
+            _parseCategory(text) {
+                // Try to match any category name (fuzzy, case-insensitive)
+                const categories = app.db.getCategories();
+                const t = text.toLowerCase();
+                let best = null, bestLen = 0;
+                for (const cat of categories) {
+                    const name = cat.name.toLowerCase();
+                    if (t.includes(name) && name.length > bestLen) {
+                        best = cat;
+                        bestLen = name.length;
+                    }
+                }
+                return best;
+            }
+
+            _stripExtras(text, date, timeFrom, timeTo, category) {
+                // Remove time/date/category/filler words to extract task name
+                let t = text.toLowerCase();
+
+                // Remove leading command words
+                t = t.replace(/^(add (a |an |the )?task|fill timesheet|add|task|hey|ok|okay)/i, '');
+
+                // Remove time patterns
+                t = t.replace(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)/gi, '');
+                t = t.replace(/for\s+\d+\.?\d*\s*(hour|hours|hr|hrs|minute|minutes|min|mins)/gi, '');
+                t = t.replace(/\b(at|from|to|until|till)\b/gi, '');
+
+                // Remove date words
+                t = t.replace(/\b(today|tomorrow|yesterday|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, '');
+                t = t.replace(/\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/gi, '');
+                t = t.replace(/\b(on|the|next|this)\b/gi, '');
+                t = t.replace(/\d{1,2}(st|nd|rd|th)?/gi, '');
+
+                // Remove category name if detected
+                if (category) t = t.replace(new RegExp(category.name, 'gi'), '');
+
+                // Clean up
+                t = t.replace(/\s+/g, ' ').trim();
+                return t.charAt(0).toUpperCase() + t.slice(1);
+            }
+
+            _isTimesheetMode(text) {
+                return /fill timesheet|timesheet|log time|time log/i.test(text);
+            }
+
+            _process(text) {
+                document.getElementById('voice-status').textContent = '✨ Got it! Processing...';
+
+                const { timeFrom, timeTo } = this._parseTime(text);
+                const date = this._parseDate(text);
+                const category = this._parseCategory(text);
+                const isTimesheet = this._isTimesheetMode(text);
+                const name = this._stripExtras(text, date, timeFrom, timeTo, category);
+
+                // Show preview
+                const fmt12 = t => t ? formatTime12Hour(t) : '—';
+                const fmtDate = d => {
+                    if (!d) return '—';
+                    const [y, mo, day] = d.split('-');
+                    const nm = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return `${nm[parseInt(mo) - 1]} ${parseInt(day)}, ${y}`;
+                };
+
+                document.getElementById('vp-name').innerHTML = `Task: <span>${name || '(not detected)'}</span>`;
+                document.getElementById('vp-date').innerHTML = `Date: <span>${fmtDate(date)}</span>`;
+                document.getElementById('vp-time').innerHTML = `Time: <span>${fmt12(timeFrom)} → ${fmt12(timeTo)}</span>`;
+                document.getElementById('vp-cat').innerHTML = `Category: <span>${category ? category.name : '(first in list)'}</span>`;
+                document.getElementById('voice-preview').classList.add('visible');
+
+                // Small delay so user sees the preview, then open form
+                setTimeout(() => {
+                    this._stop();
+                    if (isTimesheet) {
+                        this._fillTimesheetModal(name, date, timeFrom, timeTo, category);
+                    } else {
+                        this._fillAddTaskModal(name, date, timeFrom, timeTo, category);
+                    }
+                }, 1200);
+            }
+
+            // Snap HH:MM to nearest 30-min slot (selects only have 00 and 30)
+            _snapTime(time24) {
+                if (!time24) return time24;
+                const [h, m] = time24.split(':').map(Number);
+                const snapped = m < 15 ? 0 : m < 45 ? 30 : 0;
+                const extraHour = m >= 45 ? 1 : 0;
+                const newH = (h + extraHour) % 24;
+                return `${newH.toString().padStart(2, '0')}:${snapped === 0 ? '00' : '30'}`;
+            }
+
+            // Directly force-set each sub-select by matching option text, then fire change event
+            _forceSetTime(baseId, time24) {
+                if (!time24) return;
+                const snapped = this._snapTime(time24);
+                const [hStr, mStr] = snapped.split(':');
+                let hour = parseInt(hStr);
+                const period = hour >= 12 ? 'PM' : 'AM';
+                if (hour > 12) hour -= 12;
+                if (hour === 0) hour = 12;
+
+                const hSel = document.getElementById(baseId + '-h');
+                const mSel = document.getElementById(baseId + '-m');
+                const pSel = document.getElementById(baseId + '-p');
+                if (!hSel || !mSel || !pSel) return;
+
+                // Set by iterating options to guarantee a match
+                for (let i = 0; i < hSel.options.length; i++) {
+                    if (parseInt(hSel.options[i].value) === hour) { hSel.selectedIndex = i; break; }
+                }
+                for (let i = 0; i < mSel.options.length; i++) {
+                    if (mSel.options[i].value === mStr) { mSel.selectedIndex = i; break; }
+                }
+                for (let i = 0; i < pSel.options.length; i++) {
+                    if (pSel.options[i].value === period) { pSel.selectedIndex = i; break; }
+                }
+
+                // Dispatch change so any listeners (like autoSetEndTime) react
+                [hSel, mSel, pSel].forEach(sel => sel.dispatchEvent(new Event('change', { bubbles: true })));
+            }
+
+            _fillAddTaskModal(name, date, timeFrom, timeTo, category) {
+                app.openAddTaskModal();
+                setTimeout(() => {
+                    if (name) document.getElementById('inp-task-name').value = name;
+                    if (date) document.getElementById('inp-task-date').value = date;
+                    // Set FROM first (may auto-set TO via autoSetEndTime)
+                    if (timeFrom) this._forceSetTime('inp-task-time-from', timeFrom);
+                    // Then override TO explicitly if we have it
+                    if (timeTo) setTimeout(() => this._forceSetTime('inp-task-time-to', timeTo), 50);
+                    if (category) {
+                        const sel = document.getElementById('inp-task-category');
+                        if (sel) sel.value = category.id;
+                    }
+                }, 200);
+            }
+
+            _fillTimesheetModal(name, date, timeFrom, timeTo, category) {
+                if (date) {
+                    app.selectedDate = date;
+                    const tsBtn = document.querySelector('[data-view="timesheet"]');
+                    if (tsBtn) { tsBtn.click(); }
+                }
+                app.openManualFillModal();
+                setTimeout(() => {
+                    if (name) document.getElementById('manual-task-name').value = name;
+                    if (timeFrom) this._forceSetTime('manual-time-from', timeFrom);
+                    if (timeTo) setTimeout(() => this._forceSetTime('manual-time-to', timeTo), 50);
+                    if (category) {
+                        const sel = document.getElementById('manual-category');
+                        if (sel) sel.value = category.id;
+                    }
+                }, 200);
+            }
+        }
+
+        const voiceAssistant = new VoiceAssistant();
+
 
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
