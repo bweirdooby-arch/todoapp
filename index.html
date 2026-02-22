@@ -240,30 +240,44 @@
 
         /* Main Container */
         #app-container {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding-bottom: calc(var(--nav-height) + var(--spacing-xl));
+            width: 100%;
+            overflow: hidden;
+            background: var(--background);
             position: relative;
-            z-index: 1;
         }
 
-        #app-container::-webkit-scrollbar {
-            width: 6px;
+        .views-slider {
+            display: flex;
+            width: 700%;
+            /* 7 tabs */
+            height: 100%;
+            transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: transform;
         }
 
-        #app-container::-webkit-scrollbar-track {
-            background: transparent;
+        .view-slide {
+            width: 14.2857%;
+            /* 1/7 of slider width = 100vw */
+            flex-shrink: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding-bottom: 90px;
+            /* Space for nav */
+            -webkit-overflow-scrolling: touch;
         }
 
-        #app-container::-webkit-scrollbar-thumb {
-            background: var(--border-medium);
-            border-radius: var(--radius-full);
+        /* Nav Tab Indicator */
+        .nav-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: calc(100% / 7);
+            height: 3px;
+            background: var(--accent-primary);
+            transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 101;
         }
 
-        #app-container::-webkit-scrollbar-thumb:hover {
-            background: var(--border-subtle);
-        }
 
         /* Date Scroller */
         .date-scroller {
@@ -773,18 +787,22 @@
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 0 20px;
+            padding: 0;
             z-index: 100;
         }
+
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 4px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
+            padding: 8px 0;
+            flex: 1;
+            min-width: 0;
+            height: 100%;
             transition: all 0.2s;
             color: var(--text-secondary);
         }
@@ -1480,8 +1498,8 @@
         /* ===== VOICE ASSISTANT ===== */
         #voice-fab {
             position: fixed;
-            bottom: calc(var(--nav-height) + 96px);
-            right: 20px;
+            bottom: calc(var(--nav-height) + 85px);
+            right: 24px;
             width: 52px;
             height: 52px;
             border-radius: 50%;
@@ -1491,7 +1509,7 @@
             font-size: 20px;
             cursor: pointer;
             z-index: 900;
-            box-shadow: 0 4px 20px rgba(139, 126, 248, 0.5);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1501,6 +1519,15 @@
         #voice-fab:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 28px rgba(139, 126, 248, 0.7);
+        }
+
+        #voice-fab i {
+            font-size: 20px;
+            color: white;
+            display: block;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
         }
 
         #voice-fab.listening {
@@ -1553,10 +1580,13 @@
 
         .voice-ring {
             position: absolute;
+            inset: 0;
+            margin: auto;
             border-radius: 50%;
             border: 2px solid rgba(139, 126, 248, 0.4);
             animation: ringExpand 1.8s ease-out infinite;
         }
+
 
         .voice-ring:nth-child(1) {
             width: 120px;
@@ -1923,7 +1953,18 @@
 </head>
 
 <body>
-    <div id="app-container"></div>
+    <div id="app-container">
+        <div class="views-slider" id="views-slider">
+            <div class="view-slide" id="view-todo"></div>
+            <div class="view-slide" id="view-timesheet"></div>
+            <div class="view-slide" id="view-parking"></div>
+            <div class="view-slide" id="view-habits"></div>
+            <div class="view-slide" id="view-analytics"></div>
+            <div class="view-slide" id="view-manage"></div>
+            <div class="view-slide" id="view-account"></div>
+        </div>
+    </div>
+
 
     <button id="main-fab">
         <i class="fas fa-plus"></i>
@@ -1968,10 +2009,12 @@
 
 
     <nav class="bottom-nav">
+        <div class="nav-indicator" id="nav-indicator"></div>
         <div class="nav-item active" data-view="todo">
             <i class="fas fa-list-check"></i>
             <span>To Do</span>
         </div>
+
         <div class="nav-item" data-view="timesheet">
             <i class="fas fa-clock"></i>
             <span>Timesheet</span>
@@ -3132,8 +3175,10 @@
                 this.timesheetUndoStack = [];
                 this.promotingParkedTaskId = null;
                 this.deletingHabitId = null;
+                this.TAB_ORDER = ['todo', 'timesheet', 'parking', 'habits', 'analytics', 'manage', 'account'];
 
                 this.render();
+
 
                 // Keyboard undo shortcut
                 document.addEventListener('keydown', (e) => {
@@ -3149,10 +3194,7 @@
                 // Auto-refresh every minute to update productive hours in real-time
                 setInterval(() => {
                     if (this.currentView === 'todo') {
-                        const today = new Date().toISOString().split('T')[0];
-                        if (this.selectedDate === today) {
-                            this.render();
-                        }
+                        this.renderTodo();
                     }
                 }, 60000); // Update every 60 seconds
             }
@@ -3244,43 +3286,76 @@
                 this.autoSetEndTime('manual-time-from', 'manual-time-to');
                 this.autoSetEndTime('edit-routine-time-from', 'edit-routine-time-to');
 
-                // ===== SWIPE TO SWITCH TABS =====
-                const TAB_ORDER = ['todo', 'timesheet', 'parking', 'habits', 'analytics', 'manage', 'account'];
+                // ===== SWIPE TO SWITCH TABS (Interactive) =====
                 let swipeStartX = 0;
                 let swipeStartY = 0;
                 let swipeActive = false;
+                let sliderEl = document.getElementById('views-slider');
+                let indicatorEl = document.getElementById('nav-indicator');
 
                 document.addEventListener('touchstart', (e) => {
-                    // Ignore if inside a modal or a horizontal scrollable element
-                    if (e.target.closest('.modal') || e.target.closest('.modal-content')) return;
+                    const target = e.target;
+                    // Ignore if inside a modal, date scroller, or scrollable area
+                    if (target.closest('.modal') || target.closest('.modal-content') || target.closest('.date-scroller') || target.closest('.chart-container')) return;
                     swipeStartX = e.touches[0].clientX;
                     swipeStartY = e.touches[0].clientY;
                     swipeActive = true;
+                    // Disable transitions during manual drag
+                    if (sliderEl) sliderEl.style.transition = 'none';
+                    if (indicatorEl) indicatorEl.style.transition = 'none';
+                }, { passive: true });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!swipeActive) return;
+                    const dx = e.touches[0].clientX - swipeStartX;
+                    const dy = e.touches[0].clientY - swipeStartY;
+
+                    // Only lock and slide if move is primarily horizontal
+                    if (Math.abs(dx) > Math.abs(dy) * 1.4) {
+                        const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
+                        const sliderWidth = window.innerWidth;
+                        const basePercent = -(currentIdx * 14.2857);
+                        const movePercent = (dx / (sliderWidth * 7)) * 100;
+
+                        // Resistance at boundaries
+                        let finalPercent = basePercent + movePercent;
+                        if ((currentIdx === 0 && dx > 0) || (currentIdx === this.TAB_ORDER.length - 1 && dx < 0)) {
+                            finalPercent = basePercent + (movePercent * 0.3);
+                        }
+
+                        if (sliderEl) sliderEl.style.transform = `translate3d(${finalPercent}%, 0, 0)`;
+                        if (indicatorEl) {
+                            const indicatorMove = -(dx / sliderWidth) * 100;
+                            const finalIndicatorX = (currentIdx * 100) + indicatorMove;
+                            indicatorEl.style.transform = `translate3d(${finalIndicatorX}%, 0, 0)`;
+                        }
+
+                    }
                 }, { passive: true });
 
                 document.addEventListener('touchend', (e) => {
                     if (!swipeActive) return;
                     swipeActive = false;
                     const dx = e.changedTouches[0].clientX - swipeStartX;
-                    const dy = e.changedTouches[0].clientY - swipeStartY;
-                    // Only act on clear horizontal swipes (dx > 60, and more horizontal than vertical)
-                    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-                    const currentIdx = TAB_ORDER.indexOf(this.currentView);
-                    if (currentIdx === -1) return;
-                    let nextIdx;
-                    if (dx < 0) { // swipe left → next tab
-                        nextIdx = Math.min(currentIdx + 1, TAB_ORDER.length - 1);
-                    } else { // swipe right → previous tab
-                        nextIdx = Math.max(currentIdx - 1, 0);
+                    const sliderWidth = window.innerWidth;
+                    const threshold = sliderWidth * 0.2; // 20% width to trigger switch
+
+                    if (sliderEl) sliderEl.style.transition = ''; // Restore transition
+                    if (indicatorEl) indicatorEl.style.transition = '';
+
+                    if (Math.abs(dx) > threshold) {
+                        const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
+                        let nextIdx = currentIdx;
+                        if (dx < 0) nextIdx = Math.min(currentIdx + 1, this.TAB_ORDER.length - 1);
+                        else nextIdx = Math.max(currentIdx - 1, 0);
+
+                        this.currentView = this.TAB_ORDER[nextIdx];
                     }
-                    if (nextIdx === currentIdx) return;
-                    const nextView = TAB_ORDER[nextIdx];
-                    this.currentView = nextView;
-                    document.querySelectorAll('.nav-item').forEach(it => {
-                        it.classList.toggle('active', it.dataset.view === nextView);
-                    });
                     this.render();
-                }, { passive: true });
+                });
+
+
+
 
                 if (auth) {
                     auth.onAuthStateChanged((user) => {
@@ -3324,30 +3399,33 @@
             }
 
             render() {
-                switch (this.currentView) {
-                    case 'todo':
-                        this.renderTodo();
-                        break;
-                    case 'timesheet':
-                        this.renderTimesheet();
-                        break;
-                    case 'parking':
-                        this.renderParking();
-                        break;
-                    case 'habits':
-                        this.renderHabits();
-                        break;
-                    case 'analytics':
-                        this.renderAnalytics();
-                        break;
-                    case 'manage':
-                        this.renderManage();
-                        break;
-                    case 'account':
-                        this.renderAccount();
-                        break;
+                const idx = this.TAB_ORDER.indexOf(this.currentView);
+                const slider = document.getElementById('views-slider');
+                if (slider) {
+                    slider.style.transform = `translate3d(-${idx * 14.2857}%, 0, 0)`;
                 }
+
+                // Update nav indicator
+                const indicator = document.getElementById('nav-indicator');
+                if (indicator) {
+                    indicator.style.transform = `translate3d(${idx * 100}%, 0, 0)`;
+                }
+
+                // Update nav active state
+                document.querySelectorAll('.nav-item').forEach(it => {
+                    it.classList.toggle('active', it.dataset.view === this.currentView);
+                });
+
+
+                if (this.currentView === 'todo') this.renderTodo();
+                else if (this.currentView === 'timesheet') this.renderTimesheet();
+                else if (this.currentView === 'parking') this.renderParking();
+                else if (this.currentView === 'habits') this.renderHabits();
+                else if (this.currentView === 'analytics') this.renderAnalytics();
+                else if (this.currentView === 'manage') this.renderManage();
+                else if (this.currentView === 'account') this.renderAccount();
             }
+
 
             renderTodo() {
                 const tasks = this.db.getTasks(this.selectedDate);
@@ -3553,7 +3631,7 @@
                 }
                 html += `</div>`;
 
-                this.container.innerHTML = html;
+                document.getElementById('view-todo').innerHTML = html;
             }
 
             selectDate(date) {
@@ -3955,7 +4033,7 @@
 
 
                 html += `</div>`;
-                this.container.innerHTML = html;
+                document.getElementById('view-parking').innerHTML = html;
             }
 
             openAddParkedTaskModal() {
@@ -4138,7 +4216,7 @@
                 }
 
                 html += `</div>`;
-                this.container.innerHTML = html;
+                document.getElementById('view-habits').innerHTML = html;
             }
 
             setHabitRange() {
@@ -4391,7 +4469,7 @@
                 });
                 html += `</div>`;
 
-                this.container.innerHTML = html;
+                document.getElementById('view-timesheet').innerHTML = html;
             }
 
             openManualFillModal() {
@@ -4688,7 +4766,7 @@
                         <canvas id="barChart"></canvas>
                     </div>`;
 
-                this.container.innerHTML = html;
+                document.getElementById('view-analytics').innerHTML = html;
 
                 setTimeout(() => {
                     const ctxPie = document.getElementById('pieChart').getContext('2d');
@@ -4862,7 +4940,7 @@
                 });
 
                 html += `</div>`;
-                this.container.innerHTML = html;
+                document.getElementById('view-manage').innerHTML = html;
 
                 // Initialize pomodoro settings
                 if (!this.pomodoroTimer) {
@@ -4876,7 +4954,7 @@
             }
 
             renderAccount() {
-                this.container.innerHTML = `
+                document.getElementById('view-account').innerHTML = `
                     <div class="dashboard-header"><h2>Account</h2></div>
                     <div class="auth-form">
                         <div class="text-center mb-4">
@@ -4978,6 +5056,8 @@
                     this.openAddTaskModal();
                 }
             }
+
+
 
             closeModals() {
                 document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
@@ -5357,61 +5437,8 @@
                     this.renderEditRoutinePauseList();
                 }
             }
-
-            openManualFillModal() {
-                document.getElementById('manual-task-name').value = '';
-
-                const catSelect = document.getElementById('manual-category');
-                catSelect.innerHTML = '';
-                this.db.getCategories().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.innerText = c.name;
-                    catSelect.appendChild(opt);
-                });
-
-                setTimeInputValue('manual-time-from', '');
-                setTimeInputValue('manual-time-to', '');
-
-                document.getElementById('modal-manual-fill').classList.add('open');
-            }
-
-            saveManualFill() {
-                const name = document.getElementById('manual-task-name').value.trim();
-                const categoryId = document.getElementById('manual-category').value;
-                const timeFrom = getTimeInputValue('manual-time-from');
-                const timeTo = getTimeInputValue('manual-time-to');
-
-                if (!name) {
-                    alert('Task name is required');
-                    return;
-                }
-
-                let endMinutes = timeToMinutes(timeTo);
-                if (endMinutes === 0 && timeToMinutes(timeFrom) > 0) endMinutes = 1440;
-
-                if (timeFrom && timeTo && timeToMinutes(timeFrom) >= endMinutes) {
-                    alert('End time must be after start time');
-                    return;
-                }
-
-                if (!timeFrom || !timeTo) {
-                    alert('Both start and end time are required');
-                    return;
-                }
-
-                // Add to timesheet directly
-                // We don't have a task ID, so we might need to create a dummy task or just fill the slot with name
-                // The current data structure expects a taskId for timesheet entries usually, but let's see fillTimesheetBlock
-                // fillTimesheetBlock(date, timeFrom, timeTo, taskId, categoryId, taskName)
-
-                // We'll use a temporary ID or 'manual'
-                this.db.fillTimesheetBlock(this.selectedDate, timeFrom, timeTo, 'manual-' + Date.now(), categoryId, name);
-
-                this.closeModals();
-                this.render();
-            }
         }
+
 
         const app = new App();
 
