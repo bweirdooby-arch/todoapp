@@ -17,7 +17,14 @@ self.addEventListener('install', (event) => {
         console.log('Cache failed:', err);
       })
   );
-  self.skipWaiting();
+  // REMOVED self.skipWaiting() to allow controlled updates
+});
+
+// Listener for skipWaiting signal from UI
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
 
 // Fetch event - serve from cache, fallback to network

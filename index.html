@@ -355,6 +355,7 @@
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .sidebar-menu {
@@ -1599,6 +1600,53 @@
             .dot {
                 width: 6px;
                 height: 6px;
+            }
+
+            /* Update Notification Toast */
+            .update-toast {
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: var(--surface-elevated);
+                border: 1px solid var(--accent-primary);
+                padding: 12px 20px;
+                border-radius: var(--radius-lg);
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                z-index: 10000;
+                box-shadow: var(--shadow-xl), var(--shadow-glow);
+                transition: transform var(--transition-slow);
+                width: max-content;
+                max-width: 90vw;
+            }
+
+            .update-toast.open {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .update-toast p {
+                margin: 0;
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-primary);
+            }
+
+            .update-btn {
+                background: var(--accent-gradient);
+                border: none;
+                color: white;
+                padding: 6px 14px;
+                border-radius: var(--radius-sm);
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: opacity var(--transition-fast);
+            }
+
+            .update-btn:hover {
+                opacity: 0.9;
             }
 
             /* Task Select Items */
@@ -2948,7 +2996,7 @@
             }
 
             getRoutineTasksForDate(date) {
-                const dateObj = new Date(date);
+                const dateObj = new Date(date + 'T00:00:00');
                 const dayOfWeek = dateObj.getDay();
 
                 return this.data.routines
@@ -3237,7 +3285,7 @@
                     for (let i = 0; i < days; i++) {
                         const currentDate = new Date(start);
                         currentDate.setDate(start.getDate() + i);
-                        const dateStr = currentDate.toISOString().split('T')[0];
+                        const dateStr = getLocalDateStr(currentDate);
                         const dayOfWeek = currentDate.getDay();
 
                         let shouldAppear = false;
@@ -3269,7 +3317,7 @@
 
                 let currentDate = new Date(start);
                 while (currentDate <= end) {
-                    const dateStr = currentDate.toISOString().split('T')[0];
+                    const dateStr = getLocalDateStr(currentDate);
                     const daySheet = this.getTimesheet(dateStr);
 
                     TIME_SLOTS.forEach(slot => {
@@ -3305,7 +3353,7 @@
 
                 let currentDate = new Date(start);
                 while (currentDate <= end) {
-                    const dateStr = currentDate.toISOString().split('T')[0];
+                    const dateStr = getLocalDateStr(currentDate);
                     const daySheet = this.getTimesheet(dateStr);
 
                     TIME_SLOTS.forEach(slot => {
@@ -3727,7 +3775,7 @@
                 for (let i = -3; i <= 3; i++) {
                     const date = new Date(selDTodo);
                     date.setDate(selDTodo.getDate() + i);
-                    const dateStr = date.toISOString().split('T')[0];
+                    const dateStr = getLocalDateStr(date);
                     const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
                     const dayNum = date.getDate();
                     const isActive = dateStr === this.selectedDate;
@@ -4303,7 +4351,7 @@
                 // Store the parked task id; open the manual fill modal mandatorily
                 this.promotingParkedTaskId = id;
                 // Always promote to TODAY's timesheet, regardless of which date was selected
-                this.selectedDate = new Date().toISOString().split('T')[0];
+                this.selectedDate = getLocalDateStr();
                 console.log('[promoteParkedTask] id:', id, 'selectedDate set to today:', this.selectedDate);
                 const task = this.db.getParkedTasks().find(t => t.id === id);
                 this.openManualFillModal();
@@ -4322,7 +4370,7 @@
 
             // ===== HABITS RENDER =====
             renderHabits() {
-                const today = new Date().toISOString().split('T')[0];
+                const today = getLocalDateStr();
                 const selDate = this.selectedDate;
                 const selDateObj2 = new Date(selDate + 'T00:00:00');
                 const selDOW2 = selDateObj2.getDay();
@@ -4379,7 +4427,7 @@
                 for (let i = -3; i <= 3; i++) {
                     const d = new Date(selD2);
                     d.setDate(selD2.getDate() + i);
-                    const dateStr = d.toISOString().split('T')[0];
+                    const dateStr = getLocalDateStr(d);
                     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
                     const dayNum = d.getDate();
                     const isActive = dateStr === this.selectedDate;
@@ -4410,7 +4458,7 @@
                         for (let i = 6; i >= 0; i--) {
                             const d = new Date();
                             d.setDate(d.getDate() - i);
-                            const dStr = d.toISOString().split('T')[0];
+                            const dStr = getLocalDateStr(d);
                             const dayLog = this.db.getHabitLog(dStr);
                             const isDone = !!(dayLog && dayLog[habit.id]);
                             const isToday = dStr === today;
@@ -4578,7 +4626,7 @@
                 for (let i = -3; i <= 3; i++) {
                     const date = new Date(selDTs);
                     date.setDate(selDTs.getDate() + i);
-                    const dateStr = date.toISOString().split('T')[0];
+                    const dateStr = getLocalDateStr(date);
                     const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
                     const dayNum = date.getDate();
                     const isActive = dateStr === this.selectedDate;
@@ -4942,8 +4990,8 @@
                     startDate.setDate(endDate.getDate() - 365);
                 }
 
-                const startStr = startDate.toISOString().split('T')[0];
-                const endStr = endDate.toISOString().split('T')[0];
+                const startStr = getLocalDateStr(startDate);
+                const endStr = getLocalDateStr(endDate);
 
                 const taskStats = this.db.getTaskStatsForPeriod(startStr, endStr);
                 html += `
@@ -6055,17 +6103,64 @@
         const voiceAssistant = new VoiceAssistant();
 
 
-        // PWA Service Worker Registration
+        // PWA Service Worker Registration & Update Notification
+        let newWorker;
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
                         console.log('ServiceWorker registered:', registration.scope);
+
+                        // Listen for updates
+                        registration.addEventListener('updatefound', () => {
+                            newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        // New content available, show notification
+                                        showUpdateNotification();
+                                    }
+                                }
+                            });
+                        });
                     })
                     .catch((error) => {
                         console.log('ServiceWorker registration failed:', error);
                     });
             });
+
+            // Reload page on new service worker takeover
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    window.location.reload();
+                    refreshing = true;
+                }
+            });
+        }
+
+        function showUpdateNotification() {
+            // Create toast if it doesn't exist
+            let toast = document.getElementById('update-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'update-toast';
+                toast.className = 'update-toast';
+                toast.innerHTML = `
+                    <p>✨ New version available!</p>
+                    <button class="update-btn" onclick="applyUpdate()">Update Now</button>
+                `;
+                document.body.appendChild(toast);
+            }
+
+            // Show toast with delay
+            setTimeout(() => toast.classList.add('open'), 1000);
+        }
+
+        function applyUpdate() {
+            if (newWorker) {
+                newWorker.postMessage('skipWaiting');
+            }
         }
 
         // Install PWA prompt
