@@ -292,11 +292,131 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: calc(100% / 7);
+            width: 20%;
+            /* Changed to 1/5 for 5 tabs */
             height: 3px;
             background: var(--accent-primary);
             transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
             z-index: 101;
+            display: block;
+        }
+
+        .nav-indicator.hidden {
+            display: none;
+        }
+
+        /* Side Menu (Hamburger) */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--surface);
+            z-index: 2001;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            transform: translateX(280px);
+        }
+
+        .sidebar-header {
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--divider);
+            padding-bottom: 16px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.2rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-item:hover {
+            background: var(--surface-hover);
+            transform: translateX(4px);
+        }
+
+        .sidebar-item.active {
+            background: rgba(139, 126, 248, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .sidebar-item i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-btn {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 12px;
+        }
+
+        .menu-btn:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-dark);
+        }
+
+        .header-title-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
 
 
@@ -845,7 +965,7 @@
         #main-fab {
             position: fixed;
             bottom: calc(var(--nav-height) + 15px);
-            right: 20px;
+            right: 14px;
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -1302,7 +1422,7 @@
                 width: 50px;
                 height: 50px;
                 bottom: calc(var(--nav-height) + 12px);
-                right: 15px;
+                right: 14px;
             }
 
             #main-fab i {
@@ -1520,7 +1640,7 @@
         #voice-fab {
             position: fixed;
             bottom: calc(var(--nav-height) + 85px);
-            right: 24px;
+            right: 14px;
             width: 52px;
             height: 52px;
             border-radius: 50%;
@@ -1555,6 +1675,7 @@
             margin: 0;
             padding: 0;
             line-height: 1;
+            transform: translateX(1px);
         }
 
         #voice-fab.listening {
@@ -1658,6 +1779,10 @@
             font-size: 32px;
             color: white;
             box-shadow: 0 0 30px rgba(139, 126, 248, 0.6);
+        }
+
+        .voice-mic-btn i {
+            transform: translateX(2px);
         }
 
         #voice-status {
@@ -1980,6 +2105,23 @@
 </head>
 
 <body>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Manage Well</h3>
+        </div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('manage')">
+                <i class="fas fa-cog"></i>
+                <span>Settings & Workspace</span>
+            </div>
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('account')">
+                <i class="fas fa-user"></i>
+                <span>Account & Profile</span>
+            </div>
+        </div>
+    </div>
+
     <div id="app-container">
         <div class="views-slider" id="views-slider">
             <div class="view-slide" id="view-todo"></div>
@@ -2057,14 +2199,6 @@
         <div class="nav-item" data-view="analytics">
             <i class="fas fa-chart-line"></i>
             <span>Stats</span>
-        </div>
-        <div class="nav-item" data-view="manage">
-            <i class="fas fa-cog"></i>
-            <span>Manage</span>
-        </div>
-        <div class="nav-item" data-view="account">
-            <i class="fas fa-user"></i>
-            <span>Me</span>
         </div>
     </nav>
 
@@ -2697,6 +2831,15 @@
             return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
 
+        // Returns local date as YYYY-MM-DD (avoids UTC offset shifting the date in UTC+ timezones)
+        function getLocalDateStr(dateObj) {
+            const d = dateObj || new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
         // Database Manager
         class DatabaseManager {
             constructor() {
@@ -3029,9 +3172,9 @@
             moveUncompletedTasks() {
                 const yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayStr = yesterday.toISOString().split('T')[0];
+                const yesterdayStr = getLocalDateStr(yesterday);
 
-                const today = new Date().toISOString().split('T')[0];
+                const today = getLocalDateStr();
 
                 const yesterdayTasks = this.data.tasks.filter(t => t.date === yesterdayStr && t.status === 'pending');
 
@@ -3190,7 +3333,7 @@
             constructor() {
                 this.db = new DatabaseManager();
                 this.currentView = 'todo';
-                this.selectedDate = new Date().toISOString().split('T')[0];
+                this.selectedDate = getLocalDateStr();
                 this.editingTaskId = null;
                 this.addingTaskType = 'adhoc';
                 this.selectedRoutineDays = [];
@@ -3241,7 +3384,27 @@
                 populateSplitTimeSelects('edit-routine-time-to');
             }
 
+            toggleSidebar() {
+                const overlay = document.getElementById('sidebar-overlay');
+                const sidebar = document.getElementById('sidebar');
+                if (overlay && sidebar) {
+                    overlay.classList.toggle('open');
+                    sidebar.classList.toggle('open');
+                }
+            }
+
+            switchViewFromSidebar(view) {
+                this.currentView = view;
+                this.toggleSidebar();
+                this.render();
+            }
+
             initEventListeners() {
+                // Sidebar overlay closer
+                const overlay = document.getElementById('sidebar-overlay');
+                if (overlay) {
+                    overlay.addEventListener('click', () => this.toggleSidebar());
+                }
                 // Navigation
                 document.querySelectorAll('.nav-item').forEach(item => {
                     item.addEventListener('click', () => {
@@ -3351,13 +3514,13 @@
 
                         // Resistance at boundaries
                         let finalPercent = basePercent + movePercent;
-                        if ((currentIdx === 0 && dx > 0) || (currentIdx === this.TAB_ORDER.length - 1 && dx < 0)) {
+                        if ((currentIdx === 0 && dx > 0) || (currentIdx === 4 && dx < 0)) {
                             finalPercent = basePercent + (movePercent * 0.3);
                         }
 
                         if (sliderEl) sliderEl.style.transform = `translate3d(${finalPercent}%, 0, 0)`;
-                        if (indicatorEl) {
-                            const indicatorMove = -(dx / sliderWidth) * 100;
+                        if (indicatorEl && currentIdx < 5) {
+                            const indicatorMove = -(dx / (sliderWidth / 5)) * 100;
                             const finalIndicatorX = (currentIdx * 100) + indicatorMove;
                             indicatorEl.style.transform = `translate3d(${finalIndicatorX}%, 0, 0)`;
                         }
@@ -3383,23 +3546,20 @@
                     if (Math.abs(dx) > threshold) {
                         const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
                         let nextIdx = currentIdx;
-                        if (dx < 0) nextIdx = Math.min(currentIdx + 1, this.TAB_ORDER.length - 1);
+                        // Limit swipe to the first 5 tabs (rail)
+                        if (dx < 0) nextIdx = Math.min(currentIdx + 1, 4);
                         else nextIdx = Math.max(currentIdx - 1, 0);
 
                         if (nextIdx !== currentIdx) {
                             this.currentView = this.TAB_ORDER[nextIdx];
                             this.render();
                         } else {
-                            // Snap back to current position without full re-render
-                            const idx = this.TAB_ORDER.indexOf(this.currentView);
-                            if (sliderEl) sliderEl.style.transform = `translate3d(-${idx * 14.2857}%, 0, 0)`;
-                            if (indicatorEl) indicatorEl.style.transform = `translate3d(${idx * 100}%, 0, 0)`;
+                            // Snap back
+                            this.render();
                         }
                     } else {
-                        // Snap back to current position without full re-render
-                        const idx = this.TAB_ORDER.indexOf(this.currentView);
-                        if (sliderEl) sliderEl.style.transform = `translate3d(-${idx * 14.2857}%, 0, 0)`;
-                        if (indicatorEl) indicatorEl.style.transform = `translate3d(${idx * 100}%, 0, 0)`;
+                        // Snap back
+                        this.render();
                     }
                 });
 
@@ -3458,11 +3618,19 @@
                 const indicator = document.getElementById('nav-indicator');
                 if (indicator) {
                     indicator.style.transform = `translate3d(${idx * 100}%, 0, 0)`;
+                    indicator.classList.toggle('hidden', idx >= 5);
                 }
 
                 // Update nav active state
                 document.querySelectorAll('.nav-item').forEach(it => {
                     it.classList.toggle('active', it.dataset.view === this.currentView);
+                });
+
+                // Update sidebar active state
+                document.querySelectorAll('.sidebar-item').forEach(it => {
+                    const isManage = it.innerText.includes('Settings') && this.currentView === 'manage';
+                    const isAccount = it.innerText.includes('Account') && this.currentView === 'account';
+                    it.classList.toggle('active', isManage || isAccount);
                 });
 
 
@@ -3480,7 +3648,7 @@
                 const tasks = this.db.getTasks(this.selectedDate);
                 const now = new Date();
                 const currentMinutes = now.getHours() * 60 + now.getMinutes();
-                const currentDate = now.toISOString().split('T')[0];
+                const currentDate = getLocalDateStr();
 
                 let currentTask = null;
                 let nextTask = null;
@@ -3537,7 +3705,10 @@
 
                 let html = `
                     <div class="dashboard-header" style="padding-bottom: 0;">
-                        <h2>My Tasks</h2>
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2>My Tasks</h2>
+                        </div>
                     </div>`;
 
                 // Date range picker
@@ -4012,8 +4183,11 @@
 
                 let html = `
                     <div class="dashboard-header">
-                        <h2>🅿️ Parking Lot</h2>
-                        <p class="text-secondary text-sm" style="margin-top:4px;">Tasks parked for later — no time allocated yet</p>
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2>🅿️ Parking Lot</h2>
+                        </div>
+                        <p class="text-secondary text-sm" style="margin-top:4px; margin-left:52px;">Tasks parked for later — no time allocated yet</p>
                     </div>`;
 
                 html += `<div style="padding: 0 var(--spacing-lg) var(--spacing-lg);">`;
@@ -4173,7 +4347,10 @@
                     : selDateObj2.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
                 let html = `<div class="dashboard-header" style="padding-bottom:0;">
-                    <h2>🌱 Habit Tracker</h2>
+                    <div class="header-title-row">
+                        <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                        <h2>🌱 Habit Tracker</h2>
+                    </div>
                 </div>`;
 
                 // Dashboard summary
@@ -4358,7 +4535,7 @@
             renderTimesheet() {
                 const timesheet = this.db.getTimesheet(this.selectedDate);
                 const now = new Date();
-                const currentDate = now.toISOString().split('T')[0];
+                const currentDate = getLocalDateStr();
 
                 let productive = 0, nonProductive = 0, uncontrollable = 0, unassigned = 0;
 
@@ -4521,7 +4698,7 @@
                 document.getElementById('view-timesheet').innerHTML = html;
             }
 
-            openManualFillModal() {
+            openManualFillModal(presetSlot) {
                 this.editingTimesheetTaskId = null; // Reset edit state
                 document.getElementById('manual-task-name').value = '';
                 document.getElementById('manual-fill-submit-btn').textContent = 'Fill Timesheet'; // Reset button text
@@ -4535,8 +4712,21 @@
                     catSelect.appendChild(opt);
                 });
 
-                setTimeInputValue('manual-time-from', '');
-                setTimeInputValue('manual-time-to', '');
+                if (presetSlot) {
+                    // Pre-fill with the clicked empty slot time
+                    const slotMinutes = timeToMinutes(presetSlot);
+                    const toMinutes = Math.min(slotMinutes + 30, 23 * 60 + 30);
+                    setTimeInputValue('manual-time-from', presetSlot);
+                    setTimeInputValue('manual-time-to', minutesToTime(toMinutes));
+                } else {
+                    // Auto-populate current time rounded to nearest 30 min
+                    const now = new Date();
+                    const totalMins = now.getHours() * 60 + now.getMinutes();
+                    const roundedFrom = Math.floor(totalMins / 30) * 30;
+                    const roundedTo = roundedFrom + 30;
+                    setTimeInputValue('manual-time-from', minutesToTime(roundedFrom >= 24 * 60 ? 0 : roundedFrom));
+                    setTimeInputValue('manual-time-to', minutesToTime(roundedTo >= 24 * 60 ? 0 : roundedTo));
+                }
 
                 document.getElementById('modal-manual-fill').classList.add('open');
             }
@@ -4546,7 +4736,8 @@
                 const timesheet = this.db.getTimesheet(this.selectedDate);
                 const entry = timesheet[slot];
                 if (!entry) {
-                    console.log('No entry found for slot:', slot);
+                    // Empty block clicked → open manual fill pre-set to this slot's time
+                    this.openManualFillModal(slot);
                     return;
                 }
 
@@ -4729,7 +4920,10 @@
             renderAnalytics() {
                 let html = `
                     <div class="dashboard-header">
-                        <h2>Analytics</h2>
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2>📊 Analytics</h2>
+                        </div>
                     </div>
                     
                     <div class="period-selector">
@@ -4895,7 +5089,10 @@
                 const cats = this.db.getCategories();
                 let html = `
                     <div class="dashboard-header">
-                        <h2>Manage</h2>
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2>⚙️ Manage Workspace</h2>
+                        </div>
                     </div>
                     
                     <!-- Pomodoro Timer -->
@@ -5004,7 +5201,12 @@
 
             renderAccount() {
                 document.getElementById('view-account').innerHTML = `
-                    <div class="dashboard-header"><h2>Account</h2></div>
+                    <div class="dashboard-header">
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2>👤 My Account</h2>
+                        </div>
+                    </div>
                     <div class="auth-form">
                         <div class="text-center mb-4">
                             <i class="fas fa-user-circle" style="font-size: 4rem; color: var(--accent-primary)"></i>
@@ -5079,8 +5281,15 @@
 
                 document.getElementById('inp-task-date').value = this.selectedDate;
                 document.getElementById('inp-task-name').value = '';
-                setTimeInputValue('inp-task-time-from', '');
-                setTimeInputValue('inp-task-time-to', '');
+
+                // Auto-populate current time rounded to nearest 30 min
+                const _now = new Date();
+                const _totalMins = _now.getHours() * 60 + _now.getMinutes();
+                const _roundedFrom = Math.floor(_totalMins / 30) * 30;
+                const _roundedTo = _roundedFrom + 30;
+                setTimeInputValue('inp-task-time-from', minutesToTime(_roundedFrom >= 24 * 60 ? 0 : _roundedFrom));
+                setTimeInputValue('inp-task-time-to', minutesToTime(_roundedTo >= 24 * 60 ? 0 : _roundedTo));
+
                 setTimeInputValue('inp-routine-time-from', '');
                 setTimeInputValue('inp-routine-time-to', '');
                 document.getElementById('inp-routine-start-date').value = this.selectedDate;
@@ -5513,7 +5722,10 @@
                     document.getElementById('voice-fab').classList.add('listening');
                     document.getElementById('voice-overlay').classList.add('active');
                     document.getElementById('voice-status').textContent = 'Listening...';
-                    document.getElementById('voice-transcript').textContent = 'Say something like "Add meeting tomorrow at 3pm"';
+                    const hint = app.currentView === 'timesheet'
+                        ? 'Say what to log: "Meeting from 10am to 11am"'
+                        : 'Say something like "Add meeting tomorrow at 3pm"';
+                    document.getElementById('voice-transcript').textContent = hint;
                     document.getElementById('voice-preview').classList.remove('visible');
                 };
 
@@ -5645,7 +5857,7 @@
             _parseDate(text) {
                 const t = text.toLowerCase();
                 const now = new Date();
-                const toISO = d => d.toISOString().split('T')[0];
+                const toISO = d => getLocalDateStr(d);
 
                 if (/\btoday\b/.test(t)) return toISO(now);
                 if (/\btomorrow\b/.test(t)) {
@@ -5725,6 +5937,8 @@
             }
 
             _isTimesheetMode(text) {
+                // Also treat as timesheet mode if user is currently on the timesheet tab
+                if (app.currentView === 'timesheet') return true;
                 return /fill timesheet|timesheet|log time|time log/i.test(text);
             }
 
@@ -5746,7 +5960,7 @@
                     return `${nm[parseInt(mo) - 1]} ${parseInt(day)}, ${y}`;
                 };
 
-                document.getElementById('vp-name').innerHTML = `Task: <span>${name || '(not detected)'}</span>`;
+                document.getElementById('vp-name').innerHTML = `${isTimesheet ? 'Timesheet' : 'Task'}: <span>${name || '(not detected)'}</span>`;
                 document.getElementById('vp-date').innerHTML = `Date: <span>${fmtDate(date)}</span>`;
                 document.getElementById('vp-time').innerHTML = `Time: <span>${fmt12(timeFrom)} → ${fmt12(timeTo)}</span>`;
                 document.getElementById('vp-cat').innerHTML = `Category: <span>${category ? category.name : '(first in list)'}</span>`;
