@@ -269,16 +269,16 @@
 
         .views-slider {
             display: flex;
-            width: 700%;
-            /* 7 tabs */
+            width: 800%;
+            /* 8 tabs */
             height: 100%;
             transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
             will-change: transform;
         }
 
         .view-slide {
-            width: 14.2857%;
-            /* 1/7 of slider width = 100vw */
+            width: 12.5%;
+            /* 1/8 of slider width = 100vw */
             flex-shrink: 0;
             height: 100vh;
             overflow-y: auto;
@@ -2149,6 +2149,1016 @@
             opacity: 0.3;
             cursor: not-allowed;
         }
+
+        /* ===== HOME TAB ===== */
+        .home-header {
+            padding: 20px var(--spacing-lg) 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .home-greeting {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .home-date-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .home-progress-ring-wrap {
+            position: relative;
+            width: 52px;
+            height: 52px;
+        }
+
+        .home-progress-ring-wrap svg {
+            transform: rotate(-90deg);
+        }
+
+        .home-progress-pct {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .home-section-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            padding: 0 var(--spacing-lg);
+            margin-bottom: 8px;
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .home-section-label a {
+            font-size: 11px;
+            color: var(--accent-primary);
+            text-transform: none;
+            letter-spacing: 0;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Home Hero Card */
+        .home-hero-card {
+            margin: 0 var(--spacing-lg);
+            background: linear-gradient(135deg, rgba(139, 126, 248, 0.12) 0%, rgba(240, 147, 251, 0.12) 100%);
+            border: 1.5px solid rgba(139, 126, 248, 0.4);
+            border-radius: var(--radius-xl);
+            padding: 18px 16px;
+            box-shadow: 0 0 30px rgba(139, 126, 248, 0.15);
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .home-hero-card-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .home-hero-badge {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .home-hero-title {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .home-hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .home-tag {
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .home-check-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-primary);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            color: var(--accent-primary);
+            font-size: 18px;
+        }
+
+        .home-check-btn:hover,
+        .home-check-btn:active {
+            background: var(--accent-primary);
+            color: white;
+            transform: scale(1.08);
+        }
+
+        .home-check-btn.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* Home Upcoming Tasks */
+        .home-tasks-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 0 var(--spacing-lg) 4px;
+            scrollbar-width: none;
+        }
+
+        .home-tasks-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .home-task-chip {
+            flex-shrink: 0;
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 12px 14px;
+            min-width: 155px;
+            max-width: 185px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+
+        .home-task-chip:hover {
+            background: var(--surface-elevated);
+            border-color: var(--border-medium);
+        }
+
+        .home-task-chip.done-chip {
+            opacity: 0.5;
+        }
+
+        .home-task-chip-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .home-task-chip-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .home-task-chip-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .home-chip-check {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border-medium);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: transparent;
+            font-size: 13px;
+            transition: all 0.18s;
+        }
+
+        .home-chip-check:hover {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .home-chip-check.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* Home Habit Rows */
+        .home-habit-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px var(--spacing-lg);
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .home-habit-item:last-child {
+            border-bottom: none;
+        }
+
+        .home-habit-item:hover {
+            background: var(--surface-elevated);
+        }
+
+        .home-habit-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .home-habit-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .home-habit-name {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .home-habit-streak {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .home-habit-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .home-habit-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-medium);
+        }
+
+        .home-habit-dot.done {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .home-habit-toggle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border-medium);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 13px;
+            color: transparent;
+            transition: all 0.18s;
+        }
+
+        .home-habit-toggle.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        /* Home Mini Timesheet */
+        .home-mini-ts {
+            margin: 0 var(--spacing-lg);
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .home-mini-ts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px 8px;
+        }
+
+        .home-mini-ts-bar {
+            display: flex;
+            height: 32px;
+            gap: 1px;
+            padding: 0 14px 12px;
+        }
+
+        .home-mini-ts-seg {
+            flex: 1;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .home-mini-ts-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 14px 10px;
+            font-size: 10px;
+            color: var(--text-tertiary);
+        }
+
+        /* Empty state */
+        .home-empty {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* ===== REDESIGNED TASK TAB ===== */
+        /* Task group sections */
+        .task-group {
+            margin-bottom: 6px;
+        }
+
+        .task-group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px var(--spacing-lg) 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .task-group-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .task-group-count {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            background: var(--surface-elevated);
+            border-radius: var(--radius-full);
+            padding: 1px 7px;
+        }
+
+        .task-group-chevron {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            transition: transform 0.2s;
+        }
+
+        .task-group-chevron.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        /* Redesigned Task Cards - Todoist-inspired */
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 13px var(--spacing-lg);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.15s;
+            position: relative;
+        }
+
+        .task-item:hover {
+            background: var(--surface-elevated);
+        }
+
+        .task-item.task-done-item {
+            opacity: 0.55;
+        }
+
+        .task-check-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--border-medium);
+            flex-shrink: 0;
+            margin-top: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            font-size: 11px;
+            transition: all 0.18s;
+            background: transparent;
+        }
+
+        .task-check-circle:hover {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .task-check-circle.prod-circle {
+            border-color: var(--success);
+        }
+
+        .task-check-circle.nonprod-circle {
+            border-color: var(--danger);
+        }
+
+        .task-check-circle.uncontrol-circle {
+            border-color: var(--warning);
+        }
+
+        .task-check-circle.done-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .task-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .task-name-text {
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.35;
+            color: var(--text-primary);
+        }
+
+        .task-name-text.striked {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        .task-hero-star {
+            font-size: 13px;
+            color: var(--warning);
+            flex-shrink: 0;
+        }
+
+        .task-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .task-meta-tag {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .task-meta-tag.prod-tag {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: rgba(74, 222, 128, 0.25);
+            color: var(--success);
+        }
+
+        .task-meta-tag.nonprod-tag {
+            background: rgba(248, 113, 113, 0.1);
+            border-color: rgba(248, 113, 113, 0.25);
+            color: var(--danger);
+        }
+
+        .task-meta-tag.uncontrol-tag {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.25);
+            color: var(--warning);
+        }
+
+        .task-actions-row {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .task-mini-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .task-mini-btn:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+            border-color: var(--border-medium);
+        }
+
+        .task-mini-btn.danger:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .task-mini-btn.undo-btn {
+            color: var(--warning);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        /* ===== TIMESHEET RESIZE HANDLES ===== */
+        .time-block-wrap {
+            flex: 1;
+            margin: 2px;
+            position: relative;
+        }
+
+        .time-block {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ts-resize-handle {
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            height: 8px;
+            cursor: ns-resize;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .ts-resize-handle.top {
+            top: 0;
+        }
+
+        .ts-resize-handle.bottom {
+            bottom: 0;
+        }
+
+        .ts-resize-handle-pill {
+            width: 28px;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .time-block-wrap.resize-active .ts-resize-handle {
+            opacity: 1;
+        }
+
+        .time-block-wrap.resize-active .time-block {
+            outline: 2px solid rgba(139, 126, 248, 0.6);
+        }
+
+        /* ===== NAV UPDATES ===== */
+        .nav-item.active {
+            color: var(--accent-primary);
+            background: rgba(139, 126, 248, 0.1);
+        }
+
+        /* Home card container */
+        .home-card {
+            margin: 0 var(--spacing-lg);
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        /* ════════════════════════════════════════
+           TASK TAB — TIMELINE LAYOUT (tl-*)
+           ════════════════════════════════════════ */
+        .tl-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 16px 8px;
+        }
+
+        .tl-month-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            cursor: pointer;
+        }
+
+        /* Pill Date Strip */
+        .tl-date-strip {
+            display: flex;
+            gap: 6px;
+            padding: 6px 16px 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tl-date-strip::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tl-date-chip {
+            min-width: 44px;
+            height: 62px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border-radius: 999px;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .tl-date-chip.active {
+            background: var(--success);
+            border-color: var(--success);
+            color: #0a2010;
+        }
+
+        .tl-dc-day {
+            font-size: 10px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .tl-date-chip.active .tl-dc-day {
+            color: #0a2010;
+        }
+
+        .tl-dc-num {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .tl-date-chip.active .tl-dc-num {
+            color: #0a2010;
+        }
+
+        /* Stats Bar */
+        .tl-stats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            padding: 10px 16px 14px;
+            background: var(--surface);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 2px;
+        }
+
+        .tl-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .tl-stat-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .tl-stat-lbl {
+            font-size: 10px;
+            color: var(--text-tertiary);
+            margin-top: 3px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tl-stat-divider {
+            width: 1px;
+            height: 30px;
+            background: var(--border-medium);
+        }
+
+        /* Timeline */
+        .tl-timeline {
+            padding: 12px 16px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .tl-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .tl-empty i {
+            font-size: 3rem;
+            opacity: 0.2;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .tl-row {
+            display: flex;
+            gap: 0;
+            align-items: flex-start;
+            min-height: 80px;
+        }
+
+        .tl-time-col {
+            width: 56px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding-right: 10px;
+            padding-top: 14px;
+        }
+
+        .tl-time-from {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .tl-time-to {
+            font-size: 10px;
+            color: var(--text-tertiary);
+            margin-top: 3px;
+            line-height: 1;
+        }
+
+        .tl-connector {
+            width: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 18px;
+        }
+
+        .tl-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tl-line {
+            width: 2px;
+            flex: 1;
+            min-height: 24px;
+            background: var(--border-medium);
+            margin-top: 4px;
+        }
+
+        .tl-row:last-child .tl-line {
+            visibility: hidden;
+        }
+
+        .tl-card {
+            flex: 1;
+            border-radius: 14px;
+            padding: 10px 12px 8px;
+            margin-bottom: 10px;
+            margin-left: 8px;
+            min-height: 80px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .tl-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .tl-status-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .tl-progress-wrap {
+            width: 48px;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .tl-progress-bar {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .tl-progress-pct {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .tl-card-body {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tl-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            transform: rotate(45deg);
+        }
+
+        .tl-icon i {
+            transform: rotate(-45deg);
+        }
+
+        .tl-card-text {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .tl-task-name {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tl-task-done {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .tl-task-sub {
+            font-size: 11px;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tl-menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+        .tl-menu-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Action Menu (shows on toggle) */
+        .tl-action-menu {
+            display: none;
+            margin-top: 8px;
+            padding: 6px 0 2px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: none;
+            gap: 0;
+            flex-wrap: wrap;
+        }
+
+        .tl-action-menu.open {
+            display: flex;
+        }
+
+        .tl-action-item {
+            background: rgba(0, 0, 0, 0.07);
+            border: none;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 2px 3px 2px 0;
+            transition: background 0.15s;
+            color: inherit;
+        }
+
+        .tl-action-item:hover {
+            background: rgba(0, 0, 0, 0.14);
+        }
+
+        .tl-action-done {
+            color: #15803d !important;
+        }
+
+        .tl-action-warn {
+            color: #b45309 !important;
+        }
+
+        .tl-action-danger {
+            color: #be123c !important;
+        }
+
+        .tl-routine-badge {
+            font-size: 10px;
+            opacity: 0.6;
+        }
     </style>
 </head>
 
@@ -2172,6 +3182,7 @@
 
     <div id="app-container">
         <div class="views-slider" id="views-slider">
+            <div class="view-slide" id="view-home"></div>
             <div class="view-slide" id="view-todo"></div>
             <div class="view-slide" id="view-timesheet"></div>
             <div class="view-slide" id="view-parking"></div>
@@ -2227,18 +3238,17 @@
 
     <nav class="bottom-nav">
         <div class="nav-indicator" id="nav-indicator"></div>
-        <div class="nav-item active" data-view="todo">
-            <i class="fas fa-list-check"></i>
-            <span>To Do</span>
+        <div class="nav-item active" data-view="home">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
         </div>
-
+        <div class="nav-item" data-view="todo">
+            <i class="fas fa-list-check"></i>
+            <span>Tasks</span>
+        </div>
         <div class="nav-item" data-view="timesheet">
             <i class="fas fa-clock"></i>
             <span>Timesheet</span>
-        </div>
-        <div class="nav-item" data-view="parking">
-            <i class="fas fa-circle-pause"></i>
-            <span>Parking</span>
         </div>
         <div class="nav-item" data-view="habits">
             <i class="fas fa-seedling"></i>
@@ -3218,32 +4228,47 @@
             }
 
             moveUncompletedTasks() {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayStr = getLocalDateStr(yesterday);
-
                 const today = getLocalDateStr();
 
-                const yesterdayTasks = this.data.tasks.filter(t => t.date === yesterdayStr && t.status === 'pending');
+                // Guard: only run this logic once per calendar day to avoid double-moves
+                const lastRun = localStorage.getItem('lastMoveTasksDate');
+                if (lastRun === today) return;
+                localStorage.setItem('lastMoveTasksDate', today);
 
-                yesterdayTasks.forEach(task => {
-                    task.date = today;
-                    task.movedFrom = yesterdayStr;
-                });
-
-                // Mark uncompleted routine tasks as not-doable
-                const yesterdayRoutines = this.getRoutineTasksForDate(yesterdayStr);
-                yesterdayRoutines.forEach(routine => {
-                    if (routine.status === 'pending') {
-                        const [, routineId] = routine.id.split('-');
-                        const key = `${routineId}-${yesterdayStr}`;
-                        if (!this.data.routineStatus) this.data.routineStatus = {};
-                        this.data.routineStatus[key] = 'not-doable';
+                // Move ALL pending ad-hoc tasks from any past date → today
+                let changed = false;
+                this.data.tasks.forEach(task => {
+                    if (task.status === 'pending' && task.date && task.date < today) {
+                        task.movedFrom = task.movedFrom || task.date; // preserve original origin
+                        task.date = today;
+                        changed = true;
                     }
                 });
 
-                this.saveLocalData();
-                this.saveToFirebase();
+                // Mark uncompleted routine tasks from any past date as not-doable
+                const start = new Date(today);
+                start.setDate(start.getDate() - 30); // look back up to 30 days
+                for (let d = new Date(start); d < new Date(today + 'T00:00:00'); d.setDate(d.getDate() + 1)) {
+                    const dateStr = getLocalDateStr(d);
+                    const routinesForDay = this.getRoutineTasksForDate(dateStr);
+                    routinesForDay.forEach(routine => {
+                        if (routine.status === 'pending') {
+                            const parts = routine.id.split('-');
+                            const routineId = parts[1];
+                            const key = `${routineId}-${dateStr}`;
+                            if (!this.data.routineStatus) this.data.routineStatus = {};
+                            if (!this.data.routineStatus[key]) {
+                                this.data.routineStatus[key] = 'not-doable';
+                                changed = true;
+                            }
+                        }
+                    });
+                }
+
+                if (changed) {
+                    this.saveLocalData();
+                    this.saveToFirebase();
+                }
             }
 
             getTaskStatsForPeriod(startDate, endDate) {
@@ -3380,7 +4405,7 @@
         class App {
             constructor() {
                 this.db = new DatabaseManager();
-                this.currentView = 'todo';
+                this.currentView = 'home';
                 this.selectedDate = getLocalDateStr();
                 this.editingTaskId = null;
                 this.addingTaskType = 'adhoc';
@@ -3393,7 +4418,8 @@
                 this.timesheetUndoStack = [];
                 this.promotingParkedTaskId = null;
                 this.deletingHabitId = null;
-                this.TAB_ORDER = ['todo', 'timesheet', 'parking', 'habits', 'analytics', 'manage', 'account'];
+                this.TAB_ORDER = ['home', 'todo', 'timesheet', 'parking', 'habits', 'analytics', 'manage', 'account'];
+                this.collapsedGroups = {}; // track which task groups are collapsed
 
                 this.render();
 
@@ -3484,7 +4510,7 @@
                         this.openAddParkedTaskModal();
                     } else if (this.currentView === 'habits') {
                         this.openAddHabitModal();
-                    } else if (this.currentView === 'todo') {
+                    } else if (this.currentView === 'todo' || this.currentView === 'home') {
                         this.openAddTaskModal();
                     } else if (this.currentView === 'timesheet') {
                         this.openManualFillModal();
@@ -3557,10 +4583,10 @@
                         }
                         const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
                         const sliderWidth = window.innerWidth;
-                        const basePercent = -(currentIdx * 14.2857);
-                        const movePercent = (dx / (sliderWidth * 7)) * 100;
+                        const basePercent = -(currentIdx * 12.5);
+                        const movePercent = (dx / (sliderWidth * 8)) * 100;
 
-                        // Resistance at boundaries
+                        // Resistance at boundaries (swipeable = first 5 tabs in TAB_ORDER; max idx=4)
                         let finalPercent = basePercent + movePercent;
                         if ((currentIdx === 0 && dx > 0) || (currentIdx === 4 && dx < 0)) {
                             finalPercent = basePercent + (movePercent * 0.3);
@@ -3659,7 +4685,7 @@
                 const idx = this.TAB_ORDER.indexOf(this.currentView);
                 const slider = document.getElementById('views-slider');
                 if (slider) {
-                    slider.style.transform = `translate3d(-${idx * 14.2857}%, 0, 0)`;
+                    slider.style.transform = `translate3d(-${idx * 12.5}%, 0, 0)`;
                 }
 
                 // Update nav indicator
@@ -3682,7 +4708,8 @@
                 });
 
 
-                if (this.currentView === 'todo') this.renderTodo();
+                if (this.currentView === 'home') this.renderHome();
+                else if (this.currentView === 'todo') this.renderTodo();
                 else if (this.currentView === 'timesheet') this.renderTimesheet();
                 else if (this.currentView === 'parking') this.renderParking();
                 else if (this.currentView === 'habits') this.renderHabits();
@@ -3691,6 +4718,201 @@
                 else if (this.currentView === 'account') this.renderAccount();
             }
 
+            renderHome() {
+                const today = getLocalDateStr();
+                const now = new Date();
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+                const tasks = this.db.getTasks(today);
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(t => t.status === 'done').length;
+                const pct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                const circumference = 2 * Math.PI * 22;
+                const strokeDash = (pct / 100) * circumference;
+
+                // Greeting
+                const h = now.getHours();
+                const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+                const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+
+                // Find hero/current/upcoming tasks
+                let heroTask = tasks.find(t => t.isHero && t.status !== 'done');
+                let currentTask = null;
+                if (!heroTask) {
+                    for (let t of tasks) {
+                        if (t.timeFrom && t.status === 'pending') {
+                            const s = timeToMinutes(t.timeFrom), e = timeToMinutes(t.timeTo);
+                            if (s <= currentMinutes && currentMinutes < e) { currentTask = t; break; }
+                        }
+                    }
+                }
+                const focusTask = heroTask || currentTask;
+
+                // Upcoming = pending tasks with time, not current
+                const upcomingTasks = tasks.filter(t => t.status === 'pending' && t.timeFrom && t !== focusTask).slice(0, 6);
+
+                // Habits for today
+                const allHabits = this.db.getHabits();
+                const todayLog = this.db.getHabitLog(today);
+                const todayDOW = now.getDay();
+                const todayHabits = allHabits.filter(h => {
+                    if (h.startDate && today < h.startDate) return false;
+                    if (h.endDate && today >= h.endDate) return false;
+                    if (h.freq === 'daily') return true;
+                    if (h.freq === 'weekdays') return todayDOW >= 1 && todayDOW <= 5;
+                    if (h.freq === 'weekends') return todayDOW === 0 || todayDOW === 6;
+                    if (h.freq === 'custom') return h.days && h.days.includes(todayDOW);
+                    return true;
+                }).slice(0, 4);
+
+                // Mini timesheet — 6am to 10pm = 32 slots
+                const timesheet = this.db.getTimesheet(today);
+                const tsStartH = 6, tsEndH = 22, totalSegs = (tsEndH - tsStartH) * 2;
+                let tsSegsHtml = '';
+                for (let i = 0; i < totalSegs; i++) {
+                    const mins = (tsStartH * 60) + (i * 30);
+                    const slotKey = minutesToTime(mins);
+                    const entry = timesheet[slotKey];
+                    let bg = 'var(--surface-elevated)';
+                    if (entry) {
+                        const cat = this.db.getCategoryById(entry.categoryId);
+                        if (cat) {
+                            if (cat.type === 'productive') bg = 'rgba(74,222,128,0.5)';
+                            else if (cat.type === 'non-productive') bg = 'rgba(248,113,113,0.5)';
+                            else if (cat.type === 'uncontrollable') bg = 'rgba(251,191,36,0.5)';
+                        }
+                    }
+                    // Current time indicator
+                    const isNow = mins <= currentMinutes && currentMinutes < mins + 30;
+                    const nowStyle = isNow ? 'outline: 2px solid var(--accent-primary); outline-offset: 1px;' : '';
+                    tsSegsHtml += `<div class="home-mini-ts-seg" style="background:${bg};${nowStyle}" title="${formatTime12Hour(slotKey)}"></div>`;
+                }
+
+                // Habit icons by category color
+                const habIconColors = ['rgba(139,126,248,0.2)', 'rgba(74,222,128,0.2)', 'rgba(240,147,251,0.2)', 'rgba(251,191,36,0.2)', 'rgba(96,165,250,0.2)'];
+                const habIconBorders = ['rgba(139,126,248,0.4)', 'rgba(74,222,128,0.4)', 'rgba(240,147,251,0.4)', 'rgba(251,191,36,0.4)', 'rgba(96,165,250,0.4)'];
+
+                let html = `
+                <div class="home-header">
+                    <div>
+                        <div class="home-greeting">${greet} 👋</div>
+                        <div class="home-date-label">${dateStr}</div>
+                    </div>
+                    <div class="home-progress-ring-wrap" title="${pct}% tasks done">
+                        <svg width="52" height="52" viewBox="0 0 52 52">
+                            <circle cx="26" cy="26" r="22" fill="none" stroke="var(--surface-elevated)" stroke-width="4"/>
+                            <circle cx="26" cy="26" r="22" fill="none" stroke="var(--accent-primary)" stroke-width="4"
+                                stroke-dasharray="${strokeDash.toFixed(1)} ${circumference.toFixed(1)}"
+                                stroke-linecap="round" style="transition:stroke-dasharray 0.4s ease;"/>
+                        </svg>
+                        <div class="home-progress-pct">${pct}%</div>
+                    </div>
+                </div>`;
+
+                // ── Today's Focus ──
+                html += `<div class="home-section-label"><span>Today's Focus</span><a onclick="app.navTo('todo')">View All →</a></div>`;
+                if (focusTask) {
+                    const cat = this.db.getCategoryById(focusTask.categoryId);
+                    const catTag = cat ? `<span class="home-tag"><i class="fas fa-circle" style="font-size:7px;color:${cat.type === 'productive' ? 'var(--success)' : cat.type === 'non-productive' ? 'var(--danger)' : 'var(--warning)'}"></i>${cat.name}</span>` : '';
+                    const timeTag = focusTask.timeFrom ? `<span class="home-tag"><i class="fas fa-clock"></i>${formatTime12Hour(focusTask.timeFrom)}–${formatTime12Hour(focusTask.timeTo)}</span>` : '';
+                    const isChecked = focusTask.status === 'done';
+                    html += `
+                    <div class="home-hero-card">
+                        <div class="home-hero-card-body">
+                            <div class="home-hero-badge"><i class="fas fa-star"></i>${focusTask.isHero ? 'Hero Task' : 'In Progress'}</div>
+                            <div class="home-hero-title">${focusTask.name}</div>
+                            <div class="home-hero-meta">${timeTag}${catTag}</div>
+                        </div>
+                        <button class="home-check-btn ${isChecked ? 'checked' : ''}" onclick="app.completeTask('${focusTask.id}')" title="Mark done">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>`;
+                } else {
+                    html += `<div class="home-empty"><i class="fas fa-check-circle" style="opacity:0.3;font-size:2rem;display:block;margin-bottom:8px;"></i>All clear! Add tasks to get started.</div>`;
+                }
+
+                // ── Upcoming Tasks ──
+                if (upcomingTasks.length > 0) {
+                    html += `<div class="home-section-label" style="margin-top:14px;"><span>Upcoming</span></div>
+                    <div class="home-tasks-scroll">`;
+                    upcomingTasks.forEach(t => {
+                        const isDone = t.status === 'done';
+                        html += `
+                        <div class="home-task-chip ${isDone ? 'done-chip' : ''}" onclick="app.navTo('todo')">
+                            <div class="home-task-chip-body">
+                                <div class="home-task-chip-name">${t.name}</div>
+                                <div class="home-task-chip-time">${t.timeFrom ? formatTime12Hour(t.timeFrom) : 'No time'}</div>
+                            </div>
+                            <button class="home-chip-check ${isDone ? 'done' : ''}" onclick="event.stopPropagation();app.completeTask('${t.id}')" title="Complete">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                }
+
+                // ── Habits ──
+                html += `<div class="home-section-label" style="margin-top:14px;"><span>Habits</span><a onclick="app.navTo('habits')">View All →</a></div>`;
+                if (todayHabits.length === 0) {
+                    html += `<div class="home-empty">No habits today. <a onclick="app.navTo('habits')" style="color:var(--accent-primary);cursor:pointer;">Set one up →</a></div>`;
+                } else {
+                    html += `<div class="home-card">`;
+                    todayHabits.forEach((habit, idx) => {
+                        const checked = !!todayLog[habit.id];
+                        // streak count
+                        let streak = 0;
+                        for (let i = 0; i < 7; i++) {
+                            const d = new Date(); d.setDate(d.getDate() - i);
+                            const dl = this.db.getHabitLog(getLocalDateStr(d));
+                            if (dl && dl[habit.id]) streak++; else if (i > 0) break;
+                        }
+                        // 7-day dots
+                        let dotsHtml = '<div class="home-habit-dots">';
+                        for (let i = 6; i >= 0; i--) {
+                            const d = new Date(); d.setDate(d.getDate() - i);
+                            const dl = this.db.getHabitLog(getLocalDateStr(d));
+                            dotsHtml += `<div class="home-habit-dot ${dl && dl[habit.id] ? 'done' : ''}"></div>`;
+                        }
+                        dotsHtml += '</div>';
+                        const iconBg = habIconColors[idx % habIconColors.length];
+                        const iconBorder = habIconBorders[idx % habIconBorders.length];
+                        html += `
+                        <div class="home-habit-item">
+                            <div class="home-habit-icon" style="background:${iconBg};border:1px solid ${iconBorder};">🌱</div>
+                            <div class="home-habit-info">
+                                <div class="home-habit-name">${habit.name}</div>
+                                <div class="home-habit-streak">${streak > 0 ? streak + ' day streak' : 'Start today!'}</div>
+                            </div>
+                            ${dotsHtml}
+                            <button class="home-habit-toggle ${checked ? 'checked' : ''}" onclick="app.toggleHabitFromHome('${habit.id}')" title="Toggle habit">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                }
+
+                // ── Mini Timesheet ──
+                html += `
+                <div class="home-section-label" style="margin-top:14px;"><span>Today's Time</span><a onclick="app.navTo('timesheet')">Full View →</a></div>
+                <div class="home-mini-ts">
+                    <div class="home-mini-ts-bar">${tsSegsHtml}</div>
+                    <div class="home-mini-ts-labels"><span>6am</span><span>10am</span><span>2pm</span><span>6pm</span><span>10pm</span></div>
+                </div>`;
+
+                html += `<div style="height:8px;"></div>`;
+
+                document.getElementById('view-home').innerHTML = html;
+            }
+
+            navTo(view) {
+                this.currentView = view;
+                this.render();
+            }
+
+            toggleHabitFromHome(habitId) {
+                this.db.toggleHabitLog(habitId, getLocalDateStr());
+                this.renderHome();
+            }
 
             renderTodo() {
                 const tasks = this.db.getTasks(this.selectedDate);
@@ -3698,208 +4920,193 @@
                 const currentMinutes = now.getHours() * 60 + now.getMinutes();
                 const currentDate = getLocalDateStr();
 
-                let currentTask = null;
-                let nextTask = null;
-
-                if (this.selectedDate === currentDate) {
-                    for (let task of tasks) {
-                        if (task.timeFrom && task.status === 'pending') {
-                            const taskStartMinutes = timeToMinutes(task.timeFrom);
-                            const taskEndMinutes = timeToMinutes(task.timeTo);
-
-                            if (taskStartMinutes <= currentMinutes && currentMinutes < taskEndMinutes) {
-                                currentTask = task;
-                            } else if (taskStartMinutes > currentMinutes && !nextTask) {
-                                nextTask = task;
-                            }
-                        }
-                    }
-                }
-
                 const totalTasks = tasks.length;
                 const completedTasks = tasks.filter(t => t.status === 'done').length;
+                const pct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
                 let productiveHours = 0;
-                let nonProductiveHours = 0;
-                let uncontrollableHours = 0;
-
                 const timesheet = this.db.getTimesheet(this.selectedDate);
-                // Only count hours for today's date in real-time
                 if (this.selectedDate === currentDate) {
                     Object.keys(timesheet).forEach(slot => {
                         const slotMinutes = timeToMinutes(slot);
                         if (slotMinutes < currentMinutes) {
                             const entry = timesheet[slot];
                             const category = this.db.getCategoryById(entry.categoryId);
-                            if (category) {
-                                if (category.type === 'productive') productiveHours += 0.5;
-                                else if (category.type === 'non-productive') nonProductiveHours += 0.5;
-                                else if (category.type === 'uncontrollable') uncontrollableHours += 0.5;
-                            }
+                            if (category && category.type === 'productive') productiveHours += 0.5;
                         }
                     });
                 } else {
-                    // For past/future dates, count all filled slots
                     Object.keys(timesheet).forEach(slot => {
                         const entry = timesheet[slot];
                         const category = this.db.getCategoryById(entry.categoryId);
-                        if (category) {
-                            if (category.type === 'productive') productiveHours += 0.5;
-                            else if (category.type === 'non-productive') nonProductiveHours += 0.5;
-                            else if (category.type === 'uncontrollable') uncontrollableHours += 0.5;
-                        }
+                        if (category && category.type === 'productive') productiveHours += 0.5;
                     });
                 }
+
+                // ── Month/Year header ──
+                const selDateObj = new Date(this.selectedDate + 'T00:00:00');
+                const monthYear = selDateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
                 let html = `
-                    <div class="dashboard-header" style="padding-bottom: 0;">
-                        <div class="header-title-row">
-                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
-                            <h2>My Tasks</h2>
-                        </div>
-                    </div>`;
-
-                // Date range picker
-                const todoFrom = this.todoRangeFrom || this.selectedDate;
-                const todoTo = this.todoRangeTo || this.selectedDate;
-                html += `<div style="padding: 6px var(--spacing-lg) 0; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <span class="text-xs text-secondary">From</span>
-                    <input type="date" id="todo-range-from" value="${todoFrom}" onchange="app.setTodoRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
-                    <span class="text-xs text-secondary">To</span>
-                    <input type="date" id="todo-range-to" value="${todoTo}" onchange="app.setTodoRange()" style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                <div class="tl-top-bar">
+                    <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                    <div class="tl-month-title">${monthYear} <i class="fas fa-chevron-down" style="font-size:13px;opacity:0.5;margin-left:4px;"></i></div>
+                    <div style="width:40px;"></div>
                 </div>`;
 
-                // Date scroller - centred on selectedDate
+                // ── Pill Date Strip ──
                 const selDTodo = new Date(this.selectedDate + 'T00:00:00');
-                html += `<div class="date-scroller" style="border-bottom: none; padding-top: 10px;">`;
+                html += `<div class="tl-date-strip">`;
                 for (let i = -3; i <= 3; i++) {
-                    const date = new Date(selDTodo);
-                    date.setDate(selDTodo.getDate() + i);
-                    const dateStr = getLocalDateStr(date);
-                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
-                    const dayNum = date.getDate();
-                    const isActive = dateStr === this.selectedDate;
-
-                    html += `
-                        <div class="date-chip ${isActive ? 'active' : ''}" onclick="app.selectDate('${dateStr}')">
-                            <span>${dayName}</span>
-                            <span>${dayNum}</span>
-                        </div>`;
+                    const d = new Date(selDTodo);
+                    d.setDate(selDTodo.getDate() + i);
+                    const ds = getLocalDateStr(d);
+                    const dayAbbr = d.toLocaleDateString('en-US', { weekday: 'short' });
+                    const dayNum = d.getDate();
+                    const isActive = ds === this.selectedDate;
+                    html += `<div class="tl-date-chip${isActive ? ' active' : ''}" onclick="app.selectDate('${ds}')">
+                        <span class="tl-dc-day">${dayAbbr}</span>
+                        <span class="tl-dc-num">${dayNum}</span>
+                    </div>`;
                 }
                 html += `</div>`;
 
+                // ── Compact Stats Bar ──
                 html += `
-                    <div style="padding: 10px 20px 20px;">
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="text-secondary text-sm">Tasks Done</div>
-                                <div class="stat-value">${completedTasks}/${totalTasks}</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="text-secondary text-sm">Productive Hrs</div>
-                                <div class="stat-value" style="color: var(--success);">${productiveHours.toFixed(1)}h</div>
-                            </div>
-                        </div>
-                    </div>`;
+                <div class="tl-stats-bar">
+                    <div class="tl-stat">
+                        <span class="tl-stat-val">${completedTasks}/${totalTasks}</span>
+                        <span class="tl-stat-lbl">Tasks</span>
+                    </div>
+                    <div class="tl-stat-divider"></div>
+                    <div class="tl-stat">
+                        <span class="tl-stat-val" style="color:var(--success);">${productiveHours.toFixed(1)}h</span>
+                        <span class="tl-stat-lbl">Productive</span>
+                    </div>
+                    <div class="tl-stat-divider"></div>
+                    <div class="tl-stat">
+                        <span class="tl-stat-val" style="color:var(--accent-primary);">${pct}%</span>
+                        <span class="tl-stat-lbl">Done</span>
+                    </div>
+                </div>`;
 
-                if (currentTask) {
-                    const category = this.db.getCategoryById(currentTask.categoryId);
-                    html += `
-                        <div class="current-task-banner">
-                            <div class="text-sm" style="opacity: 0.9;">⏰ Current Task</div>
-                            <div class="font-bold" style="font-size: 1.2rem; margin-top: 5px;">${currentTask.name}</div>
-                            <div class="text-sm mt-2" style="opacity: 0.8;">
-                                <i class="fas fa-clock"></i> ${formatTime12Hour(currentTask.timeFrom)} - ${formatTime12Hour(currentTask.timeTo)}
-                                ${category ? ' • ' + category.name : ''}
-                            </div>
-                        </div>`;
-                }
+                // ── Timeline Task List ──
+                html += `<div class="tl-timeline">`;
 
-                if (nextTask) {
-                    const category = this.db.getCategoryById(nextTask.categoryId);
-                    html += `
-                        <div class="next-task-banner">
-                            <div class="text-sm" style="opacity: 0.9;">📅 Next Up</div>
-                            <div class="font-bold" style="margin-top: 5px;">${nextTask.name}</div>
-                            <div class="text-xs mt-2" style="opacity: 0.8;">
-                                <i class="fas fa-clock"></i> ${formatTime12Hour(nextTask.timeFrom)} - ${formatTime12Hour(nextTask.timeTo)}
-                                ${category ? ' • ' + category.name : ''}
-                            </div>
-                        </div>`;
-                }
-
-                html += `<div class="task-list">`;
                 if (tasks.length === 0) {
-                    html += `<div class="text-center text-secondary p-4">No tasks for this day. Tap + to add one!</div>`;
+                    html += `<div class="tl-empty"><i class="fas fa-calendar-plus"></i><div>No tasks for this day</div><div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">Tap + to add one</div></div>`;
                 } else {
+                    let currentTask = null, nextTask = null;
+                    const currentMinutesTl = now.getHours() * 60 + now.getMinutes();
+                    if (this.selectedDate === currentDate) {
+                        for (let task of tasks) {
+                            if (task.timeFrom && task.status === 'pending') {
+                                const tStart = timeToMinutes(task.timeFrom), tEnd = timeToMinutes(task.timeTo);
+                                if (tStart <= currentMinutesTl && currentMinutesTl < tEnd) { currentTask = task; }
+                                else if (tStart > currentMinutesTl && !nextTask) { nextTask = task; }
+                            }
+                        }
+                    }
+
                     tasks.forEach(task => {
                         const category = this.db.getCategoryById(task.categoryId);
-                        const categoryClass = category ? category.type.replace('-', '-') : '';
-                        const typeClass = categoryClass === 'productive' ? 'prod' :
-                            categoryClass === 'non-productive' ? 'non-prod' :
-                                categoryClass === 'uncontrollable' ? 'uncontrol' : '';
+                        const isDone = task.status === 'done';
+                        const isNotDoable = task.status === 'not-doable';
+                        const isHero = task.isHero;
+                        const isCurrentTask = task === currentTask;
+                        const isNextTask = task === nextTask;
 
-                        const statusClass = task.status === 'done' ? 'done' :
-                            task.status === 'not-doable' ? 'not-doable' : '';
+                        // Card color per status — reference-inspired
+                        let cardBg, cardTextColor, statusLabel, statusColor;
+                        if (isDone) {
+                            cardBg = '#b7f0b1'; cardTextColor = '#1a2e19';
+                            statusLabel = 'Completed'; statusColor = '#2d8a27';
+                        } else if (isNotDoable) {
+                            cardBg = '#f9a8d4'; cardTextColor = '#2d1a27';
+                            statusLabel = 'Rejected'; statusColor = '#be185d';
+                        } else if (isHero) {
+                            cardBg = '#c4b5fd'; cardTextColor = '#1e1a3d';
+                            statusLabel = '⭐ Hero'; statusColor = '#5b21b6';
+                        } else if (isCurrentTask) {
+                            cardBg = '#7dd3fc'; cardTextColor = '#0c2d44';
+                            statusLabel = 'Running'; statusColor = '#0369a1';
+                        } else {
+                            cardBg = 'var(--surface-elevated)'; cardTextColor = 'var(--text-primary)';
+                            statusLabel = isNextTask ? 'Upcoming' : 'Pending';
+                            statusColor = isNextTask ? 'var(--accent-primary)' : 'var(--text-secondary)';
+                        }
 
-                        const heroClass = task.isHero ? 'hero' : '';
+                        const timeFrom12 = task.timeFrom ? formatTime12Hour(task.timeFrom) : '';
+                        const timeTo12 = task.timeTo ? formatTime12Hour(task.timeTo) : '';
+                        const catName = category ? category.name : '';
+                        const catIcon = category ? (category.type === 'productive' ? 'fa-bolt' : category.type === 'non-productive' ? 'fa-times-circle' : 'fa-circle') : 'fa-list-check';
+                        const progress = isDone ? 100 : isCurrentTask ? 50 : 0;
+                        const showProgress = isDone || isCurrentTask;
 
                         html += `
-                            <div class="task-card ${typeClass} ${statusClass} ${heroClass}">
-                                <div class="task-header">
-                                    <div class="task-info">
-                                        <div class="task-title">${task.name}</div>
-                                        <div class="task-time">
-                                            ${task.timeFrom ? `<i class="fas fa-clock"></i> ${formatTime12Hour(task.timeFrom)} - ${formatTime12Hour(task.timeTo)}` : 'No time set'}
-                                            ${category ? ' • ' + category.name : ''}
-                                            ${task.isRoutine ? ' <i class="fas fa-repeat"></i>' : ''}
-                                            ${task.movedFrom ? ' <i class="fas fa-arrow-right"></i> Moved' : ''}
-                                        </div>
+                        <div class="tl-row">
+                            <div class="tl-time-col">
+                                ${task.timeFrom ? `<span class="tl-time-from">${timeFrom12}</span>` : '<span class="tl-time-from" style="opacity:0;">--</span>'}
+                                ${task.timeTo ? `<span class="tl-time-to">${timeTo12}</span>` : ''}
+                            </div>
+                            <div class="tl-connector">
+                                <div class="tl-dot" style="background:${statusColor};"></div>
+                                <div class="tl-line"></div>
+                            </div>
+                            <div class="tl-card" style="background:${cardBg};color:${cardTextColor};" id="card-${task.id}">
+                                <div class="tl-card-header">
+                                    <span class="tl-status-badge" style="background:${statusColor}25;color:${statusColor};border:1px solid ${statusColor}50;">${statusLabel}</span>
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        ${showProgress ? `
+                                            <div class="tl-progress-wrap"><div class="tl-progress-bar" style="width:${progress}%;background:${statusColor};"></div></div>
+                                            <span class="tl-progress-pct" style="color:${statusColor};font-size:11px;font-weight:700;">${progress}%</span>
+                                        ` : `<span style="font-size:11px;font-weight:600;color:${statusColor};opacity:0.7;">00%</span>`}
+                                        ${task.isRoutine ? `<span style="font-size:10px;opacity:0.6;"><i class="fas fa-repeat"></i></span>` : ''}
                                     </div>
                                 </div>
-                                <div class="task-actions">
-                                    ${task.status === 'done' ? `
-                                        <button class="task-btn" style="background: var(--warning);" title="Undo" onclick="app.undoTask('${task.id}')">
-                                            <i class="fas fa-undo"></i>
-                                        </button>
+                                <div class="tl-card-body">
+                                    <div class="tl-icon" style="background:${cardTextColor}18;color:${cardTextColor};">
+                                        <i class="fas ${isDone ? 'fa-check' : isNotDoable ? 'fa-ban' : isHero ? 'fa-star' : catIcon}"></i>
+                                    </div>
+                                    <div class="tl-card-text">
+                                        <div class="tl-task-name ${isDone ? 'tl-task-done' : ''}">${task.name}</div>
+                                        <div class="tl-task-sub">${catName}${task.movedFrom ? ' · Moved' : ''}</div>
+                                    </div>
+                                    <button class="tl-menu-btn" style="color:${cardTextColor};opacity:0.6;" onclick="app.toggleTaskMenu('${task.id}','${cardBg}','${cardTextColor}')"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                                <div class="tl-action-menu" id="menu-${task.id}">
+                                    ${isDone ? `
+                                        <button class="tl-action-item" onclick="app.undoTask('${task.id}')"><i class="fas fa-undo"></i> Undo</button>
+                                    ` : `
+                                        <button class="tl-action-item tl-action-done" onclick="app.completeTask('${task.id}')"><i class="fas fa-check"></i> Mark Done</button>
+                                    `}
+                                    ${!task.isRoutine && !isDone ? `
+                                        <button class="tl-action-item" onclick="app.openEditModal('${task.id}')"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="tl-action-item" onclick="app.openRescheduleModal('${task.id}')"><i class="fas fa-calendar"></i> Reschedule</button>
                                     ` : ''}
-                                    ${task.status !== 'done' ? `
-                                        <button class="task-btn done-btn" title="Mark as Done" onclick="app.completeTask('${task.id}')">
-                                            <i class="fas fa-check"></i>
-                                        </button>
+                                    ${task.isRoutine && !isDone ? `
+                                        <button class="tl-action-item" onclick="app.openRescheduleModal('${task.id}')"><i class="fas fa-calendar"></i> Reschedule</button>
                                     ` : ''}
-                                    ${!task.isRoutine && task.status !== 'done' ? `
-                                        <button class="task-btn" title="Edit Task" onclick="app.openEditModal('${task.id}')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="task-btn" title="Reschedule" onclick="app.openRescheduleModal('${task.id}')">
-                                            <i class="fas fa-calendar"></i>
-                                        </button>
-                                        <button class="task-btn not-doable-btn" title="Not Doable" onclick="app.markNotDoable('${task.id}')">
-                                            <i class="fas fa-ban"></i>
-                                        </button>
-                                        <button class="task-btn delete-btn" title="Delete" onclick="app.deleteTask('${task.id}')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    ` : ''}
-                                    ${task.isRoutine && task.status !== 'done' ? `
-                                        <button class="task-btn" title="Reschedule" onclick="app.openRescheduleModal('${task.id}')">
-                                            <i class="fas fa-calendar"></i>
-                                        </button>
-                                        <button class="task-btn not-doable-btn" title="Not Doable" onclick="app.markNotDoable('${task.id}')">
-                                            <i class="fas fa-ban"></i>
-                                        </button>
-                                        <button class="task-btn delete-btn" title="Skip Occurrence" onclick="app.deleteTask('${task.id}')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    ${!isDone ? `
+                                        <button class="tl-action-item tl-action-warn" onclick="app.markNotDoable('${task.id}')"><i class="fas fa-ban"></i> Not Doable</button>
+                                        <button class="tl-action-item tl-action-danger" onclick="app.deleteTask('${task.id}')"><i class="fas fa-trash"></i> Delete</button>
                                     ` : ''}
                                 </div>
-                            </div>`;
+                            </div>
+                        </div>`;
                     });
                 }
-                html += `</div>`;
 
+                html += `</div>`;
                 document.getElementById('view-todo').innerHTML = html;
+            }
+
+            toggleTaskMenu(id) {
+                const menu = document.getElementById('menu-' + id);
+                if (!menu) return;
+                const isOpen = menu.classList.contains('open');
+                document.querySelectorAll('.tl-action-menu.open').forEach(m => m.classList.remove('open'));
+                if (!isOpen) menu.classList.add('open');
             }
 
             selectDate(date) {
@@ -4720,30 +5927,172 @@
                     const entry = timesheet[slot];
                     let blockClass = '';
                     let blockText = 'Empty';
+                    const isFilled = !!entry;
+                    let taskId = '';
 
                     if (entry) {
                         const category = this.db.getCategoryById(entry.categoryId);
-
                         if (category) {
                             if (category.type === 'productive') blockClass = 'prod filled';
                             else if (category.type === 'non-productive') blockClass = 'non-prod filled';
                             else if (category.type === 'uncontrollable') blockClass = 'uncontrol filled';
-
                             blockText = entry.taskName || category.name;
                         }
+                        taskId = entry.taskId || '';
                     }
 
-                    html += `
+                    if (isFilled) {
+                        html += `
                         <div class="time-slot">
                             <div class="time-label">${formatTime12Hour(slot)}</div>
-                            <div class="time-block ${blockClass}" onclick="app.editTimesheetBlock('${slot}')">
-                                ${blockText}
+                            <div class="time-block-wrap" data-slot="${slot}" data-taskid="${taskId}">
+                                <div class="ts-resize-handle top" data-edge="top" data-slot="${slot}"><div class="ts-resize-handle-pill"></div></div>
+                                <div class="time-block ${blockClass}" onclick="app.editTimesheetBlock('${slot}')">${blockText}</div>
+                                <div class="ts-resize-handle bottom" data-edge="bottom" data-slot="${slot}"><div class="ts-resize-handle-pill"></div></div>
                             </div>
                         </div>`;
+                    } else {
+                        html += `
+                        <div class="time-slot">
+                            <div class="time-label">${formatTime12Hour(slot)}</div>
+                            <div class="time-block ${blockClass}" onclick="app.editTimesheetBlock('${slot}')">${blockText}</div>
+                        </div>`;
+                    }
                 });
                 html += `</div>`;
 
                 document.getElementById('view-timesheet').innerHTML = html;
+
+                // ===== 2-Second Hold → Show Resize Handles =====
+                this._initTimesheetResize();
+            }
+
+            _initTimesheetResize() {
+                // Long-press on filled blocks to activate resize mode
+                let holdTimer = null;
+                let activeWrap = null;
+
+                const clearActive = () => {
+                    if (activeWrap) {
+                        activeWrap.classList.remove('resize-active');
+                        activeWrap = null;
+                    }
+                };
+
+                document.querySelectorAll('.time-block-wrap').forEach(wrap => {
+                    const block = wrap.querySelector('.time-block');
+                    if (!block) return;
+
+                    block.addEventListener('touchstart', (e) => {
+                        // Don't start if we tap on a handle
+                        if (e.target.closest('.ts-resize-handle')) return;
+                        holdTimer = setTimeout(() => {
+                            clearActive();
+                            activeWrap = wrap;
+                            wrap.classList.add('resize-active');
+                            if (navigator.vibrate) navigator.vibrate(40);
+                        }, 1200);
+                    }, { passive: true });
+
+                    block.addEventListener('touchend', () => { clearTimeout(holdTimer); }, { passive: true });
+                    block.addEventListener('touchmove', () => { clearTimeout(holdTimer); }, { passive: true });
+                });
+
+                // Tap anywhere outside a resize-active wrap to dismiss
+                document.getElementById('view-timesheet').addEventListener('touchstart', (e) => {
+                    if (!e.target.closest('.time-block-wrap')) {
+                        clearActive();
+                    }
+                }, { passive: true });
+
+                // Drag on bottom handle to resize
+                let resizeDragging = false;
+                let resizeEdge = null;
+                let resizeSlot = null;
+                let resizeStartY = 0;
+                let blockHeightPx = 0;
+
+                document.querySelectorAll('.ts-resize-handle').forEach(handle => {
+                    handle.addEventListener('touchstart', (e) => {
+                        e.stopPropagation();
+                        const wrap = handle.closest('.time-block-wrap');
+                        if (!wrap || !wrap.classList.contains('resize-active')) return;
+
+                        resizeDragging = true;
+                        resizeEdge = handle.dataset.edge;
+                        resizeSlot = handle.dataset.slot;
+                        resizeStartY = e.touches[0].clientY;
+                        // Each 30-min slot is approx. the height of .time-slot
+                        const slotEl = wrap.closest('.time-slot');
+                        blockHeightPx = slotEl ? slotEl.getBoundingClientRect().height : 44;
+                        e.preventDefault();
+                    }, { passive: false });
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!resizeDragging) return;
+                    e.preventDefault();
+                }, { passive: false });
+
+                document.addEventListener('touchend', (e) => {
+                    if (!resizeDragging) return;
+                    resizeDragging = false;
+
+                    const dy = e.changedTouches[0].clientY - resizeStartY;
+                    const slots30min = Math.round(dy / blockHeightPx); // each step = 30 min
+                    if (slots30min === 0) return;
+
+                    // Find all slots for this taskId
+                    const ts = this.db.getTimesheet(this.selectedDate);
+                    const wrap = document.querySelector(`.time-block-wrap[data-slot="${resizeSlot}"]`);
+                    if (!wrap) return;
+                    const taskId = wrap.dataset.taskid;
+                    if (!taskId) return;
+
+                    const slotsForTask = Object.keys(ts).filter(s => ts[s].taskId === taskId).sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
+                    if (!slotsForTask.length) return;
+
+                    const entry = ts[slotsForTask[0]];
+                    const minSlot = slotsForTask[0];
+                    const maxSlot = slotsForTask[slotsForTask.length - 1];
+                    const maxSlotMins = timeToMinutes(maxSlot) + 30;
+
+                    this.pushUndoSnapshot();
+
+                    if (resizeEdge === 'bottom') {
+                        // Extend or shrink end
+                        let newEndMins = maxSlotMins + (slots30min * 30);
+                        newEndMins = Math.max(timeToMinutes(minSlot) + 30, Math.min(newEndMins, 24 * 60));
+                        // Clear all existing slots for task
+                        slotsForTask.forEach(s => delete ts[s]);
+                        // Re-fill with new range
+                        this.db.fillTimesheetBlock(
+                            this.selectedDate,
+                            minSlot,
+                            minutesToTime(newEndMins === 24 * 60 ? 0 : newEndMins),
+                            taskId,
+                            entry.categoryId,
+                            entry.taskName
+                        );
+                    } else if (resizeEdge === 'top') {
+                        // Move start of block
+                        let newStartMins = timeToMinutes(minSlot) + (slots30min * 30);
+                        newStartMins = Math.max(0, Math.min(newStartMins, maxSlotMins - 30));
+                        slotsForTask.forEach(s => delete ts[s]);
+                        this.db.fillTimesheetBlock(
+                            this.selectedDate,
+                            minutesToTime(newStartMins),
+                            minutesToTime(maxSlotMins === 24 * 60 ? 0 : maxSlotMins),
+                            taskId,
+                            entry.categoryId,
+                            entry.taskName
+                        );
+                    }
+
+                    this.db.saveLocalData();
+                    setTimeout(() => this.db.saveToFirebase(), 150);
+                    this.renderTimesheet();
+                });
             }
 
             openManualFillModal(presetSlot) {
@@ -4966,33 +6315,63 @@
             }
 
             renderAnalytics() {
+                // ── Compute date range from selectedPeriod / custom calendar range ──
+                let startStr, endStr;
+                const today = new Date();
+                if (this.selectedPeriod === 'custom' && this.analyticsFrom && this.analyticsTo) {
+                    startStr = this.analyticsFrom;
+                    endStr = this.analyticsTo;
+                } else {
+                    const endDate = new Date();
+                    const startDate = new Date();
+                    if (this.selectedPeriod === 'week') {
+                        startDate.setDate(endDate.getDate() - 6);
+                    } else { // month
+                        startDate.setDate(endDate.getDate() - 29);
+                    }
+                    startStr = getLocalDateStr(startDate);
+                    endStr = getLocalDateStr(endDate);
+                }
+
+                // Format display label
+                const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const periodLabel = `${fmt(startStr)} – ${fmt(endStr)}`;
+
                 let html = `
                     <div class="dashboard-header">
                         <div class="header-title-row">
                             <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
                             <h2>📊 Analytics</h2>
                         </div>
+                        <div style="font-size:12px;color:var(--text-secondary);margin-left:52px;margin-top:2px;">${periodLabel}</div>
                     </div>
-                    
+
                     <div class="period-selector">
                         <button class="period-btn ${this.selectedPeriod === 'week' ? 'active' : ''}" onclick="app.setPeriod('week')">Week</button>
                         <button class="period-btn ${this.selectedPeriod === 'month' ? 'active' : ''}" onclick="app.setPeriod('month')">Month</button>
-                        <button class="period-btn ${this.selectedPeriod === 'year' ? 'active' : ''}" onclick="app.setPeriod('year')">Year</button>
+                        <button class="period-btn ${this.selectedPeriod === 'custom' ? 'active' : ''}" onclick="app.setPeriod('custom')">📅 Custom</button>
                     </div>`;
 
-                const endDate = new Date();
-                const startDate = new Date();
-                if (this.selectedPeriod === 'week') {
-                    startDate.setDate(endDate.getDate() - 7);
-                } else if (this.selectedPeriod === 'month') {
-                    startDate.setDate(endDate.getDate() - 30);
-                } else {
-                    startDate.setDate(endDate.getDate() - 365);
+                // Calendar date pickers (only shown in custom mode)
+                if (this.selectedPeriod === 'custom') {
+                    html += `
+                    <div style="display:flex;gap:10px;align-items:center;padding:0 var(--spacing-lg) var(--spacing-md);flex-wrap:wrap;">
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <span class="text-xs text-secondary">From</span>
+                            <input type="date" id="analytics-from" value="${this.analyticsFrom || getLocalDateStr()}"
+                                onchange="app.setAnalyticsRange()"
+                                style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;">
+                            <span class="text-xs text-secondary">To</span>
+                            <input type="date" id="analytics-to" value="${this.analyticsTo || getLocalDateStr()}"
+                                onchange="app.setAnalyticsRange()"
+                                style="background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);padding:5px 8px;font-size:13px;">
+                        </div>
+                    </div>`;
                 }
 
-                const startStr = getLocalDateStr(startDate);
-                const endStr = getLocalDateStr(endDate);
-
+                // ── Task Summary card ──
                 const taskStats = this.db.getTaskStatsForPeriod(startStr, endStr);
                 html += `
                     <div class="analytics-card">
@@ -5004,38 +6383,102 @@
                             </div>
                             <div class="analytics-item">
                                 <div class="analytics-label">Completed</div>
-                                <div class="analytics-value" style="color: var(--success);">${taskStats.completed}</div>
+                                <div class="analytics-value" style="color:var(--success);">${taskStats.completed}</div>
                             </div>
                             <div class="analytics-item">
                                 <div class="analytics-label">On Time</div>
-                                <div class="analytics-value" style="color: var(--primary-color);">${taskStats.completedOnTime}</div>
+                                <div class="analytics-value" style="color:var(--accent-primary);">${taskStats.completedOnTime}</div>
                             </div>
                             <div class="analytics-item">
-                                <div class="analytics-label">Completed Late</div>
-                                <div class="analytics-value" style="color: var(--warning);">${taskStats.completedLate}</div>
+                                <div class="analytics-label">Not Doable</div>
+                                <div class="analytics-value" style="color:var(--warning);">${taskStats.notDoable}</div>
                             </div>
                         </div>
                     </div>`;
 
+                // ── Habit Analytics card ──
+                const habitAnalytics = this._getHabitAnalyticsForPeriod(startStr, endStr);
+                html += `
+                    <div class="analytics-card">
+                        <h3>🌱 Habit Analytics</h3>`;
+
+                if (habitAnalytics.length === 0) {
+                    html += `<p class="text-secondary text-center mt-4" style="font-size:13px;">No habits defined yet.</p>`;
+                } else {
+                    html += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:12px;">`;
+                    habitAnalytics.forEach(h => {
+                        const pct = h.planned > 0 ? Math.round((h.done / h.planned) * 100) : 0;
+                        const barColor = pct >= 80 ? 'var(--success)' : pct >= 50 ? 'var(--warning)' : 'var(--danger)';
+                        html += `
+                            <div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                                    <span style="font-size:14px;font-weight:600;">${h.name}</span>
+                                    <span style="font-size:13px;color:var(--text-secondary);">
+                                        <b style="color:${barColor}">${h.done}</b> / ${h.planned}
+                                        <span style="font-size:11px;margin-left:4px;color:var(--text-tertiary)">times</span>
+                                    </span>
+                                </div>
+                                <div style="height:6px;background:var(--surface-elevated);border-radius:3px;overflow:hidden;">
+                                    <div style="height:100%;width:${pct}%;background:${barColor};border-radius:3px;transition:width 0.4s;"></div>
+                                </div>
+                                <div style="font-size:11px;color:var(--text-tertiary);margin-top:3px;">${pct}% completion rate</div>
+                            </div>`;
+                    });
+                    html += `</div>`;
+                }
+                html += `</div>`;
+
+                // ── Time Distribution Pie chart ──
+                const timeStats = this.db.getTimesheetStatsForPeriod(startStr, endStr);
+                const totalTrackedH = (parseFloat(timeStats.productive) + parseFloat(timeStats.nonProductive) + parseFloat(timeStats.uncontrollable)).toFixed(1);
+                html += `
+                    <div class="analytics-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                            <h3>Time Distribution</h3>
+                            <span style="font-size:12px;color:var(--text-secondary);">${totalTrackedH}h tracked</span>
+                        </div>
+                        <div style="position:relative;">
+                            <div class="chart-container" style="height:220px;margin:0;">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>`;
+
+                // ── Category Breakdown Bar chart (descending) ──
+                const categoryBreakdown = this.db.getCategoryBreakdownForPeriod(startStr, endStr);
+                // Sort descending
+                const sortedEntries = Object.entries(categoryBreakdown).sort((a, b) => b[1] - a[1]);
+                const categories = sortedEntries.map(([k]) => k);
+                const hours = sortedEntries.map(([, v]) => v);
+
+                html += `
+                    <div class="analytics-card">
+                        <h3>Category Breakdown</h3>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:8px;">Hours — sorted high to low</div>
+                        <div class="chart-container" style="height:220px;margin:0;">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>`;
+
+                // ── Routine Stats card ──
                 const routineStats = this.db.getRoutineStatsForPeriod(startStr, endStr);
                 html += `
                     <div class="analytics-card">
                         <h3>Routine Tasks</h3>`;
-
                 if (Object.keys(routineStats).length === 0) {
-                    html += `<p class="text-secondary text-center mt-4">No routine tasks in this period</p>`;
+                    html += `<p class="text-secondary text-center mt-4" style="font-size:13px;">No routine tasks in this period</p>`;
                 } else {
-                    html += `<div style="margin-top: 15px;">`;
+                    html += `<div style="margin-top:15px;">`;
                     Object.entries(routineStats).forEach(([category, stats]) => {
                         const percentage = stats.assigned > 0 ? Math.round((stats.completed / stats.assigned) * 100) : 0;
                         html += `
-                            <div style="margin-bottom: 20px;">
+                            <div style="margin-bottom:16px;">
                                 <div class="flex justify-between mb-2">
                                     <span class="font-bold">${category}</span>
                                     <span class="text-secondary">${stats.completed}/${stats.assigned} days</span>
                                 </div>
-                                <div style="background: var(--surface-variant); height: 8px; border-radius: 4px; overflow: hidden;">
-                                    <div style="background: var(--primary-color); height: 100%; width: ${percentage}%;"></div>
+                                <div style="background:var(--surface-elevated);height:8px;border-radius:4px;overflow:hidden;">
+                                    <div style="background:var(--accent-primary);height:100%;width:${percentage}%;"></div>
                                 </div>
                             </div>`;
                     });
@@ -5043,55 +6486,85 @@
                 }
                 html += `</div>`;
 
-                const timeStats = this.db.getTimesheetStatsForPeriod(startStr, endStr);
-                html += `
-                    <h3 class="p-4">Time Distribution</h3>
-                    <div class="chart-container">
-                        <canvas id="pieChart"></canvas>
-                    </div>`;
-
-                const categoryBreakdown = this.db.getCategoryBreakdownForPeriod(startStr, endStr);
-                html += `
-                    <h3 class="p-4">Category Breakdown (Hours)</h3>
-                    <div class="chart-container">
-                        <canvas id="barChart"></canvas>
-                    </div>`;
-
                 document.getElementById('view-analytics').innerHTML = html;
 
+                // ── Render Charts ──
                 setTimeout(() => {
-                    const ctxPie = document.getElementById('pieChart').getContext('2d');
-                    new Chart(ctxPie, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Productive', 'Non-Productive', 'Uncontrollable', 'Unassigned'],
-                            datasets: [{
-                                data: [
-                                    parseFloat(timeStats.productive),
-                                    parseFloat(timeStats.nonProductive),
-                                    parseFloat(timeStats.uncontrollable),
-                                    parseFloat(timeStats.unassigned)
-                                ],
-                                backgroundColor: ['#4ade80', '#f87171', '#facc15', '#3f3f46'],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'right',
-                                    labels: { color: 'white', padding: 15 }
+                    // PIE - doughnut with hours in labels
+                    const pieData = [
+                        parseFloat(timeStats.productive),
+                        parseFloat(timeStats.nonProductive),
+                        parseFloat(timeStats.uncontrollable),
+                        parseFloat(timeStats.unassigned)
+                    ];
+                    const pieLabels = ['Productive', 'Non-Productive', 'Uncontrollable', 'Unassigned'];
+                    const pieColors = ['#4ade80', '#f87171', '#facc15', '#3f3f46'];
+
+                    const ctxPie = document.getElementById('pieChart')?.getContext('2d');
+                    if (ctxPie) {
+                        new Chart(ctxPie, {
+                            type: 'doughnut',
+                            data: {
+                                labels: pieLabels,
+                                datasets: [{
+                                    data: pieData,
+                                    backgroundColor: pieColors,
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                cutout: '60%',
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                        labels: {
+                                            color: 'white',
+                                            padding: 12,
+                                            font: { size: 11 },
+                                            generateLabels: (chart) => {
+                                                const data = chart.data;
+                                                return data.labels.map((label, i) => ({
+                                                    text: `${label}: ${pieData[i]}h`,
+                                                    fillStyle: pieColors[i],
+                                                    hidden: pieData[i] === 0,
+                                                    index: i
+                                                }));
+                                            }
+                                        }
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: (ctx) => ` ${ctx.parsed.toFixed(1)} hours`
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                    });
+                            },
+                            plugins: [{
+                                id: 'centerText',
+                                afterDraw(chart) {
+                                    const { width, height, ctx } = chart;
+                                    ctx.save();
+                                    const total = pieData.slice(0, 3).reduce((a, b) => a + b, 0).toFixed(1);
+                                    ctx.font = `bold 16px Inter, sans-serif`;
+                                    ctx.fillStyle = 'white';
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+                                    // Centre of doughnut
+                                    const cx = (chart.chartArea.left + chart.chartArea.right) / 2;
+                                    const cy = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+                                    ctx.fillText(`${total}h`, cx, cy - 8);
+                                    ctx.font = `11px Inter, sans-serif`;
+                                    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                                    ctx.fillText('tracked', cx, cy + 10);
+                                    ctx.restore();
+                                }
+                            }]
+                        });
+                    }
 
-                    const categories = Object.keys(categoryBreakdown);
-                    const hours = Object.values(categoryBreakdown);
-
-                    // Get colors based on category type
+                    // BAR - descending order
                     const barColors = categories.map(catName => {
                         const category = this.db.getCategories().find(c => c.name === catName);
                         if (!category) return '#818cf8';
@@ -5101,35 +6574,92 @@
                         return '#818cf8';
                     });
 
-                    const ctxBar = document.getElementById('barChart').getContext('2d');
-                    new Chart(ctxBar, {
-                        type: 'bar',
-                        data: {
-                            labels: categories,
-                            datasets: [{
-                                label: 'Hours',
-                                data: hours,
-                                backgroundColor: barColors,
-                                borderRadius: 5
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                x: { ticks: { color: 'white' } },
-                                y: { ticks: { color: 'white' }, beginAtZero: true }
+                    const ctxBar = document.getElementById('barChart')?.getContext('2d');
+                    if (ctxBar) {
+                        new Chart(ctxBar, {
+                            type: 'bar',
+                            data: {
+                                labels: categories,
+                                datasets: [{
+                                    label: 'Hours',
+                                    data: hours,
+                                    backgroundColor: barColors,
+                                    borderRadius: 6
+                                }]
                             },
-                            plugins: {
-                                legend: { display: false }
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                indexAxis: hours.length > 5 ? 'y' : 'x', // horizontal for many categories
+                                scales: {
+                                    x: { ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                                    y: { ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true }
+                                },
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: (ctx) => ` ${ctx.parsed.y !== undefined ? ctx.parsed.y : ctx.parsed.x} hours`
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }, 100);
+            }
+
+            /** Returns habit completion analytics for a date range */
+            _getHabitAnalyticsForPeriod(startStr, endStr) {
+                const habits = this.db.getHabits();
+                const start = new Date(startStr + 'T00:00:00');
+                const end = new Date(endStr + 'T00:00:00');
+                const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+                return habits.map(habit => {
+                    let planned = 0, done = 0;
+                    for (let i = 0; i < days; i++) {
+                        const d = new Date(start);
+                        d.setDate(start.getDate() + i);
+                        const dateStr = getLocalDateStr(d);
+                        const dow = d.getDay();
+
+                        // Check if habit was applicable this day
+                        if (habit.startDate && dateStr < habit.startDate) continue;
+                        if (habit.endDate && dateStr >= habit.endDate) continue;
+                        let applies = false;
+                        if (habit.freq === 'daily') applies = true;
+                        else if (habit.freq === 'weekdays') applies = dow >= 1 && dow <= 5;
+                        else if (habit.freq === 'weekends') applies = dow === 0 || dow === 6;
+                        else if (habit.freq === 'custom') applies = habit.days && habit.days.includes(dow);
+
+                        if (applies) {
+                            planned++;
+                            const log = this.db.getHabitLog(dateStr);
+                            if (log && log[habit.id]) done++;
+                        }
+                    }
+                    return { name: habit.name, planned, done };
+                }).filter(h => h.planned > 0);
+            }
+
+            setAnalyticsRange() {
+                const from = document.getElementById('analytics-from');
+                const to = document.getElementById('analytics-to');
+                if (from) this.analyticsFrom = from.value;
+                if (to) this.analyticsTo = to.value;
+                this.render();
             }
 
             setPeriod(period) {
                 this.selectedPeriod = period;
+                // Initialize custom range defaults
+                if (period === 'custom' && !this.analyticsFrom) {
+                    const d = new Date();
+                    this.analyticsTo = getLocalDateStr(d);
+                    d.setDate(d.getDate() - 6);
+                    this.analyticsFrom = getLocalDateStr(d);
+                }
                 this.render();
             }
 
@@ -6170,6 +7700,90 @@
             deferredPrompt = e;
             console.log('PWA install prompt ready');
         });
+
+        // ===== 11 PM DAILY NOTIFICATION SCHEDULER =====
+        function schedule11PMNotification() {
+            if (!('serviceWorker' in navigator) || !('Notification' in window)) return;
+            if (Notification.permission !== 'granted') return;
+
+            const now = new Date();
+            const target = new Date();
+            target.setHours(23, 0, 0, 0); // 11:00 PM today
+
+            // If already past 11 PM today, schedule for tomorrow
+            if (now >= target) target.setDate(target.getDate() + 1);
+
+            const msUntil = target - now;
+            console.log('[Notifications] 11 PM alarm set in', Math.round(msUntil / 60000), 'min');
+
+            setTimeout(() => {
+                triggerEveningNotification();
+                // Reschedule for the next day (wait >1 min, then recalculate)
+                setTimeout(schedule11PMNotification, 90000);
+            }, msUntil);
+        }
+
+        function triggerEveningNotification() {
+            try {
+                const stored = localStorage.getItem('productivityData');
+                if (!stored) return;
+                const data = JSON.parse(stored);
+                const today = getLocalDateStr();
+
+                // Pending habits for today
+                const allHabits = data.habits || [];
+                const todayLog = (data.habitLogs && data.habitLogs[today]) || {};
+                const todayDate = new Date(today + 'T00:00:00');
+                const dow = todayDate.getDay();
+                const pendingHabits = allHabits
+                    .filter(h => {
+                        if (h.startDate && today < h.startDate) return false;
+                        if (h.endDate && today >= h.endDate) return false;
+                        let applies = false;
+                        if (h.freq === 'daily') applies = true;
+                        else if (h.freq === 'weekdays') applies = dow >= 1 && dow <= 5;
+                        else if (h.freq === 'weekends') applies = dow === 0 || dow === 6;
+                        else if (h.freq === 'custom') applies = h.days && h.days.includes(dow);
+                        return applies && !todayLog[h.id];
+                    })
+                    .map(h => h.name);
+
+                // Task summary for today
+                const todayTasks = (data.tasks || []).filter(t => t.date === today);
+                const doneTasks = todayTasks.filter(t => t.status === 'done');
+                const taskSummary = `${doneTasks.length} of ${todayTasks.length} tasks done today`;
+
+                navigator.serviceWorker.ready.then(reg => {
+                    if (reg.active) {
+                        reg.active.postMessage({
+                            type: 'SHOW_11PM_NOTIFICATION',
+                            pendingHabits,
+                            taskSummary
+                        });
+                    }
+                });
+            } catch (e) {
+                console.error('[Notifications] Evening notification error:', e);
+            }
+        }
+
+        // Request notification permission on load, then schedule
+        window.addEventListener('load', () => {
+            if (!('Notification' in window)) return;
+            if (Notification.permission === 'granted') {
+                schedule11PMNotification();
+            } else if (Notification.permission === 'default') {
+                // Delay asking so it feels natural after the app loads
+                setTimeout(() => {
+                    Notification.requestPermission().then(perm => {
+                        if (perm === 'granted') {
+                            schedule11PMNotification();
+                        }
+                    });
+                }, 6000);
+            }
+        });
+
     </script>
 </body>
 
