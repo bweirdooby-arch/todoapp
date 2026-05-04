@@ -2756,6 +2756,7 @@
             justify-content: center;
             opacity: 0;
             transition: opacity 0.2s;
+            touch-action: none;
         }
 
         .ts-resize-handle.top {
@@ -3350,7 +3351,11 @@
 
             <div class="form-group">
                 <label>Category</label>
-                <select id="inp-task-category"></select>
+                <div class="autocomplete-wrap" id="inp-task-category-wrap">
+                    <input type="text" id="inp-task-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="inp-task-category">
+                    <div class="autocomplete-dropdown" id="inp-task-category-dropdown" style="display:none;"></div>
+                </div>
             </div>
 
             <div id="adhoc-options">
@@ -3462,7 +3467,11 @@
 
             <div class="form-group">
                 <label>Category</label>
-                <select id="edit-task-category"></select>
+                <div class="autocomplete-wrap" id="edit-task-category-wrap">
+                    <input type="text" id="edit-task-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="edit-task-category">
+                    <div class="autocomplete-dropdown" id="edit-task-category-dropdown" style="display:none;"></div>
+                </div>
             </div>
 
             <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
@@ -3606,7 +3615,11 @@
 
             <div class="form-group">
                 <label>Category</label>
-                <select id="edit-routine-category"></select>
+                <div class="autocomplete-wrap" id="edit-routine-category-wrap">
+                    <input type="text" id="edit-routine-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="edit-routine-category">
+                    <div class="autocomplete-dropdown" id="edit-routine-category-dropdown" style="display:none;"></div>
+                </div>
             </div>
 
             <div class="form-group" style="display: flex; gap: 10px;">
@@ -3678,7 +3691,11 @@
 
             <div class="form-group">
                 <label>Category</label>
-                <select id="manual-category"></select>
+                <div class="autocomplete-wrap" id="manual-category-wrap">
+                    <input type="text" id="manual-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="manual-category">
+                    <div class="autocomplete-dropdown" id="manual-category-dropdown" style="display:none;"></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -3729,7 +3746,11 @@
             </div>
             <div class="form-group">
                 <label>Category</label>
-                <select id="park-category"></select>
+                <div class="autocomplete-wrap" id="park-category-wrap">
+                    <input type="text" id="park-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="park-category">
+                    <div class="autocomplete-dropdown" id="park-category-dropdown" style="display:none;"></div>
+                </div>
             </div>
             <div style="display:flex;gap:12px;">
                 <div class="form-group" style="flex:1;">
@@ -3790,7 +3811,11 @@
             </div>
             <div class="form-group">
                 <label>Category</label>
-                <select id="habit-category"></select>
+                <div class="autocomplete-wrap" id="habit-category-wrap">
+                    <input type="text" id="habit-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="habit-category">
+                    <div class="autocomplete-dropdown" id="habit-category-dropdown" style="display:none;"></div>
+                </div>
             </div>
             <div class="form-group">
                 <label>Start From</label>
@@ -5315,15 +5340,7 @@
                 document.getElementById('edit-task-name').value = task.name;
                 document.getElementById('edit-task-hero').checked = task.isHero || false;
 
-                const catSelect = document.getElementById('edit-task-category');
-                catSelect.innerHTML = '';
-                this.db.getCategories().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.innerText = c.name;
-                    opt.selected = c.id === task.categoryId;
-                    catSelect.appendChild(opt);
-                });
+                if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('edit-task-category', task.categoryId);
 
                 document.getElementById('modal-edit-task').classList.add('open');
             }
@@ -5591,14 +5608,7 @@
             }
 
             openAddParkedTaskModal() {
-                const catSelect = document.getElementById('park-category');
-                catSelect.innerHTML = '';
-                this.db.getCategories().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.innerText = c.name;
-                    catSelect.appendChild(opt);
-                });
+                if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('park-category', '');
                 document.getElementById('park-name').value = '';
                 document.getElementById('park-desc').value = '';
                 document.getElementById('park-deadline').value = '';
@@ -5807,15 +5817,7 @@
                 document.getElementById('habit-custom-days').style.display = 'none';
                 document.querySelectorAll('#habit-day-chips .hday-chip').forEach(c => c.classList.remove('selected'));
                 this.selectedHabitDays = [];
-                // Populate category dropdown
-                const catSel = document.getElementById('habit-category');
-                catSel.innerHTML = '<option value="">-- No Category --</option>';
-                this.db.getCategories().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.name;
-                    catSel.appendChild(opt);
-                });
+                if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('habit-category', '');
                 document.getElementById('modal-add-habit').classList.add('open');
             }
 
@@ -6258,15 +6260,7 @@
                 // Populate Modal
                 document.getElementById('manual-task-name').value = entry.taskName || '';
 
-                const catSelect = document.getElementById('manual-category');
-                catSelect.innerHTML = '';
-                this.db.getCategories().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.innerText = c.name;
-                    if (c.id === entry.categoryId) opt.selected = true;
-                    catSelect.appendChild(opt);
-                });
+                if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('manual-category', entry.categoryId || '');
 
                 setTimeInputValue('manual-time-from', timeFrom);
                 setTimeInputValue('manual-time-to', timeTo);
@@ -6926,14 +6920,7 @@
                 this.promotingParkedTaskId = null;
                 const modal = document.getElementById('modal-add-task');
                 const catSelect = document.getElementById('inp-task-category');
-
-                catSelect.innerHTML = '';
-                this.db.getCategories().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.innerText = c.name;
-                    catSelect.appendChild(opt);
-                });
+                if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('inp-task-category', '');
 
                 document.getElementById('inp-task-date').value = this.selectedDate;
                 document.getElementById('inp-task-name').value = '';
@@ -7219,15 +7206,7 @@
                 setTimeInputValue('edit-routine-time-from', routine.timeFrom || '');
                 setTimeInputValue('edit-routine-time-to', routine.timeTo || '');
 
-                const catSelect = document.getElementById('edit-routine-category');
-                catSelect.innerHTML = '';
-                this.db.getCategories().forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.innerText = c.name;
-                    opt.selected = c.id === routine.categoryId;
-                    catSelect.appendChild(opt);
-                });
+                if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('edit-routine-category', routine.categoryId);
 
                 this.renderEditRoutinePauseList();
                 document.getElementById('modal-edit-routine').classList.add('open');
@@ -7358,6 +7337,178 @@
         const app = new App();
 
         // ===== TASK NAME AUTOCOMPLETE =====
+        class CategoryAutocomplete {
+            constructor() {
+                this.inputs = [
+                    { search: 'inp-task-category-search', hidden: 'inp-task-category', dropdown: 'inp-task-category-dropdown', wrap: 'inp-task-category-wrap' },
+                    { search: 'edit-task-category-search', hidden: 'edit-task-category', dropdown: 'edit-task-category-dropdown', wrap: 'edit-task-category-wrap' },
+                    { search: 'edit-routine-category-search', hidden: 'edit-routine-category', dropdown: 'edit-routine-category-dropdown', wrap: 'edit-routine-category-wrap' },
+                    { search: 'manual-category-search', hidden: 'manual-category', dropdown: 'manual-category-dropdown', wrap: 'manual-category-wrap' },
+                    { search: 'park-category-search', hidden: 'park-category', dropdown: 'park-category-dropdown', wrap: 'park-category-wrap' },
+                    { search: 'habit-category-search', hidden: 'habit-category', dropdown: 'habit-category-dropdown', wrap: 'habit-category-wrap' }
+                ];
+                this.topCategories = [];
+                // Delay init to ensure DOM is ready
+                setTimeout(() => this.init(), 100);
+            }
+
+            init() {
+                this.inputs.forEach(cfg => {
+                    const searchEl = document.getElementById(cfg.search);
+                    const hiddenEl = document.getElementById(cfg.hidden);
+                    const dropEl = document.getElementById(cfg.dropdown);
+
+                    if (!searchEl || !hiddenEl || !dropEl) return;
+
+                    searchEl.addEventListener('focus', () => {
+                        this.updateTopCategories();
+                        this.showDropdown(cfg, searchEl.value);
+                    });
+
+                    searchEl.addEventListener('input', (e) => {
+                        hiddenEl.value = '';
+                        this.showDropdown(cfg, e.target.value);
+                    });
+
+                    searchEl.addEventListener('blur', () => {
+                        // Delay to allow click on dropdown to register
+                        setTimeout(() => {
+                            const query = searchEl.value.trim().toLowerCase();
+                            if (query) {
+                                const allCats = app.db.getCategories();
+                                const exactMatch = allCats.find(c => c.name.toLowerCase() === query);
+                                if (exactMatch) {
+                                    hiddenEl.value = exactMatch.id;
+                                    searchEl.value = exactMatch.name;
+                                }
+                            }
+                        }, 200);
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!e.target.closest('#' + cfg.wrap)) {
+                            dropEl.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            updateTopCategories() {
+                if (!app || !app.db || !app.db.data) return;
+                
+                const counts = {};
+                if (app.db.data.tasks) {
+                    app.db.data.tasks.forEach(t => {
+                        if (t.categoryId) counts[t.categoryId] = (counts[t.categoryId] || 0) + 1;
+                    });
+                }
+                if (app.db.data.timesheet) {
+                    Object.values(app.db.data.timesheet).forEach(entry => {
+                        if (entry && entry.categoryId) counts[entry.categoryId] = (counts[entry.categoryId] || 0) + 1;
+                    });
+                }
+
+                const sortedIds = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(e => e[0]);
+                const categories = app.db.getCategories();
+                
+                this.topCategories = [];
+                for (let id of sortedIds) {
+                    const cat = categories.find(c => c.id === id);
+                    if (cat) this.topCategories.push(cat);
+                    if (this.topCategories.length >= 5) break;
+                }
+
+                if (this.topCategories.length < 5) {
+                    for (let cat of categories) {
+                        if (!this.topCategories.find(c => c.id === cat.id)) {
+                            this.topCategories.push(cat);
+                            if (this.topCategories.length >= 5) break;
+                        }
+                    }
+                }
+            }
+
+            showDropdown(cfg, query) {
+                const dropEl = document.getElementById(cfg.dropdown);
+                const searchEl = document.getElementById(cfg.search);
+                if (!dropEl) return;
+
+                let list = [];
+                query = query.trim().toLowerCase();
+
+                if (query === '') {
+                    list = this.topCategories;
+                } else {
+                    const allCats = app.db.getCategories();
+                    list = allCats.filter(c => c.name.toLowerCase().includes(query));
+                }
+
+                let html = '';
+                list.forEach(cat => {
+                    const dotColor = cat.type === 'productive' ? '#4ade80' : cat.type === 'non-productive' ? '#f87171' : '#facc15';
+                    html += `<div class="ac-item" data-id="${cat.id}" data-name="${cat.name.replace(/"/g, '&quot;')}">
+                        <span class="dot" style="background:${dotColor}; width:8px; height:8px; display:inline-block; margin-right:6px;"></span>
+                        ${cat.name}
+                    </div>`;
+                });
+
+                if (query !== '') {
+                    const exactMatch = list.find(c => c.name.toLowerCase() === query);
+                    if (!exactMatch) {
+                        html += `<div class="ac-item ac-create-item" data-create="${query.replace(/"/g, '&quot;')}">
+                            <i class="fas fa-plus"></i> Create "${query}"
+                        </div>`;
+                    }
+                }
+
+                if (html === '') {
+                    dropEl.style.display = 'none';
+                    return;
+                }
+
+                dropEl.innerHTML = html;
+                dropEl.style.display = 'block';
+
+                const items = dropEl.querySelectorAll('.ac-item');
+                items.forEach(item => {
+                    item.addEventListener('click', () => {
+                        if (item.classList.contains('ac-create-item')) {
+                            const newName = item.dataset.create;
+                            app.closeModals();
+                            document.getElementById('inp-cat-name').value = newName;
+                            setTimeout(() => {
+                                document.getElementById('modal-category').classList.add('open');
+                            }, 50);
+                        } else {
+                            const id = item.dataset.id;
+                            const name = item.dataset.name;
+                            document.getElementById(cfg.hidden).value = id;
+                            searchEl.value = name;
+                        }
+                        dropEl.style.display = 'none';
+                    });
+                });
+            }
+
+            setCategory(cfgName, categoryId) {
+                const cfg = this.inputs.find(i => i.hidden === cfgName);
+                if (!cfg) return;
+                const hiddenEl = document.getElementById(cfg.hidden);
+                const searchEl = document.getElementById(cfg.search);
+                if (!hiddenEl || !searchEl) return;
+
+                hiddenEl.value = categoryId || '';
+                if (categoryId) {
+                    const cat = app.db.getCategoryById(categoryId);
+                    searchEl.value = cat ? cat.name : '';
+                } else {
+                    searchEl.value = '';
+                }
+            }
+        }
+
+        window.categoryAutocomplete = new CategoryAutocomplete();
+
         class TaskAutocomplete {
             constructor() {
                 this.STORAGE_KEY = 'taskNameHistory';
