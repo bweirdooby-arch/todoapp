@@ -2482,7 +2482,7 @@
             background: var(--surface);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            overflow: hidden;
+            overflow: visible;
         }
 
         .home-mini-ts-header {
@@ -2494,21 +2494,22 @@
 
         .home-mini-ts-bar {
             display: flex;
-            height: 32px;
-            gap: 1px;
-            padding: 0 14px 12px;
+            height: auto;
+            gap: 2px;
+            padding: 14px 14px 4px;
         }
 
         .home-mini-ts-seg {
             flex: 1;
             border-radius: 4px;
             position: relative;
+            height: 24px;
         }
 
         .home-mini-ts-labels {
             display: flex;
             justify-content: space-between;
-            padding: 0 14px 10px;
+            padding: 6px 14px 12px;
             font-size: 10px;
             color: var(--text-tertiary);
         }
@@ -3159,6 +3160,64 @@
             font-size: 10px;
             opacity: 0.6;
         }
+
+        /* ===== TASK AUTOCOMPLETE ===== */
+        .autocomplete-wrap {
+            position: relative;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: var(--surface-elevated);
+            border: 1px solid var(--accent-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,126,248,0.2);
+            animation: acDropIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes acDropIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .autocomplete-item {
+            padding: 11px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.12s;
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: rgba(139, 126, 248, 0.15);
+        }
+
+        .autocomplete-item i {
+            color: var(--accent-primary);
+            font-size: 12px;
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        .autocomplete-item .ac-match {
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
     </style>
 </head>
 
@@ -3169,6 +3228,10 @@
             <h3>Manage Well</h3>
         </div>
         <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('parking')">
+                <i class="fas fa-parking"></i>
+                <span>Parking Lot</span>
+            </div>
             <div class="sidebar-item" onclick="app.switchViewFromSidebar('manage')">
                 <i class="fas fa-cog"></i>
                 <span>Settings & Workspace</span>
@@ -3185,9 +3248,9 @@
             <div class="view-slide" id="view-home"></div>
             <div class="view-slide" id="view-todo"></div>
             <div class="view-slide" id="view-timesheet"></div>
-            <div class="view-slide" id="view-parking"></div>
             <div class="view-slide" id="view-habits"></div>
             <div class="view-slide" id="view-analytics"></div>
+            <div class="view-slide" id="view-parking"></div>
             <div class="view-slide" id="view-manage"></div>
             <div class="view-slide" id="view-account"></div>
         </div>
@@ -3279,7 +3342,10 @@
 
             <div class="form-group">
                 <label>Task Name</label>
-                <input type="text" id="inp-task-name" placeholder="Enter task name">
+                <div class="autocomplete-wrap" id="inp-task-name-wrap">
+                    <input type="text" id="inp-task-name" placeholder="Enter task name" autocomplete="off">
+                    <div class="autocomplete-dropdown" id="inp-task-name-dropdown" style="display:none;"></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -3604,7 +3670,10 @@
 
             <div class="form-group">
                 <label>Task Name</label>
-                <input type="text" id="manual-task-name" placeholder="Enter task name">
+                <div class="autocomplete-wrap" id="manual-task-name-wrap">
+                    <input type="text" id="manual-task-name" placeholder="Enter task name" autocomplete="off">
+                    <div class="autocomplete-dropdown" id="manual-task-name-dropdown" style="display:none;"></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -3648,7 +3717,10 @@
             </div>
             <div class="form-group">
                 <label>Task Name</label>
-                <input type="text" id="park-name" placeholder="What needs to be done?">
+                <div class="autocomplete-wrap" id="park-name-wrap">
+                    <input type="text" id="park-name" placeholder="What needs to be done?" autocomplete="off">
+                    <div class="autocomplete-dropdown" id="park-name-dropdown" style="display:none;"></div>
+                </div>
             </div>
             <div class="form-group">
                 <label>Description</label>
@@ -4418,7 +4490,7 @@
                 this.timesheetUndoStack = [];
                 this.promotingParkedTaskId = null;
                 this.deletingHabitId = null;
-                this.TAB_ORDER = ['home', 'todo', 'timesheet', 'parking', 'habits', 'analytics', 'manage', 'account'];
+                this.TAB_ORDER = ['home', 'todo', 'timesheet', 'habits', 'analytics', 'parking', 'manage', 'account'];
                 this.collapsedGroups = {}; // track which task groups are collapsed
 
                 this.render();
@@ -4582,11 +4654,13 @@
                             if (indicatorEl) indicatorEl.style.transition = 'none';
                         }
                         const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
+                        // Only allow swiping within the first 5 tabs (home/todo/timesheet/habits/analytics)
+                        if (currentIdx >= 5) return;
                         const sliderWidth = window.innerWidth;
                         const basePercent = -(currentIdx * 12.5);
                         const movePercent = (dx / (sliderWidth * 8)) * 100;
 
-                        // Resistance at boundaries (swipeable = first 5 tabs in TAB_ORDER; max idx=4)
+                        // Resistance at boundaries (max swipeable idx=4 = analytics)
                         let finalPercent = basePercent + movePercent;
                         if ((currentIdx === 0 && dx > 0) || (currentIdx === 4 && dx < 0)) {
                             finalPercent = basePercent + (movePercent * 0.3);
@@ -4619,8 +4693,10 @@
 
                     if (Math.abs(dx) > threshold) {
                         const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
+                        // Only process swipe for the 5-tab swipeable rail
+                        if (currentIdx >= 5) { this.render(); return; }
                         let nextIdx = currentIdx;
-                        // Limit swipe to the first 5 tabs (rail)
+                        // Limit swipe to the first 5 tabs (home/todo/timesheet/habits/analytics)
                         if (dx < 0) nextIdx = Math.min(currentIdx + 1, 4);
                         else nextIdx = Math.max(currentIdx - 1, 0);
 
@@ -5531,6 +5607,7 @@
 
             saveParkedTask() {
                 const name = document.getElementById('park-name').value.trim();
+                if (name && window.taskAutocomplete) window.taskAutocomplete.learnName(name);
                 if (!name) { alert('Task name is required'); return; }
                 const description = document.getElementById('park-desc').value.trim();
                 const categoryId = document.getElementById('park-category').value;
@@ -6203,6 +6280,7 @@
 
             saveManualFill() {
                 const taskName = document.getElementById('manual-task-name').value.trim();
+                if (taskName && window.taskAutocomplete) window.taskAutocomplete.learnName(taskName);
                 const categoryId = document.getElementById('manual-category').value;
                 const timeFrom = getTimeInputValue('manual-time-from');
                 const timeTo = getTimeInputValue('manual-time-to');
@@ -6915,6 +6993,7 @@
 
             saveTask() {
                 const name = document.getElementById('inp-task-name').value.trim();
+                if (name && window.taskAutocomplete) window.taskAutocomplete.learnName(name);
                 const catId = document.getElementById('inp-task-category').value;
 
                 if (!name) {
@@ -7277,6 +7356,168 @@
 
 
         const app = new App();
+
+        // ===== TASK NAME AUTOCOMPLETE =====
+        class TaskAutocomplete {
+            constructor() {
+                this.STORAGE_KEY = 'taskNameHistory';
+                this.MAX_NAMES = 200;
+                this._names = this._load();
+                this._activeInput = null;
+                this._activeDrop = null;
+                this._selectedIdx = -1;
+                this._seedFromData();
+                this._bindInputs();
+            }
+
+            /* --- Persistence --- */
+            _load() {
+                try {
+                    const raw = localStorage.getItem(this.STORAGE_KEY);
+                    return raw ? JSON.parse(raw) : [];
+                } catch { return []; }
+            }
+
+            _save() {
+                try {
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this._names.slice(0, this.MAX_NAMES)));
+                } catch {}
+            }
+
+            /* Seed from existing app data so existing tasks surface immediately */
+            _seedFromData() {
+                const db = app.db.data;
+                const seen = new Set(this._names.map(n => n.toLowerCase()));
+                const add = name => {
+                    if (name && !seen.has(name.toLowerCase())) {
+                        this._names.push(name);
+                        seen.add(name.toLowerCase());
+                    }
+                };
+                (db.tasks || []).forEach(t => add(t.name));
+                (db.routines || []).forEach(r => add(r.name));
+                (db.parkedTasks || []).forEach(p => add(p.name));
+                Object.values(db.timesheet || {}).forEach(day => {
+                    Object.values(day || {}).forEach(entry => entry && add(entry.taskName));
+                });
+                this._save();
+            }
+
+            /* Learn a new task name (call when user saves) */
+            learnName(name) {
+                if (!name || name.length < 2) return;
+                // Move to front (most-recently-used order)
+                this._names = this._names.filter(n => n.toLowerCase() !== name.toLowerCase());
+                this._names.unshift(name);
+                this._save();
+            }
+
+            /* Suggest matches for a query, max 6 */
+            _suggest(query) {
+                if (!query || query.length < 1) return [];
+                const q = query.toLowerCase();
+                return this._names
+                    .filter(n => n.toLowerCase().includes(q) && n.toLowerCase() !== q)
+                    .slice(0, 6);
+            }
+
+            /* Highlight matched portion */
+            _highlight(text, query) {
+                if (!query) return text;
+                const idx = text.toLowerCase().indexOf(query.toLowerCase());
+                if (idx < 0) return text;
+                return text.slice(0, idx)
+                    + '<span class="ac-match">' + text.slice(idx, idx + query.length) + '</span>'
+                    + text.slice(idx + query.length);
+            }
+
+            /* Bind to all 3 task name inputs */
+            _bindInputs() {
+                const configs = [
+                    { inputId: 'inp-task-name',    dropId: 'inp-task-name-dropdown' },
+                    { inputId: 'manual-task-name', dropId: 'manual-task-name-dropdown' },
+                    { inputId: 'park-name',        dropId: 'park-name-dropdown' },
+                ];
+                configs.forEach(({ inputId, dropId }) => {
+                    const inp = document.getElementById(inputId);
+                    const drop = document.getElementById(dropId);
+                    if (!inp || !drop) return;
+                    inp.addEventListener('input', () => this._onInput(inp, drop));
+                    inp.addEventListener('keydown', (e) => this._onKey(e, inp, drop));
+                    inp.addEventListener('focus', () => this._onInput(inp, drop));
+                    inp.addEventListener('blur', () => setTimeout(() => this._hide(drop), 180));
+                });
+            }
+
+            _onInput(inp, drop) {
+                const q = inp.value.trim();
+                const matches = this._suggest(q);
+                this._selectedIdx = -1;
+                if (!matches.length) { this._hide(drop); return; }
+                this._show(matches, q, inp, drop);
+            }
+
+            _show(matches, query, inp, drop) {
+                drop.innerHTML = matches.map((m, i) =>
+                    `<div class="autocomplete-item" data-idx="${i}" data-value="${m.replace(/"/g, '&quot;')}">
+                        <i class="fas fa-clock-rotate-left"></i>
+                        <span>${this._highlight(m, query)}</span>
+                    </div>`
+                ).join('');
+                drop.querySelectorAll('.autocomplete-item').forEach(item => {
+                    item.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        inp.value = item.dataset.value;
+                        this._hide(drop);
+                        inp.dispatchEvent(new Event('input', { bubbles: true }));
+                    });
+                    // Touch support
+                    item.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        inp.value = item.dataset.value;
+                        this._hide(drop);
+                        inp.dispatchEvent(new Event('input', { bubbles: true }));
+                    });
+                });
+                drop.style.display = 'block';
+            }
+
+            _hide(drop) {
+                if (drop) drop.style.display = 'none';
+                this._selectedIdx = -1;
+            }
+
+            _onKey(e, inp, drop) {
+                if (drop.style.display === 'none') return;
+                const items = drop.querySelectorAll('.autocomplete-item');
+                if (!items.length) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    this._selectedIdx = Math.min(this._selectedIdx + 1, items.length - 1);
+                    this._setActive(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    this._selectedIdx = Math.max(this._selectedIdx - 1, -1);
+                    this._setActive(items);
+                } else if (e.key === 'Enter' && this._selectedIdx >= 0) {
+                    e.preventDefault();
+                    const val = items[this._selectedIdx].dataset.value;
+                    inp.value = val;
+                    this._hide(drop);
+                } else if (e.key === 'Escape') {
+                    this._hide(drop);
+                }
+            }
+
+            _setActive(items) {
+                items.forEach((item, i) => {
+                    item.classList.toggle('active', i === this._selectedIdx);
+                });
+            }
+        }
+
+        window.taskAutocomplete = new TaskAutocomplete();
 
         // ===== VOICE ASSISTANT =====
         class VoiceAssistant {
