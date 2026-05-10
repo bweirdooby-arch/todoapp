@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="description" content="Premium productivity and time management app">
-    <title>Productivity • Daily Planner</title>
+    <title>Productivity â€¢ Daily Planner</title>
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -608,7 +608,7 @@
         }
 
         .task-card.hero::before {
-            content: '⭐';
+            content: 'â­';
             position: absolute;
             top: -8px;
             right: -8px;
@@ -2797,9 +2797,9 @@
             overflow: hidden;
         }
 
-        /* ════════════════════════════════════════
-           TASK TAB — TIMELINE LAYOUT (tl-*)
-           ════════════════════════════════════════ */
+        /* ========================================
+           TASK TAB â€” TIMELINE LAYOUT (tl-*)
+           ======================================== */
         .tl-top-bar {
             display: flex;
             align-items: center;
@@ -3157,6 +3157,10 @@
             color: #be123c !important;
         }
 
+        .tl-action-copy {
+            color: var(--accent-primary) !important;
+        }
+
         .tl-routine-badge {
             font-size: 10px;
             opacity: 0.6;
@@ -3283,7 +3287,7 @@
         <div id="voice-status">Listening...</div>
         <div id="voice-transcript">Say something like "Add meeting tomorrow at 3pm"</div>
         <div class="voice-parsed-preview" id="voice-preview">
-            <div class="vp-title">✅ I heard:</div>
+            <div class="vp-title">âœ… I heard:</div>
             <div class="vp-row" id="vp-name"></div>
             <div class="vp-row" id="vp-date"></div>
             <div class="vp-row" id="vp-time"></div>
@@ -3294,9 +3298,9 @@
             <div class="voice-example-chip">"Meeting on Friday at 3pm for 1 hour"</div>
             <div class="voice-example-chip">"Fill timesheet study today 10am to 12pm"</div>
         </div>
-        <div id="voice-hint">💡 Say the <b>category name</b> (e.g. study, exercise) to auto-select it.<br>Say "fill
+        <div id="voice-hint">🎤  Say the <b>category name</b> (e.g. study, exercise) to auto-select it.<br>Say "fill
             timesheet" to fill the timesheet instead.</div>
-        <button id="voice-cancel-btn" onclick="voiceAssistant.cancel()">✕ Cancel</button>
+        <button id="voice-cancel-btn" onclick="voiceAssistant.cancel()">âœ• Cancel</button>
     </div>
 
 
@@ -3729,7 +3733,7 @@
     <div id="modal-add-parked" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🅿️ Park a Task</h3>
+                <h3>🅿️  Park a Task</h3>
                 <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
             </div>
             <div class="form-group">
@@ -3773,7 +3777,7 @@
                     <input type="date" id="park-deadline">
                 </div>
             </div>
-            <button class="btn-primary" onclick="app.saveParkedTask()">Park It 🅿️</button>
+            <button class="btn-primary" onclick="app.saveParkedTask()">Park It 🅿️ </button>
         </div>
     </div>
 
@@ -3781,7 +3785,7 @@
     <div id="modal-add-habit" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🌱 New Habit</h3>
+                <h3>🌱  New Habit</h3>
                 <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
             </div>
             <div class="form-group">
@@ -3792,8 +3796,8 @@
                 <label>Frequency</label>
                 <select id="habit-freq" onchange="app.onHabitFreqChange()">
                     <option value="daily">Daily (Every Day)</option>
-                    <option value="weekdays">Weekdays (Mon–Fri)</option>
-                    <option value="weekends">Weekends (Sat–Sun)</option>
+                    <option value="weekdays">Weekdays (Monâ€“Fri)</option>
+                    <option value="weekends">Weekends (Satâ€“Sun)</option>
                     <option value="custom">Custom Days</option>
                 </select>
             </div>
@@ -3821,7 +3825,7 @@
                 <label>Start From</label>
                 <input type="date" id="habit-start-date">
             </div>
-            <button class="btn-primary" onclick="app.saveHabit()">Start Habit 🌱</button>
+            <button class="btn-primary" onclick="app.saveHabit()">Start Habit 🌱 </button>
         </div>
     </div>
 
@@ -3835,7 +3839,7 @@
             <p class="text-secondary mb-4" style="font-size:14px;">How would you like to remove this habit?</p>
             <div style="display:flex;flex-direction:column;gap:12px;">
                 <button class="btn-primary" style="background:var(--danger);border:none;"
-                    onclick="app.deleteHabitPermanently()">🗑️ Delete Permanently<br><small
+                    onclick="app.deleteHabitPermanently()">🗑️  Delete Permanently<br><small
                         style="font-weight:400;opacity:0.8;">Removes habit and all history</small></button>
                 <div class="form-group" style="margin:0;">
                     <label>Stop from date</label>
@@ -4208,7 +4212,7 @@
                 this.saveToFirebase();
             }
 
-            // CRITICAL: this method is called by renderTimesheet — must exist on DatabaseManager
+            // CRITICAL: this method is called by renderTimesheet â€” must exist on DatabaseManager
             getTimesheet(date) {
                 return (this.data.timesheet && this.data.timesheet[date]) ? this.data.timesheet[date] : {};
             }
@@ -4582,7 +4586,7 @@
                         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
                         item.classList.add('active');
                         this.currentView = item.dataset.view;
-                        // NOTE: do NOT clear timesheetUndoStack on tab change — user should be able
+                        // NOTE: do NOT clear timesheetUndoStack on tab change â€” user should be able
                         // to navigate to other tabs and still come back to undo a fill.
                         this.render();
                     });
@@ -4865,7 +4869,7 @@
                     return true;
                 }).slice(0, 4);
 
-                // Mini timesheet — 6am to 10pm = 32 slots
+                // Mini timesheet â€” 6am to 10pm = 32 slots
                 const timesheet = this.db.getTimesheet(today);
                 const tsStartH = 6, tsEndH = 22, totalSegs = (tsEndH - tsStartH) * 2;
                 let tsSegsHtml = '';
@@ -4909,12 +4913,12 @@
                     </div>
                 </div>`;
 
-                // ── Today's Focus ──
+                // â”€â”€ Today's Focus â”€â”€
                 html += `<div class="home-section-label"><span>Today's Focus</span><a onclick="app.navTo('todo')">View All →</a></div>`;
                 if (focusTask) {
                     const cat = this.db.getCategoryById(focusTask.categoryId);
                     const catTag = cat ? `<span class="home-tag"><i class="fas fa-circle" style="font-size:7px;color:${cat.type === 'productive' ? 'var(--success)' : cat.type === 'non-productive' ? 'var(--danger)' : 'var(--warning)'}"></i>${cat.name}</span>` : '';
-                    const timeTag = focusTask.timeFrom ? `<span class="home-tag"><i class="fas fa-clock"></i>${formatTime12Hour(focusTask.timeFrom)}–${formatTime12Hour(focusTask.timeTo)}</span>` : '';
+                    const timeTag = focusTask.timeFrom ? `<span class="home-tag"><i class="fas fa-clock"></i>${formatTime12Hour(focusTask.timeFrom)}â€“${formatTime12Hour(focusTask.timeTo)}</span>` : '';
                     const isChecked = focusTask.status === 'done';
                     html += `
                     <div class="home-hero-card">
@@ -4931,7 +4935,7 @@
                     html += `<div class="home-empty"><i class="fas fa-check-circle" style="opacity:0.3;font-size:2rem;display:block;margin-bottom:8px;"></i>All clear! Add tasks to get started.</div>`;
                 }
 
-                // ── Upcoming Tasks ──
+                // â”€â”€ Upcoming Tasks â”€â”€
                 if (upcomingTasks.length > 0) {
                     html += `<div class="home-section-label" style="margin-top:14px;"><span>Upcoming</span></div>
                     <div class="home-tasks-scroll">`;
@@ -4951,7 +4955,7 @@
                     html += `</div>`;
                 }
 
-                // ── Habits ──
+                // â”€â”€ Habits â”€â”€
                 html += `<div class="home-section-label" style="margin-top:14px;"><span>Habits</span><a onclick="app.navTo('habits')">View All →</a></div>`;
                 if (todayHabits.length === 0) {
                     html += `<div class="home-empty">No habits today. <a onclick="app.navTo('habits')" style="color:var(--accent-primary);cursor:pointer;">Set one up →</a></div>`;
@@ -4978,7 +4982,7 @@
                         const iconBorder = habIconBorders[idx % habIconBorders.length];
                         html += `
                         <div class="home-habit-item">
-                            <div class="home-habit-icon" style="background:${iconBg};border:1px solid ${iconBorder};">🌱</div>
+                            <div class="home-habit-icon" style="background:${iconBg};border:1px solid ${iconBorder};">🌱 </div>
                             <div class="home-habit-info">
                                 <div class="home-habit-name">${habit.name}</div>
                                 <div class="home-habit-streak">${streak > 0 ? streak + ' day streak' : 'Start today!'}</div>
@@ -4992,7 +4996,7 @@
                     html += `</div>`;
                 }
 
-                // ── Mini Timesheet ──
+                // â”€â”€ Mini Timesheet â”€â”€
                 html += `
                 <div class="home-section-label" style="margin-top:14px;"><span>Today's Time</span><a onclick="app.navTo('timesheet')">Full View →</a></div>
                 <div class="home-mini-ts">
@@ -5044,7 +5048,7 @@
                     });
                 }
 
-                // ── Month/Year header ──
+                // â”€â”€ Month/Year header â”€â”€
                 const selDateObj = new Date(this.selectedDate + 'T00:00:00');
                 const monthYear = selDateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
@@ -5055,7 +5059,7 @@
                     <div style="width:40px;"></div>
                 </div>`;
 
-                // ── Pill Date Strip ──
+                // â”€â”€ Pill Date Strip â”€â”€
                 const selDTodo = new Date(this.selectedDate + 'T00:00:00');
                 html += `<div class="tl-date-strip">`;
                 for (let i = -3; i <= 3; i++) {
@@ -5072,7 +5076,7 @@
                 }
                 html += `</div>`;
 
-                // ── Compact Stats Bar ──
+                // â”€â”€ Compact Stats Bar â”€â”€
                 html += `
                 <div class="tl-stats-bar">
                     <div class="tl-stat">
@@ -5091,7 +5095,7 @@
                     </div>
                 </div>`;
 
-                // ── Timeline Task List ──
+                // â”€â”€ Timeline Task List â”€â”€
                 html += `<div class="tl-timeline">`;
 
                 if (tasks.length === 0) {
@@ -5117,7 +5121,7 @@
                         const isCurrentTask = task === currentTask;
                         const isNextTask = task === nextTask;
 
-                        // Card color per status — reference-inspired
+                        // Card color per status â€” reference-inspired
                         let cardBg, cardTextColor, statusLabel, statusColor;
                         if (isDone) {
                             cardBg = '#b7f0b1'; cardTextColor = '#1a2e19';
@@ -5127,7 +5131,7 @@
                             statusLabel = 'Rejected'; statusColor = '#be185d';
                         } else if (isHero) {
                             cardBg = '#c4b5fd'; cardTextColor = '#1e1a3d';
-                            statusLabel = '⭐ Hero'; statusColor = '#5b21b6';
+                            statusLabel = 'â­ Hero'; statusColor = '#5b21b6';
                         } else if (isCurrentTask) {
                             cardBg = '#7dd3fc'; cardTextColor = '#0c2d44';
                             statusLabel = 'Running'; statusColor = '#0369a1';
@@ -5171,7 +5175,7 @@
                                     </div>
                                     <div class="tl-card-text">
                                         <div class="tl-task-name ${isDone ? 'tl-task-done' : ''}">${task.name}</div>
-                                        <div class="tl-task-sub">${catName}${task.movedFrom ? ' · Moved' : ''}</div>
+                                        <div class="tl-task-sub">${catName}${task.movedFrom ? ' Â· Moved' : ''}</div>
                                     </div>
                                     <button class="tl-menu-btn" style="color:${cardTextColor};opacity:0.6;" onclick="app.toggleTaskMenu('${task.id}','${cardBg}','${cardTextColor}')"><i class="fas fa-ellipsis-v"></i></button>
                                 </div>
@@ -5188,6 +5192,7 @@
                                     ${task.isRoutine && !isDone ? `
                                         <button class="tl-action-item" onclick="app.openRescheduleModal('${task.id}')"><i class="fas fa-calendar"></i> Reschedule</button>
                                     ` : ''}
+                                    <button class="tl-action-item tl-action-copy" onclick="app.copyTask('${task.id}')"><i class="fas fa-copy"></i> Copy</button>
                                     ${!isDone ? `
                                         <button class="tl-action-item tl-action-warn" onclick="app.markNotDoable('${task.id}')"><i class="fas fa-ban"></i> Not Doable</button>
                                         <button class="tl-action-item tl-action-danger" onclick="app.deleteTask('${task.id}')"><i class="fas fa-trash"></i> Delete</button>
@@ -5200,6 +5205,48 @@
 
                 html += `</div>`;
                 document.getElementById('view-todo').innerHTML = html;
+            }
+
+            copyTask(id) {
+                // Find the task (could be adhoc or a routine instance)
+                const task = this.db.data.tasks.find(t => t.id === id)
+                    || (this.db.data.routines || []).find(r => r.id === id);
+                if (!task) return;
+
+                // Close all open menus
+                document.querySelectorAll('.tl-action-menu.open').forEach(m => m.classList.remove('open'));
+
+                // Open the Add Task modal pre-filled with current time + task details
+                this.addingTaskType = 'adhoc';
+                document.getElementById('btn-type-adhoc').classList.add('active');
+                document.getElementById('btn-type-routine').classList.remove('active');
+                document.getElementById('adhoc-options').style.display = 'block';
+                document.getElementById('routine-options').style.display = 'none';
+
+                // Pre-fill task name
+                document.getElementById('inp-task-name').value = task.name;
+                if (window.taskAutocomplete) window.taskAutocomplete.learnName(task.name);
+
+                // Pre-fill category
+                if (window.categoryAutocomplete) {
+                    window.categoryAutocomplete.setCategory('inp-task-category', task.categoryId || '');
+                }
+
+                // Pre-fill today's date
+                document.getElementById('inp-task-date').value = this.selectedDate;
+
+                // Pre-fill current time rounded to nearest 30 min
+                const _now = new Date();
+                const _totalMins = _now.getHours() * 60 + _now.getMinutes();
+                const _roundedFrom = Math.floor(_totalMins / 30) * 30;
+                const _roundedTo = _roundedFrom + 30;
+                setTimeInputValue('inp-task-time-from', minutesToTime(_roundedFrom >= 24 * 60 ? 0 : _roundedFrom));
+                setTimeInputValue('inp-task-time-to', minutesToTime(_roundedTo >= 24 * 60 ? 0 : _roundedTo));
+
+                document.getElementById('inp-task-hero').checked = false;
+                this.promotingParkedTaskId = null;
+
+                document.getElementById('modal-add-task').classList.add('open');
             }
 
             toggleTaskMenu(id) {
@@ -5533,9 +5580,9 @@
                     <div class="dashboard-header">
                         <div class="header-title-row">
                             <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
-                            <h2>🅿️ Parking Lot</h2>
+                            <h2>🅿️  Parking Lot</h2>
                         </div>
-                        <p class="text-secondary text-sm" style="margin-top:4px; margin-left:52px;">Tasks parked for later — no time allocated yet</p>
+                        <p class="text-secondary text-sm" style="margin-top:4px; margin-left:52px;">Tasks parked for later â€” no time allocated yet</p>
                     </div>`;
 
                 html += `<div style="padding: 0 var(--spacing-lg) var(--spacing-lg);">`;
@@ -5557,7 +5604,7 @@
                                 ${task.description ? `<div class="parking-desc">${task.description}</div>` : ''}
                                 <div class="parking-badges">
                                     ${catName ? `<span class="parking-badge cat-badge"><span class="dot" style="background:${dotColor};margin-right:4px;"></span>${catName}</span>` : ''}
-                                    <span class="parking-badge time-badge">⏱ ~${task.estimatedHours}h</span>
+                                    <span class="parking-badge time-badge">â± ~${task.estimatedHours}h</span>
                                     ${deadlineText ? `<span class="parking-badge deadline-badge">${deadlineText}</span>` : ''}
                                 </div>
                                 <div class="task-actions">
@@ -5575,7 +5622,7 @@
                 if (done.length > 0) {
                     html += `<div style="margin-top:28px;">
                         <div style="font-size:12px;font-weight:700;color:var(--text-secondary);letter-spacing:.08em;margin-bottom:12px;text-transform:uppercase;display:flex;align-items:center;gap:8px;">
-                            <span style="flex:1;">✅ Completed Parked Tasks (${done.length})</span>
+                            <span style="flex:1;">âœ… Completed Parked Tasks (${done.length})</span>
                         </div>`;
                     done.forEach(task => {
                         const cat = this.db.getCategoryById(task.categoryId);
@@ -5586,7 +5633,7 @@
                             : '';
                         html += `
                             <div style="background:var(--surface-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:10px;opacity:0.82;display:flex;align-items:center;gap:12px;">
-                                <div style="font-size:20px;color:var(--success);">✅</div>
+                                <div style="font-size:20px;color:var(--success);">âœ…</div>
                                 <div style="flex:1;min-width:0;">
                                     <div style="font-size:14px;font-weight:600;text-decoration:line-through;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${task.name}</div>
                                     <div style="font-size:11px;color:var(--text-tertiary,var(--text-secondary));margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -5657,7 +5704,7 @@
                         if (catSel && task.categoryId) catSel.value = task.categoryId;
                         // Change button label
                         const btn = document.getElementById('manual-fill-submit-btn');
-                        if (btn) btn.textContent = '✅ Complete & Fill Timesheet';
+                        if (btn) btn.textContent = 'âœ… Complete & Fill Timesheet';
                     }
                 }, 100);
             }
@@ -5691,7 +5738,7 @@
                 let html = `<div class="dashboard-header" style="padding-bottom:0;">
                     <div class="header-title-row">
                         <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
-                        <h2>🌱 Habit Tracker</h2>
+                        <h2>🌱  Habit Tracker</h2>
                     </div>
                 </div>`;
 
@@ -6387,7 +6434,7 @@
             }
 
             renderAnalytics() {
-                // ── Compute date range from selectedPeriod / custom calendar range ──
+                // â”€â”€ Compute date range from selectedPeriod / custom calendar range â”€â”€
                 let startStr, endStr;
                 const today = new Date();
                 if (this.selectedPeriod === 'custom' && this.analyticsFrom && this.analyticsTo) {
@@ -6407,7 +6454,7 @@
 
                 // Format display label
                 const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                const periodLabel = `${fmt(startStr)} – ${fmt(endStr)}`;
+                const periodLabel = `${fmt(startStr)} â€“ ${fmt(endStr)}`;
 
                 let html = `
                     <div class="dashboard-header">
@@ -6443,7 +6490,7 @@
                     </div>`;
                 }
 
-                // ── Task Summary card ──
+                // â”€â”€ Task Summary card â”€â”€
                 const taskStats = this.db.getTaskStatsForPeriod(startStr, endStr);
                 html += `
                     <div class="analytics-card">
@@ -6468,11 +6515,11 @@
                         </div>
                     </div>`;
 
-                // ── Habit Analytics card ──
+                // â”€â”€ Habit Analytics card â”€â”€
                 const habitAnalytics = this._getHabitAnalyticsForPeriod(startStr, endStr);
                 html += `
                     <div class="analytics-card">
-                        <h3>🌱 Habit Analytics</h3>`;
+                        <h3>🌱  Habit Analytics</h3>`;
 
                 if (habitAnalytics.length === 0) {
                     html += `<p class="text-secondary text-center mt-4" style="font-size:13px;">No habits defined yet.</p>`;
@@ -6500,7 +6547,7 @@
                 }
                 html += `</div>`;
 
-                // ── Time Distribution Pie chart ──
+                // â”€â”€ Time Distribution Pie chart â”€â”€
                 const timeStats = this.db.getTimesheetStatsForPeriod(startStr, endStr);
                 const totalTrackedH = (parseFloat(timeStats.productive) + parseFloat(timeStats.nonProductive) + parseFloat(timeStats.uncontrollable)).toFixed(1);
                 html += `
@@ -6516,7 +6563,7 @@
                         </div>
                     </div>`;
 
-                // ── Category Breakdown Bar chart (descending) ──
+                // â”€â”€ Category Breakdown Bar chart (descending) â”€â”€
                 const categoryBreakdown = this.db.getCategoryBreakdownForPeriod(startStr, endStr);
                 // Sort descending
                 const sortedEntries = Object.entries(categoryBreakdown).sort((a, b) => b[1] - a[1]);
@@ -6526,13 +6573,13 @@
                 html += `
                     <div class="analytics-card">
                         <h3>Category Breakdown</h3>
-                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:8px;">Hours — sorted high to low</div>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:8px;">Hours â€” sorted high to low</div>
                         <div class="chart-container" style="height:220px;margin:0;">
                             <canvas id="barChart"></canvas>
                         </div>
                     </div>`;
 
-                // ── Routine Stats card ──
+                // â”€â”€ Routine Stats card â”€â”€
                 const routineStats = this.db.getRoutineStatsForPeriod(startStr, endStr);
                 html += `
                     <div class="analytics-card">
@@ -6560,7 +6607,7 @@
 
                 document.getElementById('view-analytics').innerHTML = html;
 
-                // ── Render Charts ──
+                // â”€â”€ Render Charts â”€â”€
                 setTimeout(() => {
                     // PIE - doughnut with hours in labels
                     const pieData = [
@@ -6741,7 +6788,7 @@
                     <div class="dashboard-header">
                         <div class="header-title-row">
                             <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
-                            <h2>⚙️ Manage Workspace</h2>
+                            <h2>âš™ï¸ Manage Workspace</h2>
                         </div>
                     </div>
                     
@@ -6794,7 +6841,7 @@
                             <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 8px;">
                                 <div>
                                     <b>${r.name}</b>
-                                    <div class="text-xs text-secondary">${categoryName} • ${freqText}</div>
+                                    <div class="text-xs text-secondary">${categoryName} â€¢ ${freqText}</div>
                                 </div>
                                 <button class="task-btn" onclick="app.openEditRoutineModal('${r.id}')" title="Edit Routine">
                                     <i class="fas fa-edit"></i>
@@ -7582,25 +7629,83 @@
                     + text.slice(idx + query.length);
             }
 
-            /* Bind to all 3 task name inputs */
+            /* Bind to all task name inputs */
             _bindInputs() {
                 const configs = [
                     { inputId: 'inp-task-name',    dropId: 'inp-task-name-dropdown' },
                     { inputId: 'manual-task-name', dropId: 'manual-task-name-dropdown' },
                     { inputId: 'park-name',        dropId: 'park-name-dropdown' },
+                    { inputId: 'edit-task-name',   dropId: null }
                 ];
                 configs.forEach(({ inputId, dropId }) => {
                     const inp = document.getElementById(inputId);
-                    const drop = document.getElementById(dropId);
-                    if (!inp || !drop) return;
-                    inp.addEventListener('input', () => this._onInput(inp, drop));
-                    inp.addEventListener('keydown', (e) => this._onKey(e, inp, drop));
-                    inp.addEventListener('focus', () => this._onInput(inp, drop));
-                    inp.addEventListener('blur', () => setTimeout(() => this._hide(drop), 180));
+                    if (!inp) return;
+                    
+                    if (dropId) {
+                        const drop = document.getElementById(dropId);
+                        if (drop) {
+                            inp.addEventListener('input', () => this._onInput(inp, drop));
+                            inp.addEventListener('keydown', (e) => this._onKey(e, inp, drop));
+                            inp.addEventListener('focus', () => this._onInput(inp, drop));
+                            inp.addEventListener('blur', () => setTimeout(() => this._hide(drop), 180));
+                        }
+                    } else {
+                        inp.addEventListener('input', () => this._autoSelectCategory(inp));
+                    }
                 });
             }
 
+            _autoSelectCategory(inp) {
+                const name = inp.value.trim().toLowerCase();
+                if (!name || typeof app === 'undefined' || !app.db || !app.db.data) return;
+                
+                let foundCatId = null;
+                const db = app.db.data;
+                
+                // First search timesheet history (most recent date first)
+                if (db.timesheet) {
+                    const dates = Object.keys(db.timesheet).sort().reverse();
+                    for (let d of dates) {
+                        const day = db.timesheet[d];
+                        if (!day) continue;
+                        for (let k in day) {
+                            const entry = day[k];
+                            if (entry && entry.taskName && entry.taskName.toLowerCase().trim() === name && entry.categoryId) {
+                                foundCatId = entry.categoryId;
+                                break;
+                            }
+                        }
+                        if (foundCatId) break;
+                    }
+                }
+                
+                // Fallback: search saved tasks
+                if (!foundCatId && db.tasks) {
+                    const task = db.tasks.find(t => t.name && t.name.toLowerCase().trim() === name && t.categoryId);
+                    if (task) foundCatId = task.categoryId;
+                }
+                
+                // Also search routines
+                if (!foundCatId && db.routines) {
+                    const routine = db.routines.find(r => r.name && r.name.toLowerCase().trim() === name && r.categoryId);
+                    if (routine) foundCatId = routine.categoryId;
+                }
+                
+                if (foundCatId && typeof categoryAutocomplete !== 'undefined') {
+                    let catHiddenId = null;
+                    if (inp.id === 'inp-task-name') catHiddenId = 'inp-task-category';
+                    else if (inp.id === 'edit-task-name') catHiddenId = 'edit-task-category';
+                    else if (inp.id === 'manual-task-name') catHiddenId = 'manual-category';
+                    else if (inp.id === 'park-name') catHiddenId = 'park-category';
+                    
+                    if (catHiddenId) {
+                        categoryAutocomplete.setCategory(catHiddenId, foundCatId);
+                    }
+                }
+            }
+
             _onInput(inp, drop) {
+                this._autoSelectCategory(inp);
                 const q = inp.value.trim();
                 const matches = this._suggest(q);
                 this._selectedIdx = -1;
@@ -7656,6 +7761,7 @@
                     const val = items[this._selectedIdx].dataset.value;
                     inp.value = val;
                     this._hide(drop);
+                    this._autoSelectCategory(inp);
                 } else if (e.key === 'Escape') {
                     this._hide(drop);
                 }
@@ -7913,7 +8019,7 @@
             }
 
             _process(text) {
-                document.getElementById('voice-status').textContent = '✨ Got it! Processing...';
+                document.getElementById('voice-status').textContent = 'âœ¨ Got it! Processing...';
 
                 const { timeFrom, timeTo } = this._parseTime(text);
                 const date = this._parseDate(text);
@@ -7922,9 +8028,9 @@
                 const name = this._stripExtras(text, date, timeFrom, timeTo, category);
 
                 // Show preview
-                const fmt12 = t => t ? formatTime12Hour(t) : '—';
+                const fmt12 = t => t ? formatTime12Hour(t) : 'â€”';
                 const fmtDate = d => {
-                    if (!d) return '—';
+                    if (!d) return 'â€”';
                     const [y, mo, day] = d.split('-');
                     const nm = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                     return `${nm[parseInt(mo) - 1]} ${parseInt(day)}, ${y}`;
@@ -8069,7 +8175,7 @@
                 toast.id = 'update-toast';
                 toast.className = 'update-toast';
                 toast.innerHTML = `
-                    <p>✨ New version available!</p>
+                    <p>âœ¨ New version available!</p>
                     <button class="update-btn" onclick="applyUpdate()">Update Now</button>
                 `;
                 document.body.appendChild(toast);
