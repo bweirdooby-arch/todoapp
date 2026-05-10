@@ -269,16 +269,16 @@
 
         .views-slider {
             display: flex;
-            width: 800%;
-            /* 8 tabs */
+            width: 1000%;
+            /* 10 tabs */
             height: 100%;
             transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
             will-change: transform;
         }
 
         .view-slide {
-            width: 12.5%;
-            /* 1/8 of slider width = 100vw */
+            width: 10%;
+            /* 1/10 of slider width = 100vw */
             flex-shrink: 0;
             height: 100vh;
             overflow-y: auto;
@@ -3181,13 +3181,20 @@
             border-radius: var(--radius-md);
             overflow: hidden;
             z-index: 9999;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,126,248,0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 126, 248, 0.2);
             animation: acDropIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes acDropIn {
-            from { opacity: 0; transform: translateY(-6px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .autocomplete-item {
@@ -3223,6 +3230,135 @@
             color: var(--accent-primary);
             font-weight: 700;
         }
+
+        /* Calendar UI */
+        .calendar-container {
+            padding: var(--spacing-sm);
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            padding: 0 var(--spacing-sm);
+        }
+
+        .calendar-nav-btn {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--surface-hover);
+        }
+
+        .calendar-select-wrap {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .calendar-select {
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            outline: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .calendar-select option {
+            background: var(--surface-elevated);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background: var(--bg-primary);
+            padding: 12px 0;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .calendar-cell {
+            background: var(--bg-primary);
+            min-height: 90px;
+            padding: 6px 4px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .calendar-cell.other-month {
+            opacity: 0.3;
+        }
+
+        .calendar-date-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            padding-left: 2px;
+            color: var(--text-primary);
+        }
+
+        .calendar-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(139, 126, 248, 0.15);
+            color: #d8b4fe;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-event {
+            font-size: 10px;
+            background: var(--surface);
+            padding: 4px 4px 4px 6px;
+            border-radius: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            color: var(--text-primary);
+            line-height: 1.2;
+            transition: all var(--transition-fast);
+        }
+
+        .calendar-event:hover {
+            filter: brightness(1.2);
+        }
     </style>
 </head>
 
@@ -3233,6 +3369,14 @@
             <h3>Manage Well</h3>
         </div>
         <div class="sidebar-menu">
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('targets')">
+                <i class="fas fa-bullseye"></i>
+                <span>Targets</span>
+            </div>
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('calendar')">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
+            </div>
             <div class="sidebar-item" onclick="app.switchViewFromSidebar('parking')">
                 <i class="fas fa-parking"></i>
                 <span>Parking Lot</span>
@@ -3258,6 +3402,8 @@
             <div class="view-slide" id="view-parking"></div>
             <div class="view-slide" id="view-manage"></div>
             <div class="view-slide" id="view-account"></div>
+            <div class="view-slide" id="view-targets"></div>
+            <div class="view-slide" id="view-calendar"></div>
         </div>
     </div>
 
@@ -3298,7 +3444,7 @@
             <div class="voice-example-chip">"Meeting on Friday at 3pm for 1 hour"</div>
             <div class="voice-example-chip">"Fill timesheet study today 10am to 12pm"</div>
         </div>
-        <div id="voice-hint">🎤  Say the <b>category name</b> (e.g. study, exercise) to auto-select it.<br>Say "fill
+        <div id="voice-hint">🎤 Say the <b>category name</b> (e.g. study, exercise) to auto-select it.<br>Say "fill
             timesheet" to fill the timesheet instead.</div>
         <button id="voice-cancel-btn" onclick="voiceAssistant.cancel()">âœ• Cancel</button>
     </div>
@@ -3359,6 +3505,16 @@
                     <input type="text" id="inp-task-category-search" placeholder="Type to search..." autocomplete="off">
                     <input type="hidden" id="inp-task-category">
                     <div class="autocomplete-dropdown" id="inp-task-category-dropdown" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div class="form-group" id="adhoc-target-group">
+                <label>Target Reference (Optional)</label>
+                <div class="autocomplete-wrap" id="inp-task-target-wrap">
+                    <input type="text" id="inp-task-target-search" placeholder="Type to search ongoing targets..."
+                        autocomplete="off">
+                    <input type="hidden" id="inp-task-target">
+                    <div class="autocomplete-dropdown" id="inp-task-target-dropdown" style="display:none;"></div>
                 </div>
             </div>
 
@@ -3472,9 +3628,20 @@
             <div class="form-group">
                 <label>Category</label>
                 <div class="autocomplete-wrap" id="edit-task-category-wrap">
-                    <input type="text" id="edit-task-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="text" id="edit-task-category-search" placeholder="Type to search..."
+                        autocomplete="off">
                     <input type="hidden" id="edit-task-category">
                     <div class="autocomplete-dropdown" id="edit-task-category-dropdown" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Target Reference (Optional)</label>
+                <div class="autocomplete-wrap" id="edit-task-target-wrap">
+                    <input type="text" id="edit-task-target-search" placeholder="Type to search ongoing targets..."
+                        autocomplete="off">
+                    <input type="hidden" id="edit-task-target">
+                    <div class="autocomplete-dropdown" id="edit-task-target-dropdown" style="display:none;"></div>
                 </div>
             </div>
 
@@ -3620,7 +3787,8 @@
             <div class="form-group">
                 <label>Category</label>
                 <div class="autocomplete-wrap" id="edit-routine-category-wrap">
-                    <input type="text" id="edit-routine-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="text" id="edit-routine-category-search" placeholder="Type to search..."
+                        autocomplete="off">
                     <input type="hidden" id="edit-routine-category">
                     <div class="autocomplete-dropdown" id="edit-routine-category-dropdown" style="display:none;"></div>
                 </div>
@@ -3733,7 +3901,7 @@
     <div id="modal-add-parked" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🅿️  Park a Task</h3>
+                <h3>🅿️ Park a Task</h3>
                 <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
             </div>
             <div class="form-group">
@@ -3785,7 +3953,7 @@
     <div id="modal-add-habit" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🌱  New Habit</h3>
+                <h3>🌱 New Habit</h3>
                 <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
             </div>
             <div class="form-group">
@@ -3839,7 +4007,7 @@
             <p class="text-secondary mb-4" style="font-size:14px;">How would you like to remove this habit?</p>
             <div style="display:flex;flex-direction:column;gap:12px;">
                 <button class="btn-primary" style="background:var(--danger);border:none;"
-                    onclick="app.deleteHabitPermanently()">🗑️  Delete Permanently<br><small
+                    onclick="app.deleteHabitPermanently()">🗑️ Delete Permanently<br><small
                         style="font-weight:400;opacity:0.8;">Removes habit and all history</small></button>
                 <div class="form-group" style="margin:0;">
                     <label>Stop from date</label>
@@ -3850,6 +4018,130 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Target Modal -->
+    <div id="modal-add-target" class="modal">
+        <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>Create Target</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="form-group">
+                <label>Target Title</label>
+                <input type="text" id="inp-target-title" placeholder="e.g. Finish CM1 Unit 2">
+            </div>
+
+            <div class="form-group">
+                <label>Subject / Area</label>
+                <input type="text" id="inp-target-subject" placeholder="e.g. CM1">
+            </div>
+
+            <div class="form-group flex justify-between">
+                <div style="width: 48%;">
+                    <label>Deadline</label>
+                    <input type="date" id="inp-target-deadline">
+                </div>
+                <div style="width: 48%;">
+                    <label>Expected Effort (hrs)</label>
+                    <input type="number" id="inp-target-effort" placeholder="15">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Milestones (1-10 Value Scale)</label>
+                <div id="target-milestones-list" style="margin-bottom: 8px;"></div>
+                <button class="btn-secondary"
+                    style="width: 100%; padding: 10px; background: var(--surface-elevated); border: 1px dashed var(--border-medium); border-radius: var(--radius-md); color: var(--text-secondary); cursor: pointer;"
+                    onclick="app.addMilestoneInput()">
+                    <i class="fas fa-plus"></i> Add Milestone
+                </button>
+                <div id="milestone-total-value"
+                    style="font-size: 12px; text-align: right; margin-top: 5px; color: var(--text-secondary);">Total
+                    Value: 0 / 10</div>
+            </div>
+
+            <button class="btn-primary"
+                style="width: 100%; margin-top: 15px; padding: 12px; background: var(--accent-gradient); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;"
+                onclick="app.saveTarget()">Create Target</button>
+        </div>
+    </div>
+
+    <!-- Day Summary Modal -->
+    <div id="modal-day-summary" class="modal">
+        <div class="modal-content" style="max-height: 80vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h3>Tasks</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="day-summary-body" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
+        </div>
+    </div>
+
+    <!-- Target Detail Modal -->
+    <div id="modal-target-detail" class="modal">
+        <div class="modal-content"
+            style="max-height: 95vh; height: 95vh; width: 95vw; max-width: 500px; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h3>Target Details</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="target-detail-body" style="flex: 1; overflow-y: auto; padding-right: 5px;"></div>
+
+            <div style="display:flex; gap:10px; margin-top:15px; flex-wrap: wrap;">
+                <button class="btn-secondary" style="flex:1; min-width: 120px;" onclick="app.markTargetCompleted()"
+                    id="btn-mark-target-completed">Mark Completed</button>
+                <button class="btn-primary"
+                    style="flex:1; min-width: 120px; background:var(--accent-primary); border:none;"
+                    onclick="app.editTarget(app.viewingTargetId)">Edit Target</button>
+                <button class="btn-primary" style="flex:1; min-width: 120px; background:var(--danger); border:none;"
+                    onclick="app.deleteTarget()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Date Modal -->
+    <div id="modal-completion-date" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Target Completed</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-secondary mb-4" style="font-size:14px;">Awesome job! When did you complete this target?</p>
+            <div class="form-group">
+                <label>Date of Completion</label>
+                <input type="date" id="inp-target-completion-date">
+            </div>
+            <button class="btn-primary" style="background:var(--success);border:none;"
+                onclick="app.confirmTargetCompletion()">Confirm Completion</button>
+        </div>
+    </div>
+
+    <!-- Targets Filter Sidebar -->
+    <div id="sidebar-targets-filter" class="sidebar"
+        style="left: auto; right: -280px; transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);">
+        <div class="sidebar-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Filter Targets</h3>
+            <button class="close-btn" onclick="app.closeTargetsFilterSidebar()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select id="filter-status-select"
+                style="width: 100%; padding: 10px; background: var(--surface-elevated); border: 1px solid var(--border-medium); border-radius: var(--radius-md); color: var(--text-primary);">
+                <option value="ongoing">Ongoing</option>
+                <option value="history">History (Completed)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Subject / Area</label>
+            <select id="filter-area-select"
+                style="width: 100%; padding: 10px; background: var(--surface-elevated); border: 1px solid var(--border-medium); border-radius: var(--radius-md); color: var(--text-primary);">
+                <option value="All">All Subjects</option>
+            </select>
+        </div>
+        <button class="btn-primary" style="margin-top: auto;" onclick="app.applyTargetsFilter()">Apply Filters</button>
+    </div>
+    <div id="overlay-targets-filter" class="sidebar-overlay" onclick="app.closeTargetsFilterSidebar()"></div>
 
     <!-- Firebase SDKs (v8 Compat) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -4009,7 +4301,9 @@
             loadLocalData() {
                 const stored = localStorage.getItem('productivityData');
                 if (stored) {
-                    return JSON.parse(stored);
+                    let parsedData = JSON.parse(stored);
+                    if (!parsedData.targets) parsedData.targets = [];
+                    return parsedData;
                 }
                 return {
                     categories: [
@@ -4024,7 +4318,8 @@
                     routineStatus: {},
                     parkedTasks: [],
                     habits: [],
-                    habitLogs: {}
+                    habitLogs: {},
+                    targets: []
                 };
             }
 
@@ -4507,6 +4802,8 @@
             constructor() {
                 this.db = new DatabaseManager();
                 this.currentView = 'home';
+                this.targetsFilterStatus = 'ongoing';
+                this.targetsFilterArea = 'All';
                 this.selectedDate = getLocalDateStr();
                 this.editingTaskId = null;
                 this.addingTaskType = 'adhoc';
@@ -4519,7 +4816,7 @@
                 this.timesheetUndoStack = [];
                 this.promotingParkedTaskId = null;
                 this.deletingHabitId = null;
-                this.TAB_ORDER = ['home', 'todo', 'timesheet', 'habits', 'analytics', 'parking', 'manage', 'account'];
+                this.TAB_ORDER = ['home', 'todo', 'timesheet', 'habits', 'analytics', 'parking', 'manage', 'account', 'targets', 'calendar'];
                 this.collapsedGroups = {}; // track which task groups are collapsed
 
                 this.render();
@@ -4617,6 +4914,8 @@
                         this.openManualFillModal();
                     } else if (this.currentView === 'manage') {
                         document.getElementById('modal-category').classList.add('open');
+                    } else if (this.currentView === 'targets') {
+                        this.openAddTargetModal();
                     }
                 });
 
@@ -4790,7 +5089,7 @@
                 const idx = this.TAB_ORDER.indexOf(this.currentView);
                 const slider = document.getElementById('views-slider');
                 if (slider) {
-                    slider.style.transform = `translate3d(-${idx * 12.5}%, 0, 0)`;
+                    slider.style.transform = `translate3d(-${idx * 10}%, 0, 0)`;
                 }
 
                 // Update nav indicator
@@ -4821,6 +5120,8 @@
                 else if (this.currentView === 'analytics') this.renderAnalytics();
                 else if (this.currentView === 'manage') this.renderManage();
                 else if (this.currentView === 'account') this.renderAccount();
+                else if (this.currentView === 'targets') this.renderTargets();
+                else if (this.currentView === 'calendar') this.renderCalendar();
             }
 
             renderHome() {
@@ -4898,9 +5199,12 @@
 
                 let html = `
                 <div class="home-header">
-                    <div>
-                        <div class="home-greeting">${greet} 👋</div>
-                        <div class="home-date-label">${dateStr}</div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button class="menu-btn" onclick="app.toggleSidebar()" style="margin: 0;"><i class="fas fa-bars"></i></button>
+                        <div>
+                            <div class="home-greeting">${greet} 👋</div>
+                            <div class="home-date-label">${dateStr}</div>
+                        </div>
                     </div>
                     <div class="home-progress-ring-wrap" title="${pct}% tasks done">
                         <svg width="52" height="52" viewBox="0 0 52 52">
@@ -4933,6 +5237,60 @@
                     </div>`;
                 } else {
                     html += `<div class="home-empty"><i class="fas fa-check-circle" style="opacity:0.3;font-size:2rem;display:block;margin-bottom:8px;"></i>All clear! Add tasks to get started.</div>`;
+                }
+
+                // 🎯 Upcoming Milestones 🎯
+                const allTargets = this.db.data.targets || [];
+                const ongoingTargets = allTargets.filter(t => t.status === 'ongoing');
+                let upcomingMilestones = [];
+                ongoingTargets.forEach(t => {
+                    if (t.milestones && Array.isArray(t.milestones)) {
+                        let closest = null;
+                        t.milestones.forEach(m => {
+                            if (!m.isCompleted && m.date && new Date(m.date) >= new Date(today)) {
+                                if (!closest || new Date(m.date) < new Date(closest.date)) {
+                                    closest = m;
+                                }
+                            }
+                        });
+                        if (closest) {
+                            upcomingMilestones.push({
+                                targetId: t.id,
+                                targetTitle: t.title,
+                                targetDeadline: t.deadline,
+                                milestoneId: closest.id,
+                                title: closest.title,
+                                date: closest.date,
+                                value: closest.value
+                            });
+                        }
+                    }
+                });
+
+                upcomingMilestones.sort((a, b) => new Date(a.date) - new Date(b.date));
+                const soonMilestones = upcomingMilestones.slice(0, 3);
+
+                if (soonMilestones.length > 0) {
+                    html += `<div class="home-section-label" style="margin-top:14px;"><span>Upcoming Milestones</span><a onclick="app.navTo('targets')">View Targets</a></div>`;
+                    html += `<div style="display:flex; flex-direction:column; gap:8px; padding: 0 var(--spacing-lg) 4px;">`;
+                    soonMilestones.forEach(m => {
+                        html += `
+                        <div class="home-hero-card" style="padding: 12px; background: var(--surface-elevated); border: 1px solid var(--border-subtle); display:flex; flex-direction:column; cursor: pointer;" onclick="app.openTargetDetail('${m.targetId}')">
+                            <div style="font-size:11px; color:var(--text-secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 5px;">
+                                <i class="fas fa-folder"></i> ${m.targetTitle}
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-weight:600; font-size:14px; display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 8px; height: 8px; background: var(--accent-primary); border-radius: 50%; box-shadow: var(--shadow-glow);"></div>
+                                    ${m.title}
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:12px; color:var(--text-secondary);"><i class="fas fa-calendar-alt"></i> ${m.date}</div>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
                 }
 
                 // â”€â”€ Upcoming Tasks â”€â”€
@@ -5388,6 +5746,7 @@
                 document.getElementById('edit-task-hero').checked = task.isHero || false;
 
                 if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('edit-task-category', task.categoryId);
+                if (window.targetAutocomplete) window.targetAutocomplete.setTarget('edit-task-target', task.targetId);
 
                 document.getElementById('modal-edit-task').classList.add('open');
             }
@@ -5410,7 +5769,9 @@
                     });
                 }
 
-                this.db.updateTask(this.editingTaskId, { name, categoryId, isHero });
+                const targetId = document.getElementById('edit-task-target').value;
+
+                this.db.updateTask(this.editingTaskId, { name, categoryId, targetId, isHero });
                 this.closeModals();
                 this.render();
             }
@@ -6918,6 +7279,688 @@
                     </div>`;
             }
 
+            renderTargets() {
+                const isHistory = this.targetsFilterStatus === 'history';
+                let targets = this.db.data.targets || [];
+
+                if (isHistory) {
+                    targets = targets.filter(t => t.status === 'completed');
+                    targets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                } else {
+                    targets = targets.filter(t => t.status === 'ongoing');
+                }
+
+                if (this.targetsFilterArea && this.targetsFilterArea !== 'All') {
+                    targets = targets.filter(t => t.subject === this.targetsFilterArea);
+                }
+
+                let html = `
+                    <div class="dashboard-header">
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2>${isHistory ? 'Completed Targets' : 'Ongoing Targets'}</h2>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px; align-items: center; justify-content: space-between;">
+                            <div style="font-size: 14px; color: var(--text-secondary);">
+                                Showing: <span style="color: var(--accent-primary); font-weight: 600;">${isHistory ? 'History' : 'Ongoing'}</span> 
+                                ${this.targetsFilterArea && this.targetsFilterArea !== 'All' ? ` • ${this.targetsFilterArea}` : ''}
+                            </div>
+                            <button class="btn-secondary" style="padding: 8px 12px; font-size: 13px;" onclick="app.openTargetsFilterSidebar()">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="task-list">
+                `;
+
+                if (targets.length === 0) {
+                    html += `<div style="text-align:center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-bullseye" style="font-size: 3rem; opacity: 0.2; margin-bottom: 15px;"></i>
+                        <p>No targets found.</p>
+                    </div>`;
+                } else {
+                    targets.forEach(t => {
+                        const totalValue = 10;
+                        const completedValue = t.milestones.filter(m => m.isCompleted).reduce((sum, m) => sum + parseInt(m.value || 0), 0);
+                        const progressPct = Math.min(100, Math.round((completedValue / totalValue) * 100));
+
+                        let historyBadge = '';
+                        if (isHistory && t.completionDate && t.deadline) {
+                            const dComp = new Date(t.completionDate);
+                            const dDead = new Date(t.deadline);
+                            const diffTime = dComp - dDead;
+                            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+                            if (diffDays > 0) {
+                                historyBadge = `<div style="font-size:11px; color:var(--danger); margin-top:4px;"><i class="fas fa-exclamation-circle"></i> Delayed by ${diffDays} day(s)</div>`;
+                            } else if (diffDays < 0) {
+                                historyBadge = `<div style="font-size:11px; color:var(--success); margin-top:4px;"><i class="fas fa-bolt"></i> Bonus: ${Math.abs(diffDays)} day(s) early</div>`;
+                            } else {
+                                historyBadge = `<div style="font-size:11px; color:var(--info); margin-top:4px;"><i class="fas fa-check-double"></i> On Time</div>`;
+                            }
+                        }
+
+                        const colors = ['#8b7ef8', '#f093fb', '#4ade80', '#f87171', '#fbbf24', '#60a5fa', '#a78bfa', '#34d399', '#f472b6'];
+                        let hash = 0;
+                        const str = t.subject || 'none';
+                        for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+                        const cardColor = colors[Math.abs(hash) % colors.length];
+
+                        html += `
+                            <div class="task-card" onclick="app.openTargetDetail('${t.id}')" style="border-left-color: ${cardColor};">
+                                <div class="task-header">
+                                    <div class="task-info">
+                                        <div class="task-title">${t.title}</div>
+                                        <div class="task-time">${t.subject || 'No Subject'} • Deadline: ${t.deadline}</div>
+                                        ${historyBadge}
+                                    </div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">
+                                        <span>Progress</span>
+                                        <span>${progressPct}%</span>
+                                    </div>
+                                    <div style="width: 100%; height: 6px; background: ${cardColor}20; border-radius: 3px; overflow: hidden;">
+                                        <div style="height: 100%; width: ${progressPct}%; background: ${cardColor};"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                html += `</div>`;
+                document.getElementById('view-targets').innerHTML = html;
+            }
+
+            setTargetFilterStatus(status) {
+                this.targetsFilterStatus = status;
+                this.render();
+            }
+
+            handleTargetsAreaInput(e) {
+                const drop = document.getElementById('targets-area-dropdown');
+                const val = e.target.value.trim().toLowerCase();
+
+                if (!val) {
+                    drop.style.display = 'none';
+                    this.targetsFilterArea = 'All';
+                    // We don't render immediately on empty so user can keep typing if they want, 
+                    // but if they leave it empty, it effectively means 'All' on next render.
+                    this.render();
+                    return;
+                }
+
+                const subjects = [...new Set((this.db.data.targets || []).map(t => t.subject).filter(s => s))];
+                const matches = subjects.filter(s => s.toLowerCase().includes(val));
+
+                if (matches.length > 0) {
+                    drop.innerHTML = matches.map(m => `
+                        <div style="padding: 10px; border-bottom: 1px solid var(--border-subtle); cursor: pointer;" onclick="app.setTargetFilterArea('${m.replace(/'/g, "\\'")}')">
+                            ${m}
+                        </div>
+                    `).join('');
+                    drop.style.display = 'block';
+                } else {
+                    drop.style.display = 'none';
+                }
+            }
+
+            openTargetsFilterSidebar() {
+                const subjects = [...new Set((this.db.data.targets || []).map(t => t.subject).filter(s => s))];
+                const areaSelect = document.getElementById('filter-area-select');
+                areaSelect.innerHTML = '<option value="All">All Subjects</option>' +
+                    subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+
+                document.getElementById('filter-status-select').value = this.targetsFilterStatus || 'ongoing';
+                areaSelect.value = this.targetsFilterArea || 'All';
+
+                document.getElementById('overlay-targets-filter').classList.add('open');
+                document.getElementById('sidebar-targets-filter').style.transform = 'translateX(-280px)';
+            }
+
+            closeTargetsFilterSidebar() {
+                document.getElementById('overlay-targets-filter').classList.remove('open');
+                document.getElementById('sidebar-targets-filter').style.transform = 'translateX(0)';
+            }
+
+            applyTargetsFilter() {
+                this.targetsFilterStatus = document.getElementById('filter-status-select').value;
+                this.targetsFilterArea = document.getElementById('filter-area-select').value;
+                this.closeTargetsFilterSidebar();
+                this.render();
+            }
+
+            changeCalendarMonth(offset) {
+                if (!this.calendarDate) this.calendarDate = new Date();
+                this.calendarDate.setMonth(this.calendarDate.getMonth() + offset);
+                this.renderCalendar();
+            }
+
+            setCalendarDate(e, type) {
+                if (!this.calendarDate) this.calendarDate = new Date();
+                if (type === 'month') {
+                    this.calendarDate.setMonth(parseInt(e.target.value));
+                } else {
+                    this.calendarDate.setFullYear(parseInt(e.target.value));
+                }
+                this.renderCalendar();
+            }
+
+            setCalendarFilter(filter) {
+                this.calendarFilter = filter;
+                this.renderCalendar();
+            }
+
+            openDaySummary(dateStr) {
+                const tasks = (this.db.data.tasks || []).filter(t => t.date === dateStr);
+                let html = '';
+                if (tasks.length === 0) {
+                    html = '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">No tasks for this day.</div>';
+                } else {
+                    tasks.forEach(t => {
+                        const isDone = t.status === 'done';
+                        html += `
+                            <div class="task-card ${isDone ? 'done' : 'uncontrol'}" style="margin-bottom: 10px; padding: 12px; border-left: 3px solid ${isDone ? 'var(--success)' : 'var(--warning)'}; cursor: pointer;" onclick="app.openEditModal('${t.id}')">
+                                <div class="task-title" style="margin-bottom:0; font-size: 14px;">${t.name}</div>
+                                <div class="task-time" style="margin-top: 4px; font-size: 12px;">${isDone ? 'Completed' : 'Pending'}</div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('modal-day-summary').querySelector('h3').textContent = 'Tasks for ' + dateStr;
+                document.getElementById('day-summary-body').innerHTML = html;
+                this.closeModals();
+                document.getElementById('modal-day-summary').classList.add('open');
+            }
+
+            renderCalendar() {
+                if (!this.calendarDate) this.calendarDate = new Date();
+                const year = this.calendarDate.getFullYear();
+                const month = this.calendarDate.getMonth();
+                const today = new Date();
+
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                let monthOptions = '';
+                months.forEach((m, i) => {
+                    monthOptions += `<option value="${i}" ${i === month ? 'selected' : ''}>${m}</option>`;
+                });
+                let yearOptions = '';
+                for (let y = year - 5; y <= year + 5; y++) {
+                    yearOptions += `<option value="${y}" ${y === year ? 'selected' : ''}>${y}</option>`;
+                }
+
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                const startingDay = firstDay.getDay();
+
+                let html = `
+                    <div class="calendar-container">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 15px; margin-top: 20px;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <button class="menu-btn" onclick="app.toggleSidebar()" style="margin: 0;"><i class="fas fa-bars"></i></button>
+                                <h2 style="margin: 0;">Calendar</h2>
+                            </div>
+                        </div>
+                        <div class="period-selector" style="margin: 0 15px 15px 15px;">
+                            <button class="period-btn ${this.calendarFilter === 'all' || !this.calendarFilter ? 'active' : ''}" onclick="app.setCalendarFilter('all')">All</button>
+                            <button class="period-btn ${this.calendarFilter === 'targets' ? 'active' : ''}" onclick="app.setCalendarFilter('targets')">Targets Only</button>
+                            <button class="period-btn ${this.calendarFilter === 'tasks' ? 'active' : ''}" onclick="app.setCalendarFilter('tasks')">Tasks Only</button>
+                        </div>
+                        <div class="calendar-header">
+                            <button class="calendar-nav-btn" onclick="app.changeCalendarMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <div class="calendar-select-wrap">
+                                <select class="calendar-select" onchange="app.setCalendarDate(event, 'month')">
+                                    ${monthOptions}
+                                </select>
+                                <select class="calendar-select" onchange="app.setCalendarDate(event, 'year')">
+                                    ${yearOptions}
+                                </select>
+                            </div>
+                            <button class="calendar-nav-btn" onclick="app.changeCalendarMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-day-header">S</div>
+                            <div class="calendar-day-header">M</div>
+                            <div class="calendar-day-header">T</div>
+                            <div class="calendar-day-header">W</div>
+                            <div class="calendar-day-header">T</div>
+                            <div class="calendar-day-header">F</div>
+                            <div class="calendar-day-header">S</div>
+                `;
+
+                const allTasks = this.db.data.tasks || [];
+                const allTargets = this.db.data.targets || [];
+
+                const getEventsForDate = (d, m, y) => {
+                    const filter = this.calendarFilter || 'all';
+                    const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    let events = [];
+                    
+                    if (filter === 'all' || filter === 'tasks') {
+                        let doneCount = 0;
+                        let notDoneCount = 0;
+                        allTasks.forEach(t => {
+                            if (t.date === dateStr) {
+                                if (filter === 'all') {
+                                    events.push({ type: 'task', id: t.id, title: t.name, color: t.status === 'done' ? 'var(--success)' : 'var(--info)' });
+                                } else {
+                                    if (t.status === 'done') doneCount++;
+                                    else notDoneCount++;
+                                }
+                            }
+                        });
+                        if (filter === 'tasks' && (doneCount > 0 || notDoneCount > 0)) {
+                            events.push({ type: 'summary', date: dateStr, title: `${doneCount} Done, ${notDoneCount} Left`, color: 'var(--accent-primary)' });
+                        }
+                    }
+                    
+                    if (filter === 'all' || filter === 'targets') {
+                        allTargets.forEach(t => {
+                            if (t.deadline === dateStr) {
+                                events.push({ type: 'target', id: t.id, title: 'Due: ' + t.title, color: 'var(--danger)' });
+                            }
+                            if (t.milestones) {
+                                t.milestones.forEach(ms => {
+                                    if (ms.date === dateStr) {
+                                        events.push({ type: 'target', id: t.id, title: 'MS: ' + ms.title, color: 'var(--warning)' });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    return events;
+                };
+
+                let dayNum = 1;
+                let nextMonthDay = 1;
+                for (let i = 0; i < 42; i++) {
+                    if (i < startingDay) {
+                        const prevMonthDays = new Date(year, month, 0).getDate();
+                        const d = prevMonthDays - startingDay + i + 1;
+                        html += `<div class="calendar-cell other-month"><div class="calendar-date-label">${d}</div></div>`;
+                    } else if (dayNum <= daysInMonth) {
+                        const isToday = dayNum === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                        const todayStyle = isToday ? 'color: var(--accent-primary);' : '';
+
+                        const events = getEventsForDate(dayNum, month, year);
+                        let eventsHtml = '';
+                        events.forEach(e => {
+                            let clickAction = '';
+                            if (e.type === 'task') clickAction = `app.openEditModal('${e.id}')`;
+                            else if (e.type === 'target') clickAction = `app.openTargetDetail('${e.id}')`;
+                            else if (e.type === 'summary') clickAction = `app.openDaySummary('${e.date}')`;
+                            
+                            eventsHtml += `<div class="calendar-event" style="border-left: 3px solid ${e.color};" onclick="${clickAction}">${e.title}</div>`;
+                        });
+
+                        const badgeHtml = events.length > 0 ? `<div class="calendar-badge">${events.length}</div>` : '';
+
+                        html += `
+                            <div class="calendar-cell">
+                                <div class="calendar-date-label" style="${todayStyle}">${dayNum}</div>
+                                ${badgeHtml}
+                                ${eventsHtml}
+                            </div>
+                        `;
+                        dayNum++;
+                    } else {
+                        html += `<div class="calendar-cell other-month"><div class="calendar-date-label">${nextMonthDay}</div></div>`;
+                        nextMonthDay++;
+                    }
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+                document.getElementById('view-calendar').innerHTML = html;
+            }
+
+            openAddTargetModal() {
+                app.editingTargetId = null;
+                document.getElementById('modal-add-target').querySelector('h3').textContent = 'Create Target';
+                document.getElementById('modal-add-target').querySelector('.btn-primary').textContent = 'Create Target';
+                document.getElementById('inp-target-title').value = '';
+                document.getElementById('inp-target-subject').value = '';
+                document.getElementById('inp-target-deadline').value = '';
+                document.getElementById('inp-target-effort').value = '';
+                document.getElementById('target-milestones-list').innerHTML = '';
+                this.updateMilestoneTotal();
+                this.addMilestoneInput();
+                document.getElementById('modal-add-target').classList.add('open');
+            }
+
+            editTarget(targetId) {
+                const target = this.db.data.targets.find(t => t.id === targetId);
+                if (!target) return;
+
+                app.editingTargetId = targetId;
+                document.getElementById('modal-add-target').querySelector('h3').textContent = 'Edit Target';
+                document.getElementById('modal-add-target').querySelector('.btn-primary').textContent = 'Update Target';
+
+                document.getElementById('inp-target-title').value = target.title;
+                document.getElementById('inp-target-subject').value = target.subject || '';
+                document.getElementById('inp-target-deadline').value = target.deadline || '';
+                document.getElementById('inp-target-effort').value = target.expectedEffortHours || '';
+
+                const list = document.getElementById('target-milestones-list');
+                list.innerHTML = '';
+                target.milestones.forEach(m => {
+                    const div = document.createElement('div');
+                    div.style.display = 'flex';
+                    div.style.gap = '8px';
+                    div.style.marginBottom = '8px';
+                    div.dataset.id = m.id;
+                    div.dataset.completed = m.isCompleted;
+                    div.innerHTML = `
+                        <input type="text" class="ms-title" placeholder="Milestone Name" style="flex: 1;" value="${m.title}">
+                        <input type="date" class="ms-date" style="flex: 1;" value="${m.date || ''}">
+                        <input type="number" class="ms-value" placeholder="Value" min="1" max="10" style="width: 80px;" oninput="app.updateMilestoneTotal()" value="${m.value}">
+                        <button class="task-btn delete-btn" onclick="this.parentElement.remove(); app.updateMilestoneTotal()"><i class="fas fa-times"></i></button>
+                    `;
+                    list.appendChild(div);
+                });
+
+                this.updateMilestoneTotal();
+                this.closeModals();
+                document.getElementById('modal-add-target').classList.add('open');
+            }
+
+            addMilestoneInput() {
+                const list = document.getElementById('target-milestones-list');
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.gap = '8px';
+                div.style.marginBottom = '8px';
+                div.innerHTML = `
+                    <input type="text" class="ms-title" placeholder="Milestone Name" style="flex: 1;">
+                    <input type="date" class="ms-date" style="flex: 1;">
+                    <input type="number" class="ms-value" placeholder="Value" min="1" max="10" style="width: 80px;" oninput="app.updateMilestoneTotal()">
+                    <button class="task-btn delete-btn" onclick="this.parentElement.remove(); app.updateMilestoneTotal()"><i class="fas fa-times"></i></button>
+                `;
+                list.appendChild(div);
+            }
+
+            updateMilestoneTotal() {
+                const list = document.getElementById('target-milestones-list');
+                const inputs = list.querySelectorAll('.ms-value');
+                let total = 0;
+                inputs.forEach(inp => total += parseInt(inp.value || 0));
+
+                const totalEl = document.getElementById('milestone-total-value');
+                totalEl.textContent = `Total Value: ${total} / 10`;
+                if (total > 10) totalEl.style.color = 'var(--danger)';
+                else totalEl.style.color = 'var(--text-secondary)';
+            }
+
+            saveTarget() {
+                const title = document.getElementById('inp-target-title').value.trim();
+                const subject = document.getElementById('inp-target-subject').value.trim();
+                const deadline = document.getElementById('inp-target-deadline').value;
+                const effort = parseFloat(document.getElementById('inp-target-effort').value || 0);
+
+                if (!title) return alert('Target title is required.');
+                if (!deadline) return alert('Deadline is required.');
+
+                const msDivs = document.getElementById('target-milestones-list').children;
+                const milestones = [];
+                let totalVal = 0;
+                for (let div of msDivs) {
+                    const mTitle = div.querySelector('.ms-title').value.trim();
+                    const mDate = div.querySelector('.ms-date') ? div.querySelector('.ms-date').value : '';
+                    const mVal = parseInt(div.querySelector('.ms-value').value || 0);
+                    const mId = div.dataset.id || ('m_' + Date.now() + Math.random().toString(36).substr(2, 5));
+                    const isCompleted = div.dataset.completed === 'true';
+
+                    if (mTitle && mVal > 0) {
+                        milestones.push({
+                            id: mId,
+                            title: mTitle,
+                            date: mDate,
+                            value: mVal,
+                            isCompleted: isCompleted
+                        });
+                        totalVal += mVal;
+                    }
+                }
+
+                if (totalVal !== 10) {
+                    if (!confirm(`Total milestone value is ${totalVal}, not exactly 10. Do you want to proceed?`)) {
+                        return;
+                    }
+                }
+
+                if (!this.db.data.targets) this.db.data.targets = [];
+
+                if (app.editingTargetId) {
+                    const target = this.db.data.targets.find(t => t.id === app.editingTargetId);
+                    if (target) {
+                        target.title = title;
+                        target.subject = subject;
+                        target.deadline = deadline;
+                        target.expectedEffortHours = effort;
+                        target.milestones = milestones;
+                    }
+                    app.editingTargetId = null;
+                } else {
+                    this.db.data.targets.push({
+                        id: 't_' + Date.now() + Math.random().toString(36).substr(2, 5),
+                        title,
+                        subject,
+                        deadline,
+                        status: 'ongoing',
+                        expectedEffortHours: effort,
+                        confidence: 0,
+                        createdAt: new Date().toISOString(),
+                        milestones
+                    });
+                }
+
+                this.db.saveLocalData();
+                this.closeModals();
+                this.render();
+            }
+
+            openTargetDetail(targetId) {
+                const target = this.db.data.targets.find(t => t.id === targetId);
+                if (!target) return;
+
+                this.viewingTargetId = targetId;
+
+                // 1. Calculate Actual Effort
+                // Find tasks linked to this target
+                const linkedTasks = this.db.data.tasks.filter(t => t.targetId === targetId);
+                const linkedTaskIds = linkedTasks.map(t => t.id);
+
+                let actualEffortMins = 0;
+                if (this.db.data.timesheets) {
+                    Object.values(this.db.data.timesheets).forEach(daySheet => {
+                        Object.values(daySheet).forEach(entry => {
+                            if (entry.taskId && linkedTaskIds.includes(entry.taskId)) {
+                                actualEffortMins += 30; // each timesheet block is 30 mins
+                            }
+                        });
+                    });
+                }
+                const actualEffortHours = (actualEffortMins / 60).toFixed(1);
+
+                // Calculate Progress
+                const totalValue = 10;
+                const completedValue = target.milestones.filter(m => m.isCompleted).reduce((sum, m) => sum + parseInt(m.value || 0), 0);
+                const progressPct = Math.min(100, Math.round((completedValue / totalValue) * 100));
+
+                let driftHtml = '';
+                if (target.expectedEffortHours > 0) {
+                    const driftHours = actualEffortHours - target.expectedEffortHours;
+                    const driftColor = driftHours > 0 ? 'var(--danger)' : 'var(--success)';
+                    driftHtml = `<div style="font-size: 12px; color: ${driftColor}; margin-top: 4px;">Drift: ${driftHours > 0 ? '+' : ''}${driftHours.toFixed(1)} hrs</div>`;
+                }
+
+                // Milestones HTML
+                let milestonesHtml = target.milestones.map((m, idx) => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--surface-bg); margin-bottom: 8px; border-radius: var(--radius-md); cursor: pointer;" onclick="app.toggleTargetMilestone('${targetId}', '${m.id}')">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="home-check-btn ${m.isCompleted ? 'checked' : ''}" style="width:24px; height:24px; pointer-events:none;">
+                                <i class="fas fa-check" style="font-size:10px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 500; text-decoration: ${m.isCompleted ? 'line-through' : 'none'}; opacity: ${m.isCompleted ? 0.6 : 1};">${m.title}</div>
+                                ${m.date ? `<div style="font-size:11px; color:var(--text-secondary); margin-top:2px;"><i class="fas fa-calendar-alt"></i> ${m.date}</div>` : ''}
+                            </div>
+                        </div>
+                        <span style="font-size: 12px; color: var(--text-secondary); background: var(--surface-elevated); padding: 4px 8px; border-radius: 12px; border: 1px solid var(--border-medium);">Value: ${m.value}</span>
+                    </div>
+                `).join('');
+
+                // Linked Tasks HTML
+                let linkedTasksHtml = linkedTasks.length === 0 ?
+                    `<p style="color:var(--text-secondary); font-size:13px; padding: 10px;">No tasks referenced yet.</p>` :
+                    linkedTasks.map(t => {
+                        let tHours = 0;
+                        if (this.db.data.timesheets) {
+                            Object.values(this.db.data.timesheets).forEach(daySheet => {
+                                Object.values(daySheet).forEach(entry => {
+                                    if (entry.taskId === t.id) tHours += 0.5;
+                                });
+                            });
+                        }
+                        return `<div style="padding: 10px; border-bottom: 1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:14px; text-decoration: ${t.status === 'done' ? 'line-through' : 'none'}; opacity: ${t.status === 'done' ? 0.6 : 1};">${t.name}</span>
+                            <div style="text-align:right;">
+                                <span style="font-size:12px; color:var(--text-secondary); display:block;">${t.date || 'No Date'}</span>
+                                ${tHours > 0 ? `<span style="font-size:11px; color:var(--accent-primary); font-weight:600;">${tHours.toFixed(1)} hrs</span>` : ''}
+                            </div>
+                        </div>`;
+                    }).join('');
+
+                let html = `
+                    <div style="margin-bottom: 20px;">
+                        <h2 style="margin-bottom: 5px;">${target.title}</h2>
+                        <div style="color: var(--text-secondary); font-size: 13px;">${target.subject || 'No Subject'} • Due: ${target.deadline}</div>
+                    </div>
+                    
+                    <div style="background: var(--surface-bg); padding: 15px; border-radius: var(--radius-lg); margin-bottom: 20px; border: 1px solid var(--border-medium);">
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+                            <span>Progress</span>
+                            <span style="font-weight: 700; color: var(--accent-primary);">${progressPct}%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: var(--surface-elevated); border-radius: 4px; overflow: hidden; margin-bottom: 15px;">
+                            <div style="height: 100%; width: ${progressPct}%; background: var(--accent-gradient);"></div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; border-top: 1px solid var(--border-subtle); padding-top: 15px;">
+                            <div style="flex: 1;">
+                                <div style="font-size: 12px; color: var(--text-secondary);">Actual Effort</div>
+                                <div style="font-size: 18px; font-weight: 700;">${actualEffortHours} <span style="font-size:12px; font-weight:normal;">hrs</span></div>
+                                ${driftHtml}
+                            </div>
+                            <div style="flex: 1; border-left: 1px solid var(--border-subtle); padding-left: 15px;">
+                                <div style="font-size: 12px; color: var(--text-secondary);">Expected Effort</div>
+                                <div style="font-size: 18px; font-weight: 700;">${target.expectedEffortHours || 0} <span style="font-size:12px; font-weight:normal;">hrs</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="margin-bottom: 12px;">Milestones</h4>
+                        ${milestonesHtml}
+                    </div>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <h4 style="margin-bottom: 12px;">Linked Tasks</h4>
+                        <div style="background: var(--surface-bg); border-radius: var(--radius-md); border: 1px solid var(--border-medium);">
+                            ${linkedTasksHtml}
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('target-detail-body').innerHTML = html;
+                const btnMark = document.getElementById('btn-mark-target-completed');
+                if (target.status === 'completed') {
+                    btnMark.textContent = 'Mark Ongoing';
+                    btnMark.style.background = 'var(--surface-bg)';
+                    btnMark.style.color = 'var(--text-primary)';
+                    btnMark.style.border = '1px solid var(--border-medium)';
+                } else {
+                    btnMark.textContent = 'Mark Completed';
+                    btnMark.style.background = 'var(--success)';
+                    btnMark.style.color = 'white';
+                    btnMark.style.border = 'none';
+                }
+
+                document.getElementById('modal-target-detail').classList.add('open');
+            }
+
+            toggleTargetMilestone(targetId, milestoneId) {
+                const target = this.db.data.targets.find(t => t.id === targetId);
+                if (!target) return;
+                const ms = target.milestones.find(m => m.id === milestoneId);
+                if (!ms) return;
+                ms.isCompleted = !ms.isCompleted;
+                this.db.saveLocalData();
+                this.openTargetDetail(targetId); // refresh
+                this.render(); // update background cards
+            }
+
+            deleteTarget() {
+                if (!this.viewingTargetId) return;
+                if (confirm('Are you sure you want to delete this target? Associated tasks will lose their target reference.')) {
+                    this.db.data.targets = this.db.data.targets.filter(t => t.id !== this.viewingTargetId);
+
+                    // Unlink tasks
+                    this.db.data.tasks.forEach(t => {
+                        if (t.targetId === this.viewingTargetId) delete t.targetId;
+                    });
+
+                    this.db.saveLocalData();
+                    this.closeModals();
+                    this.render();
+                }
+            }
+
+            markTargetCompleted() {
+                if (!this.viewingTargetId) return;
+                const target = this.db.data.targets.find(t => t.id === this.viewingTargetId);
+                if (!target) return;
+
+                if (target.status === 'completed') {
+                    target.status = 'ongoing';
+                    target.completionDate = null;
+                    this.db.saveLocalData();
+                    this.closeModals();
+                    this.render();
+                } else {
+                    const totalValue = 10;
+                    const completedValue = target.milestones.filter(m => m.isCompleted).reduce((sum, m) => sum + parseInt(m.value || 0), 0);
+                    if (completedValue < totalValue) {
+                        if (!confirm('Not all milestones are completed. Mark target as completed anyway?')) return;
+                    }
+
+                    document.getElementById('inp-target-completion-date').value = getLocalDateStr();
+                    document.getElementById('modal-completion-date').classList.add('open');
+                }
+            }
+
+            confirmTargetCompletion() {
+                if (!this.viewingTargetId) return;
+                const target = this.db.data.targets.find(t => t.id === this.viewingTargetId);
+                if (!target) return;
+
+                const date = document.getElementById('inp-target-completion-date').value;
+                if (!date) return alert('Please provide a completion date.');
+
+                target.status = 'completed';
+                target.completionDate = date;
+
+                this.db.saveLocalData();
+                this.closeModals();
+                this.render();
+            }
+
             async handleAuth() {
                 if (!auth) {
                     alert('Firebase not configured. Update firebaseConfig in the code.');
@@ -6968,6 +8011,7 @@
                 const modal = document.getElementById('modal-add-task');
                 const catSelect = document.getElementById('inp-task-category');
                 if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('inp-task-category', '');
+                if (window.targetAutocomplete) window.targetAutocomplete.setTarget('inp-task-target', '');
 
                 document.getElementById('inp-task-date').value = this.selectedDate;
                 document.getElementById('inp-task-name').value = '';
@@ -7059,9 +8103,12 @@
                         });
                     }
 
+                    const targetId = document.getElementById('inp-task-target').value;
+
                     this.db.addTask({
                         name,
                         categoryId: catId,
+                        targetId,
                         date,
                         timeFrom,
                         timeTo,
@@ -7442,7 +8489,7 @@
 
             updateTopCategories() {
                 if (!app || !app.db || !app.db.data) return;
-                
+
                 const counts = {};
                 if (app.db.data.tasks) {
                     app.db.data.tasks.forEach(t => {
@@ -7457,7 +8504,7 @@
 
                 const sortedIds = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(e => e[0]);
                 const categories = app.db.getCategories();
-                
+
                 this.topCategories = [];
                 for (let id of sortedIds) {
                     const cat = categories.find(c => c.id === id);
@@ -7556,6 +8603,119 @@
 
         window.categoryAutocomplete = new CategoryAutocomplete();
 
+        // ===== TARGET AUTOCOMPLETE =====
+        class TargetAutocomplete {
+            constructor() {
+                this.inputs = [
+                    { search: 'inp-task-target-search', hidden: 'inp-task-target', dropdown: 'inp-task-target-dropdown', wrap: 'inp-task-target-wrap' },
+                    { search: 'edit-task-target-search', hidden: 'edit-task-target', dropdown: 'edit-task-target-dropdown', wrap: 'edit-task-target-wrap' }
+                ];
+                setTimeout(() => this.init(), 100);
+            }
+
+            init() {
+                this.inputs.forEach(cfg => {
+                    const searchEl = document.getElementById(cfg.search);
+                    const hiddenEl = document.getElementById(cfg.hidden);
+                    const dropEl = document.getElementById(cfg.dropdown);
+
+                    if (!searchEl || !hiddenEl || !dropEl) return;
+
+                    searchEl.addEventListener('focus', () => {
+                        this.showDropdown(cfg, searchEl.value);
+                    });
+
+                    searchEl.addEventListener('input', (e) => {
+                        hiddenEl.value = '';
+                        this.showDropdown(cfg, e.target.value);
+                    });
+
+                    searchEl.addEventListener('blur', () => {
+                        setTimeout(() => {
+                            const query = searchEl.value.trim().toLowerCase();
+                            if (query) {
+                                const allTargets = app.db.data.targets || [];
+                                const exactMatch = allTargets.find(t => t.title.toLowerCase() === query && t.status === 'ongoing');
+                                if (exactMatch) {
+                                    hiddenEl.value = exactMatch.id;
+                                    searchEl.value = exactMatch.title;
+                                }
+                            }
+                        }, 200);
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (!e.target.closest('#' + cfg.wrap)) {
+                            dropEl.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            showDropdown(cfg, query) {
+                const dropEl = document.getElementById(cfg.dropdown);
+                const hiddenEl = document.getElementById(cfg.hidden);
+                const searchEl = document.getElementById(cfg.search);
+                const q = query.toLowerCase().trim();
+
+                const allTargets = (app.db.data.targets || []).filter(t => t.status === 'ongoing');
+
+                let matches = [];
+                if (!q) {
+                    matches = allTargets;
+                } else {
+                    matches = allTargets.filter(t => t.title.toLowerCase().includes(q));
+                }
+
+                if (matches.length === 0) {
+                    dropEl.style.display = 'none';
+                    return;
+                }
+
+                dropEl.innerHTML = matches.map((t, idx) => `
+                    <div class="autocomplete-item" data-id="${t.id}" data-name="${t.title.replace(/"/g, '&quot;')}">
+                        <i class="fas fa-bullseye"></i>
+                        <span>${this._highlight(t.title, q)}</span>
+                    </div>
+                `).join('');
+
+                dropEl.querySelectorAll('.autocomplete-item').forEach(item => {
+                    item.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        hiddenEl.value = item.dataset.id;
+                        searchEl.value = item.dataset.name;
+                        dropEl.style.display = 'none';
+                    });
+                });
+
+                dropEl.style.display = 'block';
+            }
+
+            _highlight(text, q) {
+                if (!q) return text;
+                const regex = new RegExp(`(${q})`, 'gi');
+                return text.replace(regex, '<span class="autocomplete-match">$1</span>');
+            }
+
+            setTarget(inputId, targetId) {
+                const cfg = this.inputs.find(c => c.hidden === inputId);
+                if (!cfg) return;
+                const hiddenEl = document.getElementById(cfg.hidden);
+                const searchEl = document.getElementById(cfg.search);
+                if (hiddenEl && searchEl) {
+                    hiddenEl.value = targetId || '';
+                    if (targetId) {
+                        const allTargets = app.db.data.targets || [];
+                        const target = allTargets.find(t => t.id === targetId);
+                        searchEl.value = target ? target.title : '';
+                    } else {
+                        searchEl.value = '';
+                    }
+                }
+            }
+        }
+        window.targetAutocomplete = new TargetAutocomplete();
+
         class TaskAutocomplete {
             constructor() {
                 this.STORAGE_KEY = 'taskNameHistory';
@@ -7579,7 +8739,7 @@
             _save() {
                 try {
                     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this._names.slice(0, this.MAX_NAMES)));
-                } catch {}
+                } catch { }
             }
 
             /* Seed from existing app data so existing tasks surface immediately */
@@ -7632,15 +8792,15 @@
             /* Bind to all task name inputs */
             _bindInputs() {
                 const configs = [
-                    { inputId: 'inp-task-name',    dropId: 'inp-task-name-dropdown' },
+                    { inputId: 'inp-task-name', dropId: 'inp-task-name-dropdown' },
                     { inputId: 'manual-task-name', dropId: 'manual-task-name-dropdown' },
-                    { inputId: 'park-name',        dropId: 'park-name-dropdown' },
-                    { inputId: 'edit-task-name',   dropId: null }
+                    { inputId: 'park-name', dropId: 'park-name-dropdown' },
+                    { inputId: 'edit-task-name', dropId: null }
                 ];
                 configs.forEach(({ inputId, dropId }) => {
                     const inp = document.getElementById(inputId);
                     if (!inp) return;
-                    
+
                     if (dropId) {
                         const drop = document.getElementById(dropId);
                         if (drop) {
@@ -7658,10 +8818,10 @@
             _autoSelectCategory(inp) {
                 const name = inp.value.trim().toLowerCase();
                 if (!name || typeof app === 'undefined' || !app.db || !app.db.data) return;
-                
+
                 let foundCatId = null;
                 const db = app.db.data;
-                
+
                 // First search timesheet history (most recent date first)
                 if (db.timesheet) {
                     const dates = Object.keys(db.timesheet).sort().reverse();
@@ -7678,26 +8838,26 @@
                         if (foundCatId) break;
                     }
                 }
-                
+
                 // Fallback: search saved tasks
                 if (!foundCatId && db.tasks) {
                     const task = db.tasks.find(t => t.name && t.name.toLowerCase().trim() === name && t.categoryId);
                     if (task) foundCatId = task.categoryId;
                 }
-                
+
                 // Also search routines
                 if (!foundCatId && db.routines) {
                     const routine = db.routines.find(r => r.name && r.name.toLowerCase().trim() === name && r.categoryId);
                     if (routine) foundCatId = routine.categoryId;
                 }
-                
+
                 if (foundCatId && typeof categoryAutocomplete !== 'undefined') {
                     let catHiddenId = null;
                     if (inp.id === 'inp-task-name') catHiddenId = 'inp-task-category';
                     else if (inp.id === 'edit-task-name') catHiddenId = 'edit-task-category';
                     else if (inp.id === 'manual-task-name') catHiddenId = 'manual-category';
                     else if (inp.id === 'park-name') catHiddenId = 'park-category';
-                    
+
                     if (catHiddenId) {
                         categoryAutocomplete.setCategory(catHiddenId, foundCatId);
                     }
