@@ -4296,6 +4296,10 @@
             constructor() {
                 this.data = this.loadLocalData();
                 this.currentUser = null;
+                // Track which dates have unsaved changes to avoid rewriting all history
+                this._dirtyTimesheetDates = new Set();
+                this._dirtyHabitLogDates = new Set();
+                this._saveTimer = null;
             }
 
             loadLocalData() {
@@ -4327,34 +4331,183 @@
                 localStorage.setItem('productivityData', JSON.stringify(this.data));
             }
 
+            // ─── NEW: Read from sub-documents ───────────────────────────────────
             async syncWithFirebase() {
                 if (!this.currentUser || !db) return;
                 try {
-                    const userDoc = await db.collection('users').doc(this.currentUser.uid).get();
-                    if (userDoc.exists) {
-                        this.data = userDoc.data();
+                    const uid = this.currentUser.uid;
+                    const userRef = db.collection('users').doc(uid);
+
+                    // Check for legacy single-document (old format) and migrate if found
+                    const legacyDoc = await userRef.get();
+                    if (legacyDoc.exists) {
+                        const legacyData = legacyDoc.data();
+                        // Old format has tasks array directly on the document
+                        const isLegacy = Array.isArray(legacyData.tasks) || Array.isArray(legacyData.categories);
+                        if (isLegacy) {
+                            console.log('Legacy Firestore document detected — migrating to sub-document structure...');
+                            await this._migrateFromLegacy(uid, legacyData);
+                            console.log('Migration complete.');
+                        }
                     }
+
+                    // Read meta (categories, habits, parkedTasks, targets)
+                    const metaDoc = await userRef.collection('data').doc('meta').get();
+                    if (metaDoc.exists) {
+                        const meta = metaDoc.data();
+                        if (meta.categories) this.data.categories = meta.categories;
+                        if (meta.habits)     this.data.habits = meta.habits;
+                        if (meta.parkedTasks) this.data.parkedTasks = meta.parkedTasks;
+                        if (meta.targets)    this.data.targets = meta.targets;
+                    }
+
+                    // Read tasks (tasks, routines, routineStatus)
+                    const tasksDoc = await userRef.collection('data').doc('tasks').get();
+                    if (tasksDoc.exists) {
+                        const t = tasksDoc.data();
+                        if (t.tasks)         this.data.tasks = t.tasks;
+                        if (t.routines)      this.data.routines = t.routines;
+                        if (t.routineStatus) this.data.routineStatus = t.routineStatus;
+                    }
+
+                    // Read timesheet — load last 90 days so stats work
+                    const today = new Date();
+                    this.data.timesheet = {};
+                    const tsCollection = userRef.collection('timesheet');
+                    const tsSnap = await tsCollection.get();
+                    tsSnap.forEach(doc => {
+                        this.data.timesheet[doc.id] = doc.data();
+                    });
+
+                    // Read habitLogs — all dates
+                    this.data.habitLogs = {};
+                    const hlSnap = await userRef.collection('habitLogs').get();
+                    hlSnap.forEach(doc => {
+                        this.data.habitLogs[doc.id] = doc.data();
+                    });
+
+                    // Persist merged data locally
+                    this.saveLocalData();
+                    console.log('Synced from Firebase (sub-document structure).');
                 } catch (error) {
                     console.error('Firebase sync error:', error);
                 }
             }
 
-            async saveToFirebase() {
+            // ─── NEW: Write to sub-documents (debounced) ────────────────────────
+            saveToFirebase() {
+                if (!this.currentUser || !db) return;
+                // Debounce: wait 400ms after last call before writing
+                clearTimeout(this._saveTimer);
+                this._saveTimer = setTimeout(() => this._flushToFirebase(), 400);
+            }
+
+            async _flushToFirebase() {
                 if (!this.currentUser || !db) return;
                 try {
-                    // Sanitize data to remove undefined values which Firebase rejects
-                    const cleanData = JSON.parse(JSON.stringify(this.data));
-                    await db.collection('users').doc(this.currentUser.uid).set(cleanData);
-                    console.log('Saved to Firebase successfully');
+                    const uid = this.currentUser.uid;
+                    const userRef = db.collection('users').doc(uid);
+                    const batch = db.batch();
+
+                    // --- meta document ---
+                    const metaRef = userRef.collection('data').doc('meta');
+                    batch.set(metaRef, {
+                        categories:  JSON.parse(JSON.stringify(this.data.categories  || [])),
+                        habits:      JSON.parse(JSON.stringify(this.data.habits      || [])),
+                        parkedTasks: JSON.parse(JSON.stringify(this.data.parkedTasks || [])),
+                        targets:     JSON.parse(JSON.stringify(this.data.targets     || []))
+                    });
+
+                    // --- tasks document ---
+                    const tasksRef = userRef.collection('data').doc('tasks');
+                    batch.set(tasksRef, {
+                        tasks:         JSON.parse(JSON.stringify(this.data.tasks         || [])),
+                        routines:      JSON.parse(JSON.stringify(this.data.routines      || [])),
+                        routineStatus: JSON.parse(JSON.stringify(this.data.routineStatus || {}))
+                    });
+
+                    await batch.commit();
+
+                    // --- per-date timesheet (only dirty dates) ---
+                    for (const date of this._dirtyTimesheetDates) {
+                        const dayData = this.data.timesheet[date];
+                        if (dayData && Object.keys(dayData).length > 0) {
+                            await userRef.collection('timesheet').doc(date)
+                                .set(JSON.parse(JSON.stringify(dayData)));
+                        } else {
+                            // All slots cleared for this date — delete the doc
+                            await userRef.collection('timesheet').doc(date).delete();
+                        }
+                    }
+                    this._dirtyTimesheetDates.clear();
+
+                    // --- per-date habitLogs (only dirty dates) ---
+                    for (const date of this._dirtyHabitLogDates) {
+                        const dayLog = this.data.habitLogs[date];
+                        if (dayLog && Object.keys(dayLog).length > 0) {
+                            await userRef.collection('habitLogs').doc(date)
+                                .set(JSON.parse(JSON.stringify(dayLog)));
+                        } else {
+                            await userRef.collection('habitLogs').doc(date).delete();
+                        }
+                    }
+                    this._dirtyHabitLogDates.clear();
+
+                    console.log('Saved to Firebase (sub-document structure).');
                 } catch (error) {
                     console.error('Firebase save error:', error);
                     if (error.code === 'permission-denied') {
-                        alert('DATABASE ERROR: Permission Denied!\n\nYour Firestore Database Rules are blocking writes.\n\nPlease fix your Rules in the Firebase Console:\n1. Go to Build -> Firestore Database -> Rules\n2. Change "allow read, write: if false;" to "allow read, write: if true;" (for testing) OR "if request.auth != null;"');
+                        alert('DATABASE ERROR: Permission Denied!\n\nYour Firestore Security Rules are blocking writes.\n\nPlease update your Rules in the Firebase Console to:\nmatch /users/{uid}/{document=**} {\n  allow read, write: if request.auth != null;\n}');
                     } else {
-                        // Only alert for other errors if it's not a network offline issue (optional)
-                        // But for now, let's be noisy to debug
                         alert('Error saving to cloud: ' + error.message);
                     }
+                }
+            }
+
+            // ─── Migration: old single-doc → new sub-docs ───────────────────────
+            async _migrateFromLegacy(uid, legacyData) {
+                try {
+                    const userRef = db.collection('users').doc(uid);
+                    const batch = db.batch();
+
+                    // Write meta
+                    batch.set(userRef.collection('data').doc('meta'), {
+                        categories:  legacyData.categories  || [],
+                        habits:      legacyData.habits      || [],
+                        parkedTasks: legacyData.parkedTasks || [],
+                        targets:     legacyData.targets     || []
+                    });
+
+                    // Write tasks
+                    batch.set(userRef.collection('data').doc('tasks'), {
+                        tasks:         legacyData.tasks         || [],
+                        routines:      legacyData.routines      || [],
+                        routineStatus: legacyData.routineStatus || {}
+                    });
+
+                    await batch.commit();
+
+                    // Write timesheet per-date
+                    const timesheet = legacyData.timesheet || {};
+                    for (const [date, dayData] of Object.entries(timesheet)) {
+                        if (dayData && Object.keys(dayData).length > 0) {
+                            await userRef.collection('timesheet').doc(date).set(dayData);
+                        }
+                    }
+
+                    // Write habitLogs per-date
+                    const habitLogs = legacyData.habitLogs || {};
+                    for (const [date, dayLog] of Object.entries(habitLogs)) {
+                        if (dayLog && Object.keys(dayLog).length > 0) {
+                            await userRef.collection('habitLogs').doc(date).set(dayLog);
+                        }
+                    }
+
+                    // Clear legacy fields from the root document (don't delete — keep uid doc as anchor)
+                    await userRef.set({ _migrated: true, _migratedAt: new Date().toISOString() });
+                    console.log('Legacy data migrated successfully.');
+                } catch (err) {
+                    console.error('Migration failed:', err);
                 }
             }
 
@@ -4503,6 +4656,8 @@
                     };
                 }
 
+                // Mark this date dirty so only it gets re-written to Firestore
+                this._dirtyTimesheetDates.add(date);
                 this.saveLocalData();
                 this.saveToFirebase();
             }
@@ -4523,6 +4678,8 @@
                     }
                 });
 
+                // Mark this date dirty
+                this._dirtyTimesheetDates.add(date);
                 this.saveLocalData();
                 this.saveToFirebase();
             }
@@ -4565,7 +4722,11 @@
                 this.data.habits = (this.data.habits || []).filter(h => h.id !== id);
                 if (this.data.habitLogs) {
                     Object.keys(this.data.habitLogs).forEach(date => {
-                        if (this.data.habitLogs[date]) delete this.data.habitLogs[date][id];
+                        if (this.data.habitLogs[date]) {
+                            delete this.data.habitLogs[date][id];
+                            // Mark each affected date dirty
+                            this._dirtyHabitLogDates.add(date);
+                        }
                     });
                 }
                 this.saveLocalData();
@@ -4580,6 +4741,8 @@
                 } else {
                     this.data.habitLogs[date][habitId] = true;
                 }
+                // Mark this date dirty
+                this._dirtyHabitLogDates.add(date);
                 this.saveLocalData();
                 this.saveToFirebase();
             }
@@ -5921,6 +6084,8 @@
                     }
                 }
 
+                // Mark this date dirty
+                this.db._dirtyTimesheetDates.add(date);
                 this.db.saveLocalData();
                 this.db.saveToFirebase();
             }
@@ -6715,6 +6880,8 @@
                         this.editingTimesheetOriginalSlots.forEach(slot => {
                             delete this.db.data.timesheet[dateToClear][slot];
                         });
+                        // Mark dirty — slots were removed directly
+                        this.db._dirtyTimesheetDates.add(dateToClear);
                     } else {
                         this.db.clearTimesheetEntries(dateToClear, this.editingTimesheetTaskId);
                     }
@@ -6779,6 +6946,8 @@
                 if (!this.db.data.timesheet) this.db.data.timesheet = {};
                 this.db.data.timesheet[frame.date] = JSON.parse(JSON.stringify(frame.data));
                 this.selectedDate = frame.date;
+                // Mark this date dirty so the undo is persisted to Firestore
+                this.db._dirtyTimesheetDates.add(frame.date);
                 // Persist immediately
                 this.db.saveLocalData();
                 // Delay Firebase save slightly to avoid racing a prior in-flight write
