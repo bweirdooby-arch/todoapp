@@ -7427,6 +7427,7 @@
             }
 
             renderAccount() {
+                const user = this.db.currentUser;
                 document.getElementById('view-account').innerHTML = `
                     <div class="dashboard-header">
                         <div class="header-title-row">
@@ -7442,10 +7443,27 @@
                         <input type="password" id="password-input" placeholder="Password">
                         <button class="btn-primary" onclick="app.handleAuth()">Sign In / Register</button>
                         <p class="text-center text-sm text-secondary mt-4">
-                            ${this.db.currentUser ? 'Signed in as: ' + this.db.currentUser.email : 'Sign in to sync across devices'}
+                            ${user ? 'Signed in as: ' + user.email : 'Sign in to sync across devices'}
                         </p>
-                        ${this.db.currentUser ? '<button class="btn-secondary" onclick="app.signOut()">Sign Out</button>' : ''}
-                    </div>`;
+                        ${user ? '<button class="btn-secondary" onclick="app.signOut()">Sign Out</button>' : ''}
+                    </div>
+
+                    ${user ? `
+                    <!-- Import from old account -->
+                    <div style="margin: 0 16px 24px; background: var(--surface); border: 1px solid var(--border-medium); border-radius: var(--radius-lg); padding: 20px;">
+                        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">📥 Import from Old Account</h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+                            If your data was stored under a different account, paste that account's User ID below and tap Import. Your tasks, timesheet, habits — everything will be copied to this account.
+                        </p>
+                        <input type="text" id="old-uid-input"
+                            style="width:100%; padding:12px; background:var(--surface-elevated); border:1px solid var(--border-medium); border-radius:var(--radius-md); color:var(--text-primary); font-size:13px; margin-bottom:12px; font-family:monospace;"
+                            placeholder="Paste old User ID here"
+                            value="IpkAXg2HBVWIsce8klWH5USpz892">
+                        <button class="btn-primary" id="import-old-btn" onclick="app.importFromOldAccount()" style="width:100%;">
+                            📥 Import Data
+                        </button>
+                        <p id="import-status" style="font-size:13px; text-align:center; margin-top:10px; min-height:20px;"></p>
+                    </div>` : ''}`;
             }
 
             renderTargets() {
@@ -8173,6 +8191,107 @@
                     this.render();
                 }
             }
+
+            async importFromOldAccount() {
+                const oldUid = (document.getElementById('old-uid-input')?.value || '').trim();
+                const statusEl = document.getElementById('import-status');
+                const btn = document.getElementById('import-old-btn');
+
+                if (!oldUid) {
+                    if (statusEl) statusEl.textContent = '⚠️ Please enter the old User ID.';
+                    return;
+                }
+                if (!this.db.currentUser) {
+                    if (statusEl) statusEl.textContent = '⚠️ You must be signed in first.';
+                    return;
+                }
+                if (oldUid === this.db.currentUser.uid) {
+                    if (statusEl) statusEl.textContent = '⚠️ That is your current account ID — nothing to import.';
+                    return;
+                }
+
+                if (btn) btn.disabled = true;
+                if (statusEl) statusEl.innerHTML = '<span style="color:var(--accent-primary)">⏳ Reading old account data…</span>';
+
+                try {
+                    const oldRef = db.collection('users').doc(oldUid);
+                    let importedData = {
+                        categories: [], tasks: [], routines: [], routineStatus: {},
+                        parkedTasks: [], habits: [], habitLogs: {}, timesheet: {}, targets: []
+                    };
+
+                    // ── Try new sub-document format first ──────────────────────
+                    const metaDoc  = await oldRef.collection('data').doc('meta').get();
+                    const tasksDoc = await oldRef.collection('data').doc('tasks').get();
+                    const hasNewFormat = metaDoc.exists || tasksDoc.exists;
+
+                    if (hasNewFormat) {
+                        if (metaDoc.exists) {
+                            const m = metaDoc.data();
+                            if (m.categories)  importedData.categories  = m.categories;
+                            if (m.habits)       importedData.habits      = m.habits;
+                            if (m.parkedTasks)  importedData.parkedTasks = m.parkedTasks;
+                            if (m.targets)      importedData.targets     = m.targets;
+                        }
+                        if (tasksDoc.exists) {
+                            const t = tasksDoc.data();
+                            if (t.tasks)         importedData.tasks         = t.tasks;
+                            if (t.routines)      importedData.routines      = t.routines;
+                            if (t.routineStatus) importedData.routineStatus = t.routineStatus;
+                        }
+                        // Read timesheet sub-collection
+                        const tsSnap = await oldRef.collection('timesheet').get();
+                        tsSnap.forEach(doc => { importedData.timesheet[doc.id] = doc.data(); });
+                        // Read habitLogs sub-collection
+                        const hlSnap = await oldRef.collection('habitLogs').get();
+                        hlSnap.forEach(doc => { importedData.habitLogs[doc.id] = doc.data(); });
+
+                    } else {
+                        // ── Fall back to old monolithic document format ─────────
+                        const legacyDoc = await oldRef.get();
+                        if (!legacyDoc.exists) {
+                            if (statusEl) statusEl.innerHTML = '<span style="color:var(--danger)">❌ No data found for that User ID. Double-check it.</span>';
+                            if (btn) btn.disabled = false;
+                            return;
+                        }
+                        const d = legacyDoc.data();
+                        if (d.categories)    importedData.categories    = d.categories;
+                        if (d.tasks)         importedData.tasks         = d.tasks;
+                        if (d.routines)      importedData.routines      = d.routines;
+                        if (d.routineStatus) importedData.routineStatus = d.routineStatus;
+                        if (d.parkedTasks)   importedData.parkedTasks   = d.parkedTasks;
+                        if (d.habits)        importedData.habits        = d.habits;
+                        if (d.habitLogs)     importedData.habitLogs     = d.habitLogs;
+                        if (d.timesheet)     importedData.timesheet     = d.timesheet;
+                        if (d.targets)       importedData.targets       = d.targets;
+                    }
+
+                    if (statusEl) statusEl.innerHTML = '<span style="color:var(--accent-primary)">⏳ Saving to your new account…</span>';
+
+                    // ── Write imported data into current account ───────────────
+                    this.db.data = importedData;
+                    this.db.saveLocalData();
+
+                    // Mark all timesheet and habitLog dates as dirty so they all get written
+                    Object.keys(importedData.timesheet).forEach(d => this.db._dirtyTimesheetDates.add(d));
+                    Object.keys(importedData.habitLogs).forEach(d => this.db._dirtyHabitLogDates.add(d));
+
+                    // Flush everything to Firestore immediately (bypass debounce)
+                    await this.db._flushToFirebase();
+
+                    if (statusEl) statusEl.innerHTML = '<span style="color:var(--success)">✅ Import complete! All your data is back.</span>';
+                    if (btn) btn.textContent = '✅ Done';
+
+                    // Re-render the app with restored data
+                    setTimeout(() => this.render(), 1500);
+
+                } catch (err) {
+                    console.error('Import failed:', err);
+                    if (statusEl) statusEl.innerHTML = `<span style="color:var(--danger)">❌ Error: ${err.message}</span>`;
+                    if (btn) btn.disabled = false;
+                }
+            }
+
 
             openAddTaskModal() {
                 // If parking-promote is pending, cancel it (user opened add-task manually)
