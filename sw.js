@@ -1,4 +1,4 @@
-const CACHE_NAME = 'productivity-planner-v3';
+const CACHE_NAME = 'productivity-planner-v7';
 const urlsToCache = [
   '/',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
