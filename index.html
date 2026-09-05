@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a0a0f">
+    <meta name="theme-color" content="#f8fafc">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="description" content="Premium productivity and time management app">
-    <title>Productivity â€¢ Daily Planner</title>
+    <title>Productivity • Daily Planner</title>
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -27,45 +27,61 @@
 
     <style>
         :root {
-            /* Premium Dark Theme Colors */
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --surface: #1a1a24;
-            --surface-elevated: #20202e;
-            --surface-hover: #252533;
+            /* Premium Light Theme Colors (TickTick & MS Teams inspired) */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --surface: #ffffff;
+            --surface-elevated: #f1f5f9;
+            --surface-hover: #e2e8f0;
+
+            /* Soft Pastel Accents for Cards & Categories (TickTick style) */
+            --card-pink-bg: #ffe4e6;
+            --card-pink-text: #9f1239;
+            --card-blue-bg: #dbeafe;
+            --card-blue-text: #1e40af;
+            --card-green-bg: #dcfce7;
+            --card-green-text: #166534;
+            --card-purple-bg: #f3e8ff;
+            --card-purple-text: #6b21a8;
+            --card-amber-bg: #fef3c7;
+            --card-amber-text: #92400e;
+            --card-cyan-bg: #cffafe;
+            --card-cyan-text: #155e75;
 
             /* Accent Colors */
-            --accent-primary: #8b7ef8;
-            --accent-secondary: #f093fb;
-            --accent-gradient: linear-gradient(135deg, #8b7ef8 0%, #f093fb 100%);
+            --accent-primary: #4f46e5;
+            --accent-secondary: #7c3aed;
+            --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --primary-color: #4f46e5;
 
             /* Semantic Colors */
-            --success: #4ade80;
-            --success-bg: rgba(74, 222, 128, 0.1);
-            --danger: #f87171;
-            --danger-bg: rgba(248, 113, 113, 0.1);
-            --warning: #fbbf24;
-            --warning-bg: rgba(251, 191, 36, 0.1);
-            --info: #60a5fa;
-            --info-bg: rgba(96, 165, 250, 0.1);
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --danger: #dc2626;
+            --danger-bg: #fee2e2;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --info: #2563eb;
+            --info-bg: #dbeafe;
+            --unassigned: #94a3b8;
 
             /* Text Colors */
-            --text-primary: #f5f5f7;
-            --text-secondary: #a1a1aa;
-            --text-tertiary: #71717a;
-            --text-inverse: #18181b;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+            --text-inverse: #ffffff;
 
             /* Border & Divider */
-            --border-subtle: rgba(255, 255, 255, 0.06);
-            --border-medium: rgba(255, 255, 255, 0.1);
-            --divider: rgba(255, 255, 255, 0.08);
+            --border-subtle: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --divider: #e2e8f0;
 
             /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 20px rgba(139, 126, 248, 0.3);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 4px 14px rgba(79, 70, 229, 0.25);
 
             /* Spacing */
             --spacing-xs: 4px;
@@ -141,8 +157,8 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at 30% 50%, rgba(139, 126, 248, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 70% 20%, rgba(240, 147, 251, 0.06) 0%, transparent 50%);
+            background: radial-gradient(circle at 30% 50%, rgba(79, 70, 229, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 70% 20%, rgba(124, 58, 237, 0.03) 0%, transparent 50%);
             animation: float 20s ease-in-out infinite;
             pointer-events: none;
             z-index: 0;
@@ -269,16 +285,16 @@
 
         .views-slider {
             display: flex;
-            width: 1000%;
-            /* 10 tabs */
+            width: 1200%;
+            /* 12 tabs */
             height: 100%;
             transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
             will-change: transform;
         }
 
         .view-slide {
-            width: 10%;
-            /* 1/10 of slider width = 100vw */
+            width: 8.333333%;
+            /* 1/12 of slider width = 100vw */
             flex-shrink: 0;
             height: 100vh;
             overflow-y: auto;
@@ -292,8 +308,8 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 20%;
-            /* Changed to 1/5 for 5 tabs */
+            width: 16.666667%;
+            /* 1/6 for 6 bottom tabs */
             height: 3px;
             background: var(--accent-primary);
             transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
@@ -303,6 +319,234 @@
 
         .nav-indicator.hidden {
             display: none;
+        }
+
+        /* All Tasks View Styles */
+        .alltasks-header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .alltasks-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alltasks-filter-pills {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+        }
+
+        .alltasks-pill {
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--surface-elevated);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .alltasks-pill.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .alltasks-group-header {
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 4px;
+            right: calc(50% - 18px);
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 1px 5px;
+            min-width: 16px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* MS Teams Style Day Calendar Styles */
+        .cal-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .cal-top-bar {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .cal-view-segmented {
+            display: flex;
+            background: var(--bg-primary);
+            padding: 3px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .cal-view-btn {
+            padding: 5px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cal-view-btn.active {
+            background: var(--surface-elevated);
+            color: var(--accent-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cal-date-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .cal-date-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .cal-day-timeline-wrap {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+
+        .cal-day-timeline {
+            position: relative;
+            height: 1440px;
+            /* 24 hours * 60px/hr */
+            width: 100%;
+        }
+
+        .cal-hour-row {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 60px;
+            border-bottom: 1px solid var(--border-subtle);
+            box-sizing: border-box;
+        }
+
+        .cal-hour-row::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 60px;
+            right: 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+        }
+
+        .cal-hour-label {
+            position: absolute;
+            left: 12px;
+            top: -8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            width: 45px;
+        }
+
+        .cal-now-line {
+            position: absolute;
+            left: 55px;
+            right: 0;
+            height: 2px;
+            background: #f43f5e;
+            z-index: 8;
+            pointer-events: none;
+        }
+
+        .cal-now-line::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: -4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #f43f5e;
+        }
+
+        .cal-task-card {
+            position: absolute;
+            left: 65px;
+            right: 12px;
+            border-radius: 8px;
+            padding: 6px 10px;
+            box-sizing: border-box;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 5;
+            transition: transform 0.15s, box-shadow 0.15s;
+            border-left: 4px solid var(--accent-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cal-task-card:active {
+            transform: scale(0.98);
+        }
+
+        .cal-task-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cal-task-time {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 2px;
         }
 
         /* Side Menu (Hamburger) */
@@ -674,22 +918,23 @@
             margin-top: 10px;
         }
 
-        /* Task Buttons - Icon Only */
+        /* Task Buttons */
         .task-btn {
             flex: 0 0 auto;
-            min-width: 40px;
-            width: 40px;
-            height: 40px;
-            padding: 0;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
             background: var(--surface-elevated);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-size: 16px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 6px;
             transition: all var(--transition-base);
         }
 
@@ -697,6 +942,31 @@
             background: var(--surface-hover);
             border-color: var(--border-medium);
             transform: translateY(-1px);
+        }
+
+        /* Settings & Manage Workspace */
+        .settings-list {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .setting-item {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .setting-item:hover {
+            background: var(--surface-elevated);
+            border-color: var(--border-medium);
         }
 
         .task-btn.done-btn {
@@ -922,13 +1192,14 @@
             left: 0;
             right: 0;
             height: var(--nav-height);
-            background: rgba(10, 10, 15, 0.7);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             display: flex;
             justify-content: flex-start;
             align-items: stretch;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid var(--border-subtle);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
             padding: 0;
             z-index: 100;
         }
@@ -950,8 +1221,9 @@
         }
 
         .nav-item.active {
-            color: var(--primary-color);
-            background: rgba(129, 140, 248, 0.1);
+            color: var(--accent-primary);
+            background: rgba(79, 70, 229, 0.08);
+            font-weight: 600;
         }
 
         .nav-item i {
@@ -3373,9 +3645,13 @@
                 <i class="fas fa-bullseye"></i>
                 <span>Targets</span>
             </div>
-            <div class="sidebar-item" onclick="app.switchViewFromSidebar('calendar')">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Calendar</span>
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('pomodoro')">
+                <i class="fas fa-stopwatch"></i>
+                <span>Pomodoro Timer</span>
+            </div>
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('analytics')">
+                <i class="fas fa-chart-line"></i>
+                <span>Stats & Analytics</span>
             </div>
             <div class="sidebar-item" onclick="app.switchViewFromSidebar('parking')">
                 <i class="fas fa-parking"></i>
@@ -3396,14 +3672,16 @@
         <div class="views-slider" id="views-slider">
             <div class="view-slide" id="view-home"></div>
             <div class="view-slide" id="view-todo"></div>
+            <div class="view-slide" id="view-alltasks"></div>
             <div class="view-slide" id="view-timesheet"></div>
             <div class="view-slide" id="view-habits"></div>
-            <div class="view-slide" id="view-analytics"></div>
+            <div class="view-slide" id="view-calendar"></div>
             <div class="view-slide" id="view-parking"></div>
             <div class="view-slide" id="view-manage"></div>
             <div class="view-slide" id="view-account"></div>
             <div class="view-slide" id="view-targets"></div>
-            <div class="view-slide" id="view-calendar"></div>
+            <div class="view-slide" id="view-analytics"></div>
+            <div class="view-slide" id="view-pomodoro"></div>
         </div>
     </div>
 
@@ -3460,6 +3738,11 @@
             <i class="fas fa-list-check"></i>
             <span>Tasks</span>
         </div>
+        <div class="nav-item" data-view="alltasks">
+            <i class="fas fa-clock-rotate-left"></i>
+            <span>All Tasks</span>
+            <span class="nav-badge hidden" id="alltasks-nav-badge">0</span>
+        </div>
         <div class="nav-item" data-view="timesheet">
             <i class="fas fa-clock"></i>
             <span>Timesheet</span>
@@ -3468,9 +3751,9 @@
             <i class="fas fa-seedling"></i>
             <span>Habits</span>
         </div>
-        <div class="nav-item" data-view="analytics">
-            <i class="fas fa-chart-line"></i>
-            <span>Stats</span>
+        <div class="nav-item" data-view="calendar">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Calendar</span>
         </div>
     </nav>
 
@@ -4522,6 +4805,19 @@
                 this.saveToFirebase();
             }
 
+            deleteCategory(id) {
+                this.data.categories = this.data.categories.filter(c => c.id !== id);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
+            addCategory(category) {
+                category.id = Date.now().toString();
+                this.data.categories.push(category);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+
             getCategoryById(id) {
                 return this.data.categories.find(c => c.id === id);
             }
@@ -4789,22 +5085,15 @@
             moveUncompletedTasks() {
                 const today = getLocalDateStr();
 
-                // Guard: only run this logic once per calendar day to avoid double-moves
+                // Guard: only run this logic once per calendar day
                 const lastRun = localStorage.getItem('lastMoveTasksDate');
                 if (lastRun === today) return;
                 localStorage.setItem('lastMoveTasksDate', today);
 
-                // Move ALL pending ad-hoc tasks from any past date → today
-                let changed = false;
-                this.data.tasks.forEach(task => {
-                    if (task.status === 'pending' && task.date && task.date < today) {
-                        task.movedFrom = task.movedFrom || task.date; // preserve original origin
-                        task.date = today;
-                        changed = true;
-                    }
-                });
+                // Note: Ad-hoc pending tasks remain on their original date so they appear in the All Tasks view.
 
                 // Mark uncompleted routine tasks from any past date as not-doable
+                let changed = false;
                 const start = new Date(today);
                 start.setDate(start.getDate() - 30); // look back up to 30 days
                 for (let d = new Date(start); d < new Date(today + 'T00:00:00'); d.setDate(d.getDate() + 1)) {
@@ -4972,14 +5261,9 @@
                 this.addingTaskType = 'adhoc';
                 this.selectedRoutineDays = [];
                 this.selectedHabitDays = [];
-                this.fillingTimeTaskId = null;
-                this.editingTimesheetTaskId = null;
-                this.container = document.getElementById('app-container');
-                this.selectedPeriod = 'week';
-                this.timesheetUndoStack = [];
                 this.promotingParkedTaskId = null;
                 this.deletingHabitId = null;
-                this.TAB_ORDER = ['home', 'todo', 'timesheet', 'habits', 'analytics', 'parking', 'manage', 'account', 'targets', 'calendar'];
+                this.TAB_ORDER = ['home', 'todo', 'alltasks', 'timesheet', 'habits', 'calendar', 'parking', 'manage', 'account', 'targets', 'analytics', 'pomodoro'];
                 this.collapsedGroups = {}; // track which task groups are collapsed
 
                 this.render();
@@ -5000,6 +5284,8 @@
                 setInterval(() => {
                     if (this.currentView === 'todo') {
                         this.renderTodo();
+                    } else if (this.currentView === 'alltasks') {
+                        this.renderAllTasks();
                     }
                 }, 60000); // Update every 60 seconds
             }
@@ -5046,8 +5332,6 @@
                         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
                         item.classList.add('active');
                         this.currentView = item.dataset.view;
-                        // NOTE: do NOT clear timesheetUndoStack on tab change â€” user should be able
-                        // to navigate to other tabs and still come back to undo a fill.
                         this.render();
                     });
                 });
@@ -5071,7 +5355,7 @@
                         this.openAddParkedTaskModal();
                     } else if (this.currentView === 'habits') {
                         this.openAddHabitModal();
-                    } else if (this.currentView === 'todo' || this.currentView === 'home') {
+                    } else if (this.currentView === 'todo' || this.currentView === 'home' || this.currentView === 'alltasks' || this.currentView === 'calendar') {
                         this.openAddTaskModal();
                     } else if (this.currentView === 'timesheet') {
                         this.openManualFillModal();
@@ -5124,7 +5408,7 @@
                 document.addEventListener('touchstart', (e) => {
                     const target = e.target;
                     // Ignore if inside a modal, date scroller, or scrollable area
-                    if (target.closest('.modal') || target.closest('.modal-content') || target.closest('.date-scroller') || target.closest('.chart-container')) return;
+                    if (target.closest('.modal') || target.closest('.modal-content') || target.closest('.date-scroller') || target.closest('.chart-container') || target.closest('.cal-day-timeline-wrap')) return;
                     swipeStartX = e.touches[0].clientX;
                     swipeStartY = e.touches[0].clientY;
                     swipeActive = true;
@@ -5145,21 +5429,21 @@
                             if (indicatorEl) indicatorEl.style.transition = 'none';
                         }
                         const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
-                        // Only allow swiping within the first 5 tabs (home/todo/timesheet/habits/analytics)
-                        if (currentIdx >= 5) return;
+                        // Only allow swiping within the first 6 bottom tabs
+                        if (currentIdx >= 6) return;
                         const sliderWidth = window.innerWidth;
-                        const basePercent = -(currentIdx * 12.5);
-                        const movePercent = (dx / (sliderWidth * 8)) * 100;
+                        const basePercent = -(currentIdx * (100 / 12));
+                        const movePercent = (dx / (sliderWidth * 12)) * 100;
 
-                        // Resistance at boundaries (max swipeable idx=4 = analytics)
+                        // Resistance at boundaries (max bottom tab idx=5 = calendar)
                         let finalPercent = basePercent + movePercent;
-                        if ((currentIdx === 0 && dx > 0) || (currentIdx === 4 && dx < 0)) {
+                        if ((currentIdx === 0 && dx > 0) || (currentIdx === 5 && dx < 0)) {
                             finalPercent = basePercent + (movePercent * 0.3);
                         }
 
                         if (sliderEl) sliderEl.style.transform = `translate3d(${finalPercent}%, 0, 0)`;
-                        if (indicatorEl && currentIdx < 5) {
-                            const indicatorMove = -(dx / (sliderWidth / 5)) * 100;
+                        if (indicatorEl && currentIdx < 6) {
+                            const indicatorMove = -(dx / (sliderWidth / 6)) * 100;
                             const finalIndicatorX = (currentIdx * 100) + indicatorMove;
                             indicatorEl.style.transform = `translate3d(${finalIndicatorX}%, 0, 0)`;
                         }
@@ -5184,11 +5468,10 @@
 
                     if (Math.abs(dx) > threshold) {
                         const currentIdx = this.TAB_ORDER.indexOf(this.currentView);
-                        // Only process swipe for the 5-tab swipeable rail
-                        if (currentIdx >= 5) { this.render(); return; }
+                        // Only process swipe for the 6 bottom tabs rail
+                        if (currentIdx >= 6) { this.render(); return; }
                         let nextIdx = currentIdx;
-                        // Limit swipe to the first 5 tabs (home/todo/timesheet/habits/analytics)
-                        if (dx < 0) nextIdx = Math.min(currentIdx + 1, 4);
+                        if (dx < 0) nextIdx = Math.min(currentIdx + 1, 5);
                         else nextIdx = Math.max(currentIdx - 1, 0);
 
                         if (nextIdx !== currentIdx) {
@@ -5244,7 +5527,7 @@
 
                 if (hSelect) hSelect.addEventListener('change', updateToTime);
                 if (mSelect) mSelect.addEventListener('change', updateToTime);
-                if (pSelect) mSelect.addEventListener('change', updateToTime);
+                if (pSelect) pSelect.addEventListener('change', updateToTime);
                 if (pSelect) pSelect.addEventListener('change', updateToTime);
             }
 
@@ -5252,14 +5535,20 @@
                 const idx = this.TAB_ORDER.indexOf(this.currentView);
                 const slider = document.getElementById('views-slider');
                 if (slider) {
-                    slider.style.transform = `translate3d(-${idx * 10}%, 0, 0)`;
+                    slider.style.transform = `translate3d(-${idx * (100 / 12)}%, 0, 0)`;
                 }
 
-                // Update nav indicator
+                // Update nav indicator for bottom nav tabs (first 6 tabs)
+                const bottomTabs = ['home', 'todo', 'alltasks', 'timesheet', 'habits', 'calendar'];
+                const bottomIdx = bottomTabs.indexOf(this.currentView);
                 const indicator = document.getElementById('nav-indicator');
                 if (indicator) {
-                    indicator.style.transform = `translate3d(${idx * 100}%, 0, 0)`;
-                    indicator.classList.toggle('hidden', idx >= 5);
+                    if (bottomIdx !== -1) {
+                        indicator.style.transform = `translate3d(${bottomIdx * 100}%, 0, 0)`;
+                        indicator.classList.remove('hidden');
+                    } else {
+                        indicator.classList.add('hidden');
+                    }
                 }
 
                 // Update nav active state
@@ -5271,12 +5560,17 @@
                 document.querySelectorAll('.sidebar-item').forEach(it => {
                     const isManage = it.innerText.includes('Settings') && this.currentView === 'manage';
                     const isAccount = it.innerText.includes('Account') && this.currentView === 'account';
-                    it.classList.toggle('active', isManage || isAccount);
+                    const isAnalytics = (it.innerText.includes('Stats') || it.innerText.includes('Analytics')) && this.currentView === 'analytics';
+                    const isTargets = it.innerText.includes('Targets') && this.currentView === 'targets';
+                    const isParking = it.innerText.includes('Parking') && this.currentView === 'parking';
+                    const isPomodoro = it.innerText.includes('Pomodoro') && this.currentView === 'pomodoro';
+                    it.classList.toggle('active', isManage || isAccount || isAnalytics || isTargets || isParking || isPomodoro);
                 });
 
 
                 if (this.currentView === 'home') this.renderHome();
                 else if (this.currentView === 'todo') this.renderTodo();
+                else if (this.currentView === 'alltasks') this.renderAllTasks();
                 else if (this.currentView === 'timesheet') this.renderTimesheet();
                 else if (this.currentView === 'parking') this.renderParking();
                 else if (this.currentView === 'habits') this.renderHabits();
@@ -5285,6 +5579,9 @@
                 else if (this.currentView === 'account') this.renderAccount();
                 else if (this.currentView === 'targets') this.renderTargets();
                 else if (this.currentView === 'calendar') this.renderCalendar();
+                else if (this.currentView === 'pomodoro') this.renderPomodoro();
+
+                this.updateAllTasksBadge();
             }
 
             renderHome() {
@@ -7302,7 +7599,6 @@
 
             setPeriod(period) {
                 this.selectedPeriod = period;
-                // Initialize custom range defaults
                 if (period === 'custom' && !this.analyticsFrom) {
                     const d = new Date();
                     this.analyticsTo = getLocalDateStr(d);
@@ -7314,108 +7610,144 @@
 
             renderManage() {
                 const cats = this.db.getCategories();
+                const routines = this.db.data.routines || [];
+
                 let html = `
                     <div class="dashboard-header">
                         <div class="header-title-row">
                             <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
-                            <h2>âš™ï¸ Manage Workspace</h2>
+                            <h2 style="font-size: 1.25rem; font-weight: 700;">⚙️ Workspace Settings</h2>
+                        </div>
+                    </div>
+
+                    <div style="padding: 0 var(--spacing-lg) 80px;">
+                        <!-- Routines Section -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; margin-top: 10px;">
+                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">🔄 My Routines (${routines.length})</h3>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 6px 14px; border-radius: 20px; gap: 6px; display: inline-flex; align-items: center;" onclick="app.setTaskType('routine'); app.openAddTaskModal();">
+                                <i class="fas fa-plus"></i> Add Routine
+                            </button>
+                        </div>
+                        <div class="settings-list" style="padding: 0; margin-bottom: 24px;">
+                            ${routines.map(r => {
+                                const freqText = r.freq === 'daily' ? 'Daily' : r.freq === 'weekly' ? 'Weekly' : 'Custom Days';
+                                const timeText = r.timeFrom ? `${formatTime12Hour(r.timeFrom)} - ${formatTime12Hour(r.timeTo)}` : 'No time set';
+                                const category = this.db.getCategoryById(r.categoryId);
+                                const categoryName = category ? category.name : 'Uncategorized';
+                                const isEnded = r.endDate && new Date(r.endDate) < new Date();
+
+                                return `
+                                    <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                                            <div>
+                                                <b style="font-size: 15px; color: var(--text-primary);">${r.name}</b>
+                                                <div class="text-xs text-secondary" style="margin-top: 2px;">
+                                                    <span style="display: inline-block; padding: 2px 8px; border-radius: 10px; background: var(--surface-elevated); border: 1px solid var(--border-subtle); margin-right: 4px;">${categoryName}</span>
+                                                    <span>${freqText}</span>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; gap: 6px;">
+                                                <button class="task-btn" style="width: 34px; height: 34px; font-size: 13px;" onclick="app.openEditRoutineModal('${r.id}')" title="Edit Routine">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 8px; margin-top: 2px;">
+                                            <div class="text-xs text-secondary">
+                                                <i class="fas fa-clock" style="color: var(--accent-primary);"></i> ${timeText}
+                                                ${r.startDate ? ` · Start: ${r.startDate}` : ''}
+                                                ${r.endDate ? ` · End: ${r.endDate}` : ''}
+                                            </div>
+                                            ${!isEnded ? `
+                                                <button class="btn-secondary" style="padding: 4px 10px; font-size: 11px; height: 28px; color: var(--danger); border-color: var(--danger-bg); background: var(--danger-bg);" onclick="app.endRoutineNow('${r.id}')">
+                                                    End Now
+                                                </button>
+                                            ` : '<span class="text-xs text-tertiary">Ended</span>'}
+                                        </div>
+                                    </div>`;
+                            }).join('')}
+                            ${routines.length === 0 ? '<div style="text-align: center; color: var(--text-secondary); padding: 24px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); font-size: 13px;">No routines created yet. Tap "+ Add Routine" to create one.</div>' : ''}
+                        </div>
+
+                        <!-- Categories Section -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">🏷️ Categories (${cats.length})</h3>
+                            <button class="btn-secondary" style="font-size: 12px; padding: 6px 14px; border-radius: 20px; gap: 6px; display: inline-flex; align-items: center;" onclick="document.getElementById('modal-category').classList.add('open');">
+                                <i class="fas fa-plus"></i> Add Category
+                            </button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px;">
+                            ${cats.map(c => {
+                                const dotColor = c.type === 'productive' ? '#16a34a' : c.type === 'non-productive' ? '#dc2626' : '#d97706';
+                                const bgBadge = c.type === 'productive' ? '#dcfce7' : c.type === 'non-productive' ? '#fee2e2' : '#fef3c7';
+                                return `
+                                    <div class="setting-item" style="padding: 12px 14px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                                            <span class="dot" style="background:${dotColor}; flex-shrink: 0;"></span>
+                                            <b style="font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.name}</b>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <span style="font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 8px; background:${bgBadge}; color:${dotColor};">${c.type}</span>
+                                            <button style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; font-size: 12px;" onclick="app.deleteCategory('${c.id}')" title="Delete category"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </div>`;
+                            }).join('')}
+                        </div>
+
+                        <!-- Data & System Options -->
+                        <div style="background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm);">
+                            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;">💾 Workspace Data</h3>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button class="btn-secondary" style="font-size: 12px; padding: 8px 14px;" onclick="app.exportDataJSON()"><i class="fas fa-download"></i> Export Data</button>
+                                <button class="btn-secondary" style="font-size: 12px; padding: 8px 14px;" onclick="app.resetAppCache()"><i class="fas fa-rotate"></i> Reset App Cache</button>
+                            </div>
+                        </div>
+                    </div>`;
+
+                document.getElementById('view-manage').innerHTML = html;
+            }
+
+            renderPomodoro() {
+                let html = `
+                    <div class="dashboard-header">
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2 style="font-size: 1.25rem; font-weight: 700;">🍅 Pomodoro Timer</h2>
                         </div>
                     </div>
                     
-                    <!-- Pomodoro Timer -->
-                    <div class="analytics-card" style="margin: 15px 20px;">
-                        <h3>🍅 Pomodoro Timer</h3>
-                        <div id="pomodoro-display" style="text-align: center; margin: 30px 0;">
-                            <div style="font-size: 4rem; font-weight: bold; color: var(--primary-color); font-family: 'Space Mono', monospace;" id="timer-display">25:00</div>
-                            <div style="font-size: 1.2rem; color: var(--text-secondary); margin-top: 10px;" id="timer-status">Focus Time</div>
+                    <div style="margin: 20px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 28px; box-shadow: var(--shadow-md); text-align: center;">
+                        <div id="pomodoro-display" style="margin: 10px 0 24px;">
+                            <div style="font-size: 4.5rem; font-weight: 800; color: var(--accent-primary); font-family: 'Inter', monospace; letter-spacing: -1px;" id="timer-display">25:00</div>
+                            <div style="font-size: 1.1rem; color: var(--text-secondary); margin-top: 6px; font-weight: 600;" id="timer-status">Focus Time 🎯</div>
                         </div>
                         
-                        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
-                            <button class="task-btn" style="flex: 1; max-width: 120px; background: var(--success);" onclick="app.startPomodoro()" id="start-btn">
+                        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap;">
+                            <button id="start-btn" onclick="app.startPomodoro()" style="flex: 1; max-width: 140px; height: 48px; background: var(--accent-gradient); color: white; border: none; font-size: 15px; font-weight: 700; border-radius: var(--radius-lg); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--shadow-glow);">
                                 <i class="fas fa-play"></i> Start
                             </button>
-                            <button class="task-btn" style="flex: 1; max-width: 120px; background: var(--warning); display: none;" onclick="app.pausePomodoro()" id="pause-btn">
+                            <button id="pause-btn" onclick="app.pausePomodoro()" style="flex: 1; max-width: 140px; height: 48px; background: var(--warning); color: white; border: none; font-size: 15px; font-weight: 700; border-radius: var(--radius-lg); cursor: pointer; display: none; align-items: center; justify-content: center; gap: 8px;">
                                 <i class="fas fa-pause"></i> Pause
                             </button>
-                            <button class="task-btn" style="flex: 1; max-width: 120px; background: var(--danger);" onclick="app.resetPomodoro()" id="reset-btn">
-                                <i class="fas fa-stop"></i> Reset
+                            <button id="reset-btn" onclick="app.resetPomodoro()" style="flex: 1; max-width: 140px; height: 48px; background: var(--surface-elevated); color: var(--text-secondary); border: 1px solid var(--border-medium); font-size: 15px; font-weight: 600; border-radius: var(--radius-lg); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fas fa-rotate-left"></i> Reset
                             </button>
                         </div>
                         
-                        <div class="form-group" style="margin-bottom: 10px;">
-                            <label>Focus Time (minutes)</label>
-                            <input type="number" id="focus-time" value="25" min="1" max="60" style="width: 100%; padding: 10px; background: var(--surface-variant); border: 1px solid transparent; border-radius: 8px; color: var(--text-primary);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: left; background: var(--bg-primary); padding: 18px; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block;">Focus Duration (min)</label>
+                                <input type="number" id="focus-time" value="25" min="1" max="120" onchange="app.resetPomodoro()" style="width: 100%; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border-medium); border-radius: var(--radius-md); color: var(--text-primary); font-size: 14px; font-weight: 600;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block;">Rest Duration (min)</label>
+                                <input type="number" id="rest-time" value="5" min="1" max="60" style="width: 100%; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border-medium); border-radius: var(--radius-md); color: var(--text-primary); font-size: 14px; font-weight: 600;">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Rest Time (minutes)</label>
-                            <input type="number" id="rest-time" value="5" min="1" max="30" style="width: 100%; padding: 10px; background: var(--surface-variant); border: 1px solid transparent; border-radius: 8px; color: var(--text-primary);">
-                        </div>
-                    </div>
-                    
-                </div>
+                    </div>`;
 
-                <div class="dashboard-header" style="margin-top: 20px;">
-                    <h2>My Routines</h2>
-                </div>
-                <div class="settings-list">
-                    ${this.db.data.routines.map(r => {
-                    const freqText = r.freq === 'daily' ? 'Daily' :
-                        r.freq === 'weekly' ? 'Weekly (Mon)' :
-                            'Custom Days';
-                    const timeText = r.timeFrom ? `${formatTime12Hour(r.timeFrom)} - ${formatTime12Hour(r.timeTo)}` : 'No time set';
-                    const category = this.db.getCategoryById(r.categoryId);
-                    const categoryName = category ? category.name : 'Unknown';
+                document.getElementById('view-pomodoro').innerHTML = html;
 
-                    return `
-                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
-                            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 8px;">
-                                <div>
-                                    <b>${r.name}</b>
-                                    <div class="text-xs text-secondary">${categoryName} â€¢ ${freqText}</div>
-                                </div>
-                                <button class="task-btn" onclick="app.openEditRoutineModal('${r.id}')" title="Edit Routine">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </div>
-                            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-                                <div class="text-xs text-secondary">
-                                    <i class="fas fa-clock"></i> ${timeText}<br>
-                                    ${r.startDate ? `Start: ${r.startDate}` : ''}
-                                    ${r.endDate ? `<br>End: ${r.endDate}` : ''}
-                                </div>
-                                ${!r.endDate || new Date(r.endDate) >= new Date() ?
-                            `<button class="task-btn delete-btn" style="width: auto; padding: 0 10px; font-size: 12px; height: 30px;" onclick="app.endRoutineNow('${r.id}')">
-                                        End Now
-                                    </button>` :
-                            '<span class="text-xs text-secondary">Ended</span>'
-                        }
-                            </div>
-                        </div>`;
-                }).join('')}
-                    ${this.db.data.routines.length === 0 ? '<div class="text-center text-secondary p-4">No routines created yet.</div>' : ''}
-                </div>
-                
-                <div class="dashboard-header" style="margin-top: 20px;">
-                    <h2>Categories</h2>
-                </div>
-                    <div class="settings-list">`;
-
-                cats.forEach(c => {
-                    const dotColor = c.type === 'productive' ? '#4ade80' : c.type === 'non-productive' ? '#f87171' : '#facc15';
-                    html += `
-                        <div class="setting-item">
-                            <div>
-                                <span class="dot" style="background:${dotColor}"></span>
-                                <b>${c.name}</b>
-                            </div>
-                            <div class="text-sm text-secondary">${c.type}</div>
-                        </div>`;
-                });
-
-                html += `</div>`;
-                document.getElementById('view-manage').innerHTML = html;
-
-                // Initialize pomodoro settings
                 if (!this.pomodoroTimer) {
                     this.pomodoroTimer = {
                         interval: null,
@@ -7423,6 +7755,8 @@
                         isRunning: false,
                         isFocusMode: true
                     };
+                } else {
+                    this.updateTimerDisplay();
                 }
             }
 
@@ -7663,7 +7997,384 @@
                 document.getElementById('modal-day-summary').classList.add('open');
             }
 
+            updateAllTasksBadge() {
+                const today = getLocalDateStr();
+                const overdueCount = (this.db.data.tasks || []).filter(t => t.status === 'pending' && t.date && t.date < today).length;
+                const badgeEl = document.getElementById('alltasks-nav-badge');
+                if (badgeEl) {
+                    if (overdueCount > 0) {
+                        badgeEl.textContent = overdueCount;
+                        badgeEl.classList.remove('hidden');
+                    } else {
+                        badgeEl.classList.add('hidden');
+                    }
+                }
+            }
+
+            setAllTasksFilter(filter) {
+                this.allTasksFilter = filter;
+                this.renderAllTasks();
+            }
+
+            rescheduleAllOverdueToToday() {
+                const today = getLocalDateStr();
+                let count = 0;
+                this.db.data.tasks.forEach(t => {
+                    if (t.status === 'pending' && t.date && t.date < today) {
+                        t.movedFrom = t.movedFrom || t.date;
+                        t.date = today;
+                        count++;
+                    }
+                });
+                if (count > 0) {
+                    this.db.saveLocalData();
+                    this.db.saveToFirebase();
+                    this.render();
+                }
+            }
+
+            renderAllTasks() {
+                const today = getLocalDateStr();
+                this.allTasksFilter = this.allTasksFilter || 'all'; // 'all', 'overdue', 'today', 'upcoming'
+
+                const allPendingTasks = (this.db.data.tasks || []).filter(t => t.status === 'pending');
+                const overdueTasks = allPendingTasks.filter(t => t.date && t.date < today).sort((a, b) => b.date.localeCompare(a.date));
+                const todayTasks = allPendingTasks.filter(t => t.date === today);
+                const upcomingTasks = allPendingTasks.filter(t => t.date && t.date > today).sort((a, b) => a.date.localeCompare(b.date));
+
+                let html = `
+                <div class="alltasks-header">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                        <div class="alltasks-title">
+                            <i class="fas fa-clock-rotate-left" style="color:var(--accent-primary);"></i>
+                            <span>All Tasks</span>
+                        </div>
+                    </div>
+                    ${overdueTasks.length > 0 ? `
+                        <button class="btn-secondary" style="font-size:12px;padding:6px 12px;border-radius:20px;gap:6px;" onclick="app.rescheduleAllOverdueToToday()">
+                            <i class="fas fa-calendar-arrow-down"></i> Move Overdue to Today
+                        </button>
+                    ` : ''}
+                </div>
+
+                <div class="alltasks-filter-pills">
+                    <button class="alltasks-pill ${this.allTasksFilter === 'all' ? 'active' : ''}" onclick="app.setAllTasksFilter('all')">All (${allPendingTasks.length})</button>
+                    <button class="alltasks-pill ${this.allTasksFilter === 'overdue' ? 'active' : ''}" onclick="app.setAllTasksFilter('overdue')">Overdue (${overdueTasks.length})</button>
+                    <button class="alltasks-pill ${this.allTasksFilter === 'today' ? 'active' : ''}" onclick="app.setAllTasksFilter('today')">Today (${todayTasks.length})</button>
+                    <button class="alltasks-pill ${this.allTasksFilter === 'upcoming' ? 'active' : ''}" onclick="app.setAllTasksFilter('upcoming')">Upcoming (${upcomingTasks.length})</button>
+                </div>
+
+                <div class="tl-timeline" style="padding: 10px 16px 80px 16px;">`;
+
+                let tasksToShow = [];
+                if (this.allTasksFilter === 'overdue') tasksToShow = overdueTasks;
+                else if (this.allTasksFilter === 'today') tasksToShow = todayTasks;
+                else if (this.allTasksFilter === 'upcoming') tasksToShow = upcomingTasks;
+                else tasksToShow = [...overdueTasks, ...todayTasks, ...upcomingTasks];
+
+                if (tasksToShow.length === 0) {
+                    html += `
+                    <div class="tl-empty" style="padding:60px 20px;">
+                        <i class="fas fa-circle-check" style="font-size:48px;color:var(--success);margin-bottom:12px;"></i>
+                        <div style="font-weight:700;font-size:16px;">No tasks found</div>
+                        <div style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">You're all caught up!</div>
+                    </div>`;
+                } else {
+                    // Group tasks by date
+                    const grouped = {};
+                    tasksToShow.forEach(task => {
+                        const dKey = task.date || 'No Date';
+                        if (!grouped[dKey]) grouped[dKey] = [];
+                        grouped[dKey].push(task);
+                    });
+
+                    Object.keys(grouped).forEach(dateStr => {
+                        const dateTasks = grouped[dateStr];
+                        let formattedDate = dateStr;
+                        if (dateStr !== 'No Date') {
+                            const dObj = new Date(dateStr + 'T00:00:00');
+                            formattedDate = dObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+                        }
+
+                        let dateLabel = formattedDate;
+                        let labelColor = 'var(--text-secondary)';
+                        if (dateStr < today) {
+                            dateLabel = `⚠️ ${formattedDate} (Overdue)`;
+                            labelColor = 'var(--danger)';
+                        } else if (dateStr === today) {
+                            dateLabel = `🌟 Today - ${formattedDate}`;
+                            labelColor = 'var(--success)';
+                        } else {
+                            dateLabel = `📅 ${formattedDate}`;
+                            labelColor = 'var(--info)';
+                        }
+
+                        html += `
+                        <div class="alltasks-group-header" style="color:${labelColor};">
+                            <span>${dateLabel}</span>
+                            <span>${dateTasks.length} task${dateTasks.length > 1 ? 's' : ''}</span>
+                        </div>`;
+
+                        dateTasks.forEach(task => {
+                            const category = this.db.getCategoryById(task.categoryId);
+                            const isDone = task.status === 'done';
+                            const isNotDoable = task.status === 'not-doable';
+                            const isHero = task.isHero;
+                            const isOverdue = task.date && task.date < today;
+
+                            let cardBg, cardTextColor, statusLabel, statusColor;
+                            if (isDone) {
+                                cardBg = '#b7f0b1'; cardTextColor = '#1a2e19';
+                                statusLabel = 'Completed'; statusColor = '#2d8a27';
+                            } else if (isNotDoable) {
+                                cardBg = '#f9a8d4'; cardTextColor = '#2d1a27';
+                                statusLabel = 'Rejected'; statusColor = '#be185d';
+                            } else if (isOverdue) {
+                                cardBg = 'rgba(248, 113, 113, 0.15)'; cardTextColor = '#f87171';
+                                statusLabel = '⚠️ Overdue'; statusColor = '#f87171';
+                            } else if (isHero) {
+                                cardBg = '#c4b5fd'; cardTextColor = '#1e1a3d';
+                                statusLabel = '⭐ Hero'; statusColor = '#5b21b6';
+                            } else {
+                                cardBg = 'var(--surface-elevated)'; cardTextColor = 'var(--text-primary)';
+                                statusLabel = 'Pending'; statusColor = 'var(--text-secondary)';
+                            }
+
+                            const timeFrom12 = task.timeFrom ? formatTime12Hour(task.timeFrom) : '';
+                            const timeTo12 = task.timeTo ? formatTime12Hour(task.timeTo) : '';
+                            const catName = category ? category.name : '';
+                            const catIcon = category ? (category.type === 'productive' ? 'fa-bolt' : category.type === 'non-productive' ? 'fa-times-circle' : 'fa-circle') : 'fa-list-check';
+
+                            html += `
+                            <div class="tl-row" style="margin-bottom:10px;">
+                                <div class="tl-time-col">
+                                    ${task.timeFrom ? `<span class="tl-time-from">${timeFrom12}</span>` : '<span class="tl-time-from" style="opacity:0.4;">--</span>'}
+                                    ${task.timeTo ? `<span class="tl-time-to">${timeTo12}</span>` : ''}
+                                </div>
+                                <div class="tl-connector">
+                                    <div class="tl-dot" style="background:${statusColor};"></div>
+                                    <div class="tl-line"></div>
+                                </div>
+                                <div class="tl-card" style="background:${cardBg};color:${cardTextColor};" id="card-${task.id}">
+                                    <div class="tl-card-header">
+                                        <span class="tl-status-badge" style="background:${statusColor}25;color:${statusColor};border:1px solid ${statusColor}50;">${statusLabel}</span>
+                                        <div style="display:flex;align-items:center;gap:6px;">
+                                            ${task.isRoutine ? `<span style="font-size:10px;opacity:0.6;"><i class="fas fa-repeat"></i></span>` : ''}
+                                        </div>
+                                    </div>
+                                    <div class="tl-card-body">
+                                        <div class="tl-icon" style="background:${cardTextColor}18;color:${cardTextColor};">
+                                            <i class="fas ${isDone ? 'fa-check' : isNotDoable ? 'fa-ban' : isHero ? 'fa-star' : catIcon}"></i>
+                                        </div>
+                                        <div class="tl-card-text">
+                                            <div class="tl-task-name ${isDone ? 'tl-task-done' : ''}">${task.name}</div>
+                                            <div class="tl-task-sub">${catName}${task.movedFrom ? ' · Moved' : ''}</div>
+                                        </div>
+                                        <button class="tl-menu-btn" style="color:${cardTextColor};opacity:0.6;" onclick="app.toggleTaskMenu('${task.id}','${cardBg}','${cardTextColor}')"><i class="fas fa-ellipsis-v"></i></button>
+                                    </div>
+                                    <div class="tl-action-menu" id="menu-${task.id}">
+                                        ${isDone ? `
+                                            <button class="tl-action-item" onclick="app.undoTask('${task.id}')"><i class="fas fa-undo"></i> Undo</button>
+                                        ` : `
+                                            <button class="tl-action-item tl-action-done" onclick="app.completeTask('${task.id}')"><i class="fas fa-check"></i> Mark Done</button>
+                                        `}
+                                        ${!task.isRoutine && !isDone ? `
+                                            <button class="tl-action-item" onclick="app.openEditModal('${task.id}')"><i class="fas fa-edit"></i> Edit</button>
+                                            <button class="tl-action-item" onclick="app.openRescheduleModal('${task.id}')"><i class="fas fa-calendar"></i> Reschedule</button>
+                                        ` : ''}
+                                        ${task.isRoutine && !isDone ? `
+                                            <button class="tl-action-item" onclick="app.openRescheduleModal('${task.id}')"><i class="fas fa-calendar"></i> Reschedule</button>
+                                        ` : ''}
+                                        <button class="tl-action-item tl-action-copy" onclick="app.copyTask('${task.id}')"><i class="fas fa-copy"></i> Copy</button>
+                                        ${!isDone ? `
+                                            <button class="tl-action-item tl-action-warn" onclick="app.markNotDoable('${task.id}')"><i class="fas fa-ban"></i> Not Doable</button>
+                                            <button class="tl-action-item tl-action-danger" onclick="app.deleteTask('${task.id}')"><i class="fas fa-trash"></i> Delete</button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                    });
+                }
+
+                html += `</div>`;
+                document.getElementById('view-alltasks').innerHTML = html;
+            }
+
+            setCalendarViewMode(mode) {
+                this.calendarMode = mode;
+                this.renderCalendar();
+            }
+
+            changeCalendarDay(offset) {
+                if (!this.calendarSelectedDate) this.calendarSelectedDate = getLocalDateStr();
+                const d = new Date(this.calendarSelectedDate + 'T00:00:00');
+                d.setDate(d.getDate() + offset);
+                this.calendarSelectedDate = getLocalDateStr(d);
+                this.renderCalendar();
+            }
+
+            setCalendarToday() {
+                this.calendarSelectedDate = getLocalDateStr();
+                this.renderCalendar();
+            }
+
+            handleCalendarSlotClick(e) {
+                const timelineEl = document.getElementById('cal-day-timeline');
+                if (!timelineEl) return;
+                const rect = timelineEl.getBoundingClientRect();
+                const clickY = e.clientY - rect.top;
+                if (clickY < 0) return;
+
+                // 60px per hour => 1px = 1 min
+                const totalMinutes = Math.floor(clickY);
+                const roundedMins = Math.floor(totalMinutes / 30) * 30; // round to 30 min block
+                const startMins = Math.max(0, Math.min(23 * 60 + 30, roundedMins));
+                const endMins = Math.min(24 * 60, startMins + 30);
+
+                const timeFrom = minutesToTime(startMins);
+                const timeTo = minutesToTime(endMins);
+
+                const targetDate = this.calendarSelectedDate || getLocalDateStr();
+                this.openAddTaskModal(targetDate, timeFrom, timeTo);
+            }
+
             renderCalendar() {
+                this.calendarMode = this.calendarMode || 'day';
+                this.calendarSelectedDate = this.calendarSelectedDate || getLocalDateStr();
+
+                if (this.calendarMode === 'month') {
+                    this.renderCalendarMonthView();
+                } else {
+                    this.renderCalendarDayView();
+                }
+            }
+
+            renderCalendarDayView() {
+                const selectedDate = this.calendarSelectedDate || getLocalDateStr();
+                const today = getLocalDateStr();
+                const now = new Date();
+                const currentMins = now.getHours() * 60 + now.getMinutes();
+
+                const selDateObj = new Date(selectedDate + 'T00:00:00');
+                const formattedDate = selDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+                const tasks = this.db.getTasks(selectedDate);
+                const targets = (this.db.data.targets || []).filter(t => t.deadline === selectedDate);
+
+                let html = `
+                <div class="cal-container">
+                    <div class="cal-top-bar">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2 style="font-size:1.15rem;margin:0;">Calendar</h2>
+                        </div>
+                        <div class="cal-view-segmented">
+                            <button class="cal-view-btn ${this.calendarMode === 'day' ? 'active' : ''}" onclick="app.setCalendarViewMode('day')">Day</button>
+                            <button class="cal-view-btn ${this.calendarMode === 'month' ? 'active' : ''}" onclick="app.setCalendarViewMode('month')">Month</button>
+                        </div>
+                    </div>
+
+                    <div class="cal-date-nav">
+                        <button class="calendar-nav-btn" onclick="app.changeCalendarDay(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <div style="text-align:center;">
+                            <div class="cal-date-title">${formattedDate}</div>
+                            ${selectedDate === today ? `<span style="font-size:11px;color:var(--accent-primary);font-weight:600;">Today</span>` : ''}
+                        </div>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <button class="btn-secondary" style="font-size:11px;padding:4px 10px;border-radius:12px;" onclick="app.setCalendarToday()">Today</button>
+                            <button class="calendar-nav-btn" onclick="app.changeCalendarDay(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>`;
+
+                if (targets.length > 0) {
+                    html += `<div style="background:var(--danger-bg);border-bottom:1px solid var(--border-subtle);padding:8px 16px;font-size:12px;color:var(--danger);font-weight:600;display:flex;gap:8px;align-items:center;">
+                        <i class="fas fa-bullseye"></i> <span>Target Due: ${targets.map(t => t.title).join(', ')}</span>
+                    </div>`;
+                }
+
+                html += `
+                <div class="cal-day-timeline-wrap" id="cal-timeline-wrap">
+                    <div class="cal-day-timeline" id="cal-day-timeline" onclick="app.handleCalendarSlotClick(event)">`;
+
+                for (let h = 0; h < 24; h++) {
+                    const topPx = h * 60;
+                    const time12 = formatTime12Hour(`${String(h).padStart(2, '0')}:00`);
+                    html += `
+                    <div class="cal-hour-row" style="top:${topPx}px;">
+                        <span class="cal-hour-label">${time12}</span>
+                    </div>`;
+                }
+
+                if (selectedDate === today) {
+                    const nowTop = (currentMins / 60) * 60;
+                    html += `<div class="cal-now-line" style="top:${nowTop}px;" title="Current Time"></div>`;
+                }
+
+                tasks.forEach(task => {
+                    if (!task.timeFrom) return;
+
+                    const startMins = timeToMinutes(task.timeFrom);
+                    let endMins = task.timeTo ? timeToMinutes(task.timeTo) : startMins + 30;
+                    if (endMins <= startMins) endMins = startMins + 30;
+                    const duration = endMins - startMins;
+
+                    const topPx = (startMins / 60) * 60;
+                    const heightPx = Math.max(34, (duration / 60) * 60);
+
+                    const category = this.db.getCategoryById(task.categoryId);
+                    const isDone = task.status === 'done';
+                    const isNotDoable = task.status === 'not-doable';
+
+                    let bg = 'rgba(139, 126, 248, 0.2)';
+                    let borderCol = 'var(--accent-primary)';
+                    let textCol = 'var(--text-primary)';
+
+                    if (isDone) {
+                        bg = 'rgba(74, 222, 128, 0.25)';
+                        borderCol = 'var(--success)';
+                        textCol = '#4ade80';
+                    } else if (isNotDoable) {
+                        bg = 'rgba(248, 113, 113, 0.2)';
+                        borderCol = 'var(--danger)';
+                        textCol = '#f87171';
+                    } else if (category) {
+                        if (category.type === 'productive') {
+                            bg = 'rgba(96, 165, 250, 0.25)';
+                            borderCol = 'var(--info)';
+                        } else if (category.type === 'non-productive') {
+                            bg = 'rgba(251, 191, 36, 0.25)';
+                            borderCol = 'var(--warning)';
+                        }
+                    }
+
+                    const timeStr = `${formatTime12Hour(task.timeFrom)} - ${formatTime12Hour(task.timeTo || task.timeFrom)}`;
+
+                    html += `
+                    <div class="cal-task-card" style="top:${topPx}px;height:${heightPx}px;background:${bg};border-left-color:${borderCol};color:${textCol};" onclick="event.stopPropagation(); app.openEditModal('${task.id}')">
+                        <div class="cal-task-name">${isDone ? '✓ ' : ''}${task.name}</div>
+                        <div class="cal-task-time">${timeStr}</div>
+                    </div>`;
+                });
+
+                html += `
+                    </div>
+                </div>
+                </div>`;
+
+                document.getElementById('view-calendar').innerHTML = html;
+
+                setTimeout(() => {
+                    const wrap = document.getElementById('cal-timeline-wrap');
+                    if (wrap) {
+                        const scrollMins = selectedDate === today ? Math.max(0, currentMins - 60) : 7 * 60;
+                        wrap.scrollTop = (scrollMins / 60) * 60;
+                    }
+                }, 50);
+            }
+
+            renderCalendarMonthView() {
                 if (!this.calendarDate) this.calendarDate = new Date();
                 const year = this.calendarDate.getFullYear();
                 const month = this.calendarDate.getMonth();
@@ -7686,10 +8397,14 @@
 
                 let html = `
                     <div class="calendar-container">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 0 15px; margin-top: 20px;">
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <button class="menu-btn" onclick="app.toggleSidebar()" style="margin: 0;"><i class="fas fa-bars"></i></button>
-                                <h2 style="margin: 0;">Calendar</h2>
+                        <div class="cal-top-bar" style="margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                                <h2 style="font-size:1.15rem; margin: 0;">Calendar</h2>
+                            </div>
+                            <div class="cal-view-segmented">
+                                <button class="cal-view-btn ${this.calendarMode === 'day' ? 'active' : ''}" onclick="app.setCalendarViewMode('day')">Day</button>
+                                <button class="cal-view-btn ${this.calendarMode === 'month' ? 'active' : ''}" onclick="app.setCalendarViewMode('month')">Month</button>
                             </div>
                         </div>
                         <div class="period-selector" style="margin: 0 15px 15px 15px;">
@@ -8293,28 +9008,33 @@
             }
 
 
-            openAddTaskModal() {
+            openAddTaskModal(defaultDate, defaultFrom, defaultTo) {
                 // If parking-promote is pending, cancel it (user opened add-task manually)
                 this.promotingParkedTaskId = null;
                 const modal = document.getElementById('modal-add-task');
-                const catSelect = document.getElementById('inp-task-category');
                 if (window.categoryAutocomplete) window.categoryAutocomplete.setCategory('inp-task-category', '');
                 if (window.targetAutocomplete) window.targetAutocomplete.setTarget('inp-task-target', '');
 
-                document.getElementById('inp-task-date').value = this.selectedDate;
+                const targetDate = defaultDate || this.selectedDate;
+                document.getElementById('inp-task-date').value = targetDate;
                 document.getElementById('inp-task-name').value = '';
 
-                // Auto-populate current time rounded to nearest 30 min
-                const _now = new Date();
-                const _totalMins = _now.getHours() * 60 + _now.getMinutes();
-                const _roundedFrom = Math.floor(_totalMins / 30) * 30;
-                const _roundedTo = _roundedFrom + 30;
-                setTimeInputValue('inp-task-time-from', minutesToTime(_roundedFrom >= 24 * 60 ? 0 : _roundedFrom));
-                setTimeInputValue('inp-task-time-to', minutesToTime(_roundedTo >= 24 * 60 ? 0 : _roundedTo));
+                if (defaultFrom) {
+                    setTimeInputValue('inp-task-time-from', defaultFrom);
+                    setTimeInputValue('inp-task-time-to', defaultTo || defaultFrom);
+                } else {
+                    // Auto-populate current time rounded to nearest 30 min
+                    const _now = new Date();
+                    const _totalMins = _now.getHours() * 60 + _now.getMinutes();
+                    const _roundedFrom = Math.floor(_totalMins / 30) * 30;
+                    const _roundedTo = _roundedFrom + 30;
+                    setTimeInputValue('inp-task-time-from', minutesToTime(_roundedFrom >= 24 * 60 ? 0 : _roundedFrom));
+                    setTimeInputValue('inp-task-time-to', minutesToTime(_roundedTo >= 24 * 60 ? 0 : _roundedTo));
+                }
 
                 setTimeInputValue('inp-routine-time-from', '');
                 setTimeInputValue('inp-routine-time-to', '');
-                document.getElementById('inp-routine-start-date').value = this.selectedDate;
+                document.getElementById('inp-routine-start-date').value = targetDate;
                 document.getElementById('inp-routine-end-date').value = '';
                 document.getElementById('inp-task-hero').checked = false;
 
@@ -8461,6 +9181,35 @@
                 document.getElementById('inp-cat-name').value = '';
                 this.closeModals();
                 this.render();
+            }
+
+            deleteCategory(id) {
+                if (confirm('Delete this category? Associated tasks will remain but lose their category tag.')) {
+                    this.db.deleteCategory(id);
+                    this.render();
+                }
+            }
+
+            exportDataJSON() {
+                const jsonStr = JSON.stringify(this.db.data, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `manage-well-backup-${getLocalDateStr()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            resetAppCache() {
+                if (confirm('Clear app cache and reload? Your cloud & local data will remain safe.')) {
+                    if ('caches' in window) {
+                        caches.keys().then(names => {
+                            names.forEach(name => caches.delete(name));
+                        });
+                    }
+                    window.location.reload(true);
+                }
             }
 
             // Pomodoro Timer Methods
