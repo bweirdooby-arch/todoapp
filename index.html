@@ -1539,6 +1539,88 @@
             color: var(--primary-color);
         }
 
+        .routine-month-days {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 6px;
+            background: var(--surface-elevated, rgba(0, 0, 0, 0.02));
+            border-radius: var(--radius-md, 8px);
+            border: 1px solid var(--border-subtle, #e5e7eb);
+        }
+
+        .month-day-chip {
+            min-width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            background: var(--surface-variant);
+            border: 1px solid var(--border-medium);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+
+        .month-day-chip.selected {
+            background: rgba(129, 140, 248, 0.25);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .quick-duration-wrapper {
+            margin-top: 4px;
+            margin-bottom: 10px;
+        }
+
+        .quick-duration-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .duration-boxes-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .duration-box {
+            flex: 0 0 auto;
+            padding: 6px 12px;
+            background: var(--surface-variant);
+            border: 1px solid var(--border-medium);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            user-select: none;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .duration-box:hover {
+            border-color: var(--primary-color);
+        }
+
+        .duration-box.active {
+            background: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+        }
+
         .manual-fill-btn {
             background: var(--primary-color);
             color: white;
@@ -3808,6 +3890,7 @@
                 </div>
                 <div class="form-group">
                     <label>Time Block</label>
+                    <div id="adhoc-duration-boxes" class="quick-duration-wrapper"></div>
                     <div class="time-row">
                         <div style="flex: 1; padding-right: 5px;">
                             <label class="text-xs text-secondary">From</label>
@@ -3835,7 +3918,8 @@
                     <select id="inp-routine-freq">
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
-                        <option value="custom">Custom Days</option>
+                        <option value="custom">Custom Days (Weekly)</option>
+                        <option value="monthly">Custom Date of Month (Monthly)</option>
                     </select>
                 </div>
                 <div class="form-group" id="custom-days-group" style="display:none;">
@@ -3850,6 +3934,10 @@
                         <div class="day-chip" data-day="6">Sat</div>
                     </div>
                 </div>
+                <div class="form-group" id="custom-month-group" style="display:none;">
+                    <label>Select Date(s) of Month</label>
+                    <div class="routine-month-days" id="inp-routine-month-days"></div>
+                </div>
                 <div class="form-group" style="display: flex; gap: 10px;">
                     <div style="flex: 1;">
                         <label>Start Date</label>
@@ -3862,6 +3950,7 @@
                 </div>
                 <div class="form-group">
                     <label>Routine Time</label>
+                    <div id="routine-duration-boxes" class="quick-duration-wrapper"></div>
                     <div class="time-row">
                         <div style="flex: 1; padding-right: 5px;">
                             <label class="text-xs text-secondary">From</label>
@@ -3955,6 +4044,7 @@
 
             <div class="form-group">
                 <label>Time Block</label>
+                <div id="reschedule-duration-boxes" class="quick-duration-wrapper"></div>
                 <div class="time-row">
                     <div style="flex: 1; padding-right: 5px;">
                         <label class="text-xs text-secondary">From</label>
@@ -4004,6 +4094,7 @@
 
             <div class="form-group">
                 <label>Time Block</label>
+                <div id="fill-time-duration-boxes" class="quick-duration-wrapper"></div>
                 <div class="time-row">
                     <div style="flex: 1; padding-right: 5px;">
                         <label class="text-xs text-secondary">From</label>
@@ -4104,6 +4195,7 @@
 
             <div class="form-group">
                 <label>Time Block</label>
+                <div id="edit-routine-duration-boxes" class="quick-duration-wrapper"></div>
                 <div class="time-row">
                     <div style="flex: 1; padding-right: 5px;">
                         <label class="text-xs text-secondary">From</label>
@@ -4155,6 +4247,7 @@
 
             <div class="form-group">
                 <label>Time Block</label>
+                <div id="manual-duration-boxes" class="quick-duration-wrapper"></div>
                 <div class="time-row">
                     <div style="flex: 1; padding-right: 5px;">
                         <label class="text-xs text-secondary">From</label>
@@ -4565,6 +4658,80 @@
             return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
         }
 
+        function setupQuickDurationBoxes(containerId, fromBaseId, toBaseId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const durations = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8];
+
+            let html = `<div class="quick-duration-label">Quick Duration</div>`;
+            html += `<div class="duration-boxes-container">`;
+            durations.forEach(dur => {
+                html += `<div class="duration-box" data-dur="${dur}">${dur}h</div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+
+            const boxEls = container.querySelectorAll('.duration-box');
+
+            const updateActiveBox = () => {
+                const fromTime = getTimeInputValue(fromBaseId);
+                const toTime = getTimeInputValue(toBaseId);
+                if (!fromTime || !toTime) {
+                    boxEls.forEach(b => b.classList.remove('active'));
+                    return;
+                }
+                let fromMins = timeToMinutes(fromTime);
+                let toMins = timeToMinutes(toTime);
+                if (toMins <= fromMins && toMins !== 0) toMins += 1440;
+                const diffHours = (toMins - fromMins) / 60;
+
+                boxEls.forEach(b => {
+                    const dur = parseFloat(b.dataset.dur);
+                    if (Math.abs(dur - diffHours) < 0.01) {
+                        b.classList.add('active');
+                    } else {
+                        b.classList.remove('active');
+                    }
+                });
+            };
+
+            boxEls.forEach(box => {
+                box.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const dur = parseFloat(box.dataset.dur);
+                    let fromTime = getTimeInputValue(fromBaseId);
+                    if (!fromTime) {
+                        const now = new Date();
+                        const totalMins = now.getHours() * 60 + now.getMinutes();
+                        const roundedFrom = Math.floor(totalMins / 30) * 30;
+                        fromTime = minutesToTime(roundedFrom >= 24 * 60 ? 0 : roundedFrom);
+                        setTimeInputValue(fromBaseId, fromTime);
+                    }
+                    const fromMins = timeToMinutes(fromTime);
+                    let newToMins = fromMins + Math.round(dur * 60);
+                    if (newToMins >= 24 * 60) {
+                        newToMins = newToMins % (24 * 60);
+                    }
+                    const newToTime = minutesToTime(newToMins);
+                    setTimeInputValue(toBaseId, newToTime);
+
+                    updateActiveBox();
+                });
+            });
+
+            ['h', 'm', 'p'].forEach(part => {
+                const fEl = document.getElementById(`${fromBaseId}-${part}`);
+                const tEl = document.getElementById(`${toBaseId}-${part}`);
+                if (fEl) fEl.addEventListener('change', () => setTimeout(updateActiveBox, 10));
+                if (tEl) tEl.addEventListener('change', updateActiveBox);
+            });
+
+            updateActiveBox();
+            return updateActiveBox;
+        }
+
         // Returns local date as YYYY-MM-DD (avoids UTC offset shifting the date in UTC+ timezones)
         function getLocalDateStr(dateObj) {
             const d = dateObj || new Date();
@@ -4870,6 +5037,23 @@
                         if (routine.freq === 'custom' && routine.days) {
                             return routine.days.includes(dayOfWeek);
                         }
+                        if (routine.freq === 'monthly') {
+                            const dom = dateObj.getDate();
+                            const lastDOM = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
+                            if (routine.monthDays && routine.monthDays.length > 0) {
+                                if (routine.monthDays.includes(dom)) return true;
+                                const maxDay = Math.max(...routine.monthDays);
+                                if (dom === lastDOM && maxDay > lastDOM && !routine.monthDays.includes(dom)) return true;
+                                return false;
+                            } else if (routine.monthDay) {
+                                return dom === routine.monthDay || (dom === lastDOM && routine.monthDay > lastDOM);
+                            } else if (routine.startDate) {
+                                const startDOM = new Date(routine.startDate + 'T00:00:00').getDate();
+                                return dom === startDOM || (dom === lastDOM && startDOM > lastDOM);
+                            } else {
+                                return dom === 1;
+                            }
+                        }
                         return false;
                     })
                     .map(routine => ({
@@ -5165,6 +5349,20 @@
                         if (routine.freq === 'daily') shouldAppear = true;
                         else if (routine.freq === 'weekly' && dayOfWeek === 1) shouldAppear = true;
                         else if (routine.freq === 'custom' && routine.days?.includes(dayOfWeek)) shouldAppear = true;
+                        else if (routine.freq === 'monthly') {
+                            const dom = currentDate.getDate();
+                            const lastDOM = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+                            if (routine.monthDays && routine.monthDays.length > 0) {
+                                shouldAppear = routine.monthDays.includes(dom) || (dom === lastDOM && Math.max(...routine.monthDays) > lastDOM);
+                            } else if (routine.monthDay) {
+                                shouldAppear = dom === routine.monthDay || (dom === lastDOM && routine.monthDay > lastDOM);
+                            } else if (routine.startDate) {
+                                const startDOM = new Date(routine.startDate + 'T00:00:00').getDate();
+                                shouldAppear = dom === startDOM || (dom === lastDOM && startDOM > lastDOM);
+                            } else {
+                                shouldAppear = dom === 1;
+                            }
+                        }
 
                         if (shouldAppear) {
                             assignedDays++;
@@ -5260,6 +5458,7 @@
                 this.editingTaskId = null;
                 this.addingTaskType = 'adhoc';
                 this.selectedRoutineDays = [];
+                this.selectedRoutineMonthDays = [];
                 this.selectedHabitDays = [];
                 this.promotingParkedTaskId = null;
                 this.deletingHabitId = null;
@@ -5303,6 +5502,14 @@
                 populateSplitTimeSelects('manual-time-to');
                 populateSplitTimeSelects('edit-routine-time-from');
                 populateSplitTimeSelects('edit-routine-time-to');
+
+                // Quick duration hour boxes
+                setupQuickDurationBoxes('adhoc-duration-boxes', 'inp-task-time-from', 'inp-task-time-to');
+                setupQuickDurationBoxes('routine-duration-boxes', 'inp-routine-time-from', 'inp-routine-time-to');
+                setupQuickDurationBoxes('reschedule-duration-boxes', 'reschedule-time-from', 'reschedule-time-to');
+                setupQuickDurationBoxes('fill-time-duration-boxes', 'fill-time-from', 'fill-time-to');
+                setupQuickDurationBoxes('manual-duration-boxes', 'manual-time-from', 'manual-time-to');
+                setupQuickDurationBoxes('edit-routine-duration-boxes', 'edit-routine-time-from', 'edit-routine-time-to');
             }
 
             toggleSidebar() {
@@ -5367,14 +5574,45 @@
                 });
 
                 const freqSelect = document.getElementById('inp-routine-freq');
-                freqSelect.addEventListener('change', (e) => {
-                    const customDaysGroup = document.getElementById('custom-days-group');
-                    if (e.target.value === 'custom') {
-                        customDaysGroup.style.display = 'block';
-                    } else {
-                        customDaysGroup.style.display = 'none';
+                if (freqSelect) {
+                    freqSelect.addEventListener('change', (e) => {
+                        const customDaysGroup = document.getElementById('custom-days-group');
+                        const customMonthGroup = document.getElementById('custom-month-group');
+                        if (e.target.value === 'custom') {
+                            if (customDaysGroup) customDaysGroup.style.display = 'block';
+                            if (customMonthGroup) customMonthGroup.style.display = 'none';
+                        } else if (e.target.value === 'monthly') {
+                            if (customDaysGroup) customDaysGroup.style.display = 'none';
+                            if (customMonthGroup) customMonthGroup.style.display = 'block';
+                        } else {
+                            if (customDaysGroup) customDaysGroup.style.display = 'none';
+                            if (customMonthGroup) customMonthGroup.style.display = 'none';
+                        }
+                    });
+                }
+
+                const monthDaysContainer = document.getElementById('inp-routine-month-days');
+                if (monthDaysContainer) {
+                    let html = '';
+                    for (let d = 1; d <= 31; d++) {
+                        html += `<div class="month-day-chip" data-day="${d}">${d}</div>`;
                     }
-                });
+                    monthDaysContainer.innerHTML = html;
+
+                    monthDaysContainer.querySelectorAll('.month-day-chip').forEach(chip => {
+                        chip.addEventListener('click', () => {
+                            chip.classList.toggle('selected');
+                            const day = parseInt(chip.dataset.day);
+                            if (chip.classList.contains('selected')) {
+                                if (!this.selectedRoutineMonthDays.includes(day)) {
+                                    this.selectedRoutineMonthDays.push(day);
+                                }
+                            } else {
+                                this.selectedRoutineMonthDays = this.selectedRoutineMonthDays.filter(d => d !== day);
+                            }
+                        });
+                    });
+                }
 
                 document.querySelectorAll('.day-chip:not(.hday-chip)').forEach(chip => {
                     chip.addEventListener('click', () => {
@@ -7630,7 +7868,7 @@
                         </div>
                         <div class="settings-list" style="padding: 0; margin-bottom: 24px;">
                             ${routines.map(r => {
-                                const freqText = r.freq === 'daily' ? 'Daily' : r.freq === 'weekly' ? 'Weekly' : 'Custom Days';
+                                const freqText = r.freq === 'daily' ? 'Daily' : r.freq === 'weekly' ? 'Weekly' : r.freq === 'monthly' ? ('Monthly' + (r.monthDays && r.monthDays.length ? ' (Day ' + r.monthDays.join(', ') + ')' : '')) : 'Custom Days';
                                 const timeText = r.timeFrom ? `${formatTime12Hour(r.timeFrom)} - ${formatTime12Hour(r.timeTo)}` : 'No time set';
                                 const category = this.db.getCategoryById(r.categoryId);
                                 const categoryName = category ? category.name : 'Uncategorized';
@@ -9039,7 +9277,15 @@
                 document.getElementById('inp-task-hero').checked = false;
 
                 this.selectedRoutineDays = [];
+                this.selectedRoutineMonthDays = [];
                 document.querySelectorAll('.day-chip').forEach(chip => chip.classList.remove('selected'));
+                document.querySelectorAll('.month-day-chip').forEach(chip => chip.classList.remove('selected'));
+                const freqSelect = document.getElementById('inp-routine-freq');
+                if (freqSelect) freqSelect.value = 'daily';
+                const customDaysGroup = document.getElementById('custom-days-group');
+                const customMonthGroup = document.getElementById('custom-month-group');
+                if (customDaysGroup) customDaysGroup.style.display = 'none';
+                if (customMonthGroup) customMonthGroup.style.display = 'none';
 
                 modal.classList.add('open');
             }
@@ -9159,6 +9405,13 @@
                             return;
                         }
                         routineData.days = this.selectedRoutineDays;
+                    } else if (freq === 'monthly') {
+                        if (this.selectedRoutineMonthDays && this.selectedRoutineMonthDays.length > 0) {
+                            routineData.monthDays = [...this.selectedRoutineMonthDays].sort((a, b) => a - b);
+                        } else {
+                            const startDOM = new Date((startDate || this.selectedDate) + 'T00:00:00').getDate();
+                            routineData.monthDays = [startDOM];
+                        }
                     }
 
                     this.db.addRoutine(routineData);
