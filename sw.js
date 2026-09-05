@@ -1,6 +1,6 @@
 const CACHE_NAME = 'productivity-planner-v7';
 const urlsToCache = [
-  '/',
+  './',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
@@ -41,8 +41,8 @@ self.addEventListener('message', (event) => {
     event.waitUntil(
       self.registration.showNotification('🌙 Manage Well — Evening Review', {
         body: bodyLines.join('\n'),
-        icon: '/icon-192.png',
-        badge: '/icon-192.png',
+        icon: './img.png',
+        badge: './img.png',
         tag: 'daily-planning-11pm',
         renotify: false,
         requireInteraction: true,
@@ -65,7 +65,7 @@ self.addEventListener('notificationclick', (event) => {
       for (const client of windowClients) {
         if ('focus' in client) return client.focus();
       }
-      if (clients.openWindow) return clients.openWindow('/');
+      if (clients.openWindow) return clients.openWindow('./');
     })
   );
 });
