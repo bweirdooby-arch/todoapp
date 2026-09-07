@@ -14,7 +14,7 @@
     <link rel="manifest" href="manifest.json">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -106,6 +106,130 @@
             /* Layout */
             --nav-height: 72px;
             --max-width: 1200px;
+        }
+
+        /* ===== KAWAII THEME OVERRIDES ===== */
+        html[data-theme="kawaii"] {
+            --bg-primary: #f9f6f0;
+            --bg-secondary: #fffcf7;
+            --surface: #fffdf9;
+            --surface-elevated: #f3eee6;
+            --surface-hover: #e8e1d5;
+
+            /* Text Colors */
+            --text-primary: #2c2825;
+            --text-secondary: #6b635b;
+            --text-tertiary: #a0978d;
+            --text-inverse: #ffffff;
+
+            /* Accents */
+            --accent-primary: #8abfb0;
+            --accent-secondary: #e6a59e;
+            --accent-gradient: linear-gradient(135deg, #8abfb0 0%, #76ad9e 100%);
+            --primary-color: #8abfb0;
+
+            /* Soft Pastel Card Colors matching design reference */
+            --card-pink-bg: #f7d5d2;
+            --card-pink-text: #632a26;
+            --card-blue-bg: #d2dbf7;
+            --card-blue-text: #243363;
+            --card-green-bg: #c2e8db;
+            --card-green-text: #194a3a;
+            --card-amber-bg: #fce9c5;
+            --card-amber-text: #594116;
+            --card-purple-bg: #e5d4f7;
+            --card-purple-text: #482269;
+            --card-cyan-bg: #d2f2f7;
+            --card-cyan-text: #1b535c;
+
+            /* Semantic */
+            --success: #36856c;
+            --success-bg: #c2e8db;
+            --danger: #c95147;
+            --danger-bg: #f7d5d2;
+            --warning: #c27d2c;
+            --warning-bg: #fce9c5;
+            --info: #3b5aa6;
+            --info-bg: #d2dbf7;
+
+            /* Borders & Dividers */
+            --border-subtle: #e6ded4;
+            --border-medium: #363331;
+            --divider: #e6ded4;
+
+            /* Radius */
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+        }
+
+        html[data-theme="kawaii"] body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        html[data-theme="kawaii"] h1,
+        html[data-theme="kawaii"] h2,
+        html[data-theme="kawaii"] h3,
+        html[data-theme="kawaii"] .header-title-row h2,
+        html[data-theme="kawaii"] .tl-month-title,
+        html[data-theme="kawaii"] .dashboard-header h2,
+        html[data-theme="kawaii"] .sidebar-header h2 {
+            font-family: var(--font-heading) !important;
+            letter-spacing: -0.01em;
+            color: #2c2825;
+        }
+
+        html[data-theme="kawaii"] .parking-card,
+        html[data-theme="kawaii"] .task-card,
+        html[data-theme="kawaii"] .habit-card,
+        html[data-theme="kawaii"] .setting-item,
+        html[data-theme="kawaii"] .modal-content,
+        html[data-theme="kawaii"] .dashboard-card {
+            border: 1.5px solid var(--border-medium) !important;
+            border-radius: var(--radius-lg) !important;
+            box-shadow: 2px 3px 0px rgba(45, 43, 42, 0.08) !important;
+        }
+
+        html[data-theme="kawaii"] .btn-primary {
+            background: var(--accent-primary) !important;
+            color: #2c2825 !important;
+            font-weight: 600 !important;
+            border: 1.5px solid var(--border-medium) !important;
+            border-radius: var(--radius-full) !important;
+            box-shadow: 1px 2px 0px rgba(45, 43, 42, 0.1) !important;
+        }
+
+        html[data-theme="kawaii"] .btn-secondary,
+        html[data-theme="kawaii"] .task-btn,
+        html[data-theme="kawaii"] .tl-date-chip,
+        html[data-theme="kawaii"] .day-chip,
+        html[data-theme="kawaii"] .month-day-chip {
+            border: 1.5px solid var(--border-medium) !important;
+            border-radius: var(--radius-full) !important;
+        }
+
+        html[data-theme="kawaii"] .tl-date-chip.active,
+        html[data-theme="kawaii"] .day-chip.selected,
+        html[data-theme="kawaii"] .month-day-chip.selected {
+            background: var(--accent-primary) !important;
+            color: #2c2825 !important;
+        }
+
+        html[data-theme="kawaii"] .sidebar {
+            background: #fffcf7 !important;
+            border-right: 1.5px solid var(--border-medium) !important;
+        }
+
+        html[data-theme="kawaii"] .bottom-nav {
+            background: #fffcf7 !important;
+            border-top: 1.5px solid var(--border-medium) !important;
         }
 
         * {
@@ -285,16 +409,16 @@
 
         .views-slider {
             display: flex;
-            width: 1200%;
-            /* 12 tabs */
+            width: 1300%;
+            /* 13 tabs */
             height: 100%;
             transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1);
             will-change: transform;
         }
 
         .view-slide {
-            width: 8.333333%;
-            /* 1/12 of slider width = 100vw */
+            width: 7.692307%;
+            /* 1/13 of slider width = 100vw */
             flex-shrink: 0;
             height: 100vh;
             overflow-y: auto;
@@ -3743,6 +3867,10 @@
                 <i class="fas fa-note-sticky"></i>
                 <span>Notes & Ideas</span>
             </div>
+            <div class="sidebar-item" onclick="app.toggleTheme()">
+                <i class="fas fa-palette"></i>
+                <span>Theme: <b style="margin-left:4px;text-transform:capitalize;" id="sidebar-theme-label">Default</b></span>
+            </div>
             <div class="sidebar-item" onclick="app.switchViewFromSidebar('manage')">
                 <i class="fas fa-cog"></i>
                 <span>Settings & Workspace</span>
@@ -5592,17 +5720,8 @@
                 this.deletingHabitId = null;
                 this.TAB_ORDER = ['home', 'todo', 'alltasks', 'timesheet', 'habits', 'calendar', 'parking', 'manage', 'account', 'targets', 'analytics', 'pomodoro', 'notes'];
                 this.collapsedGroups = {}; // track which task groups are collapsed
-
-                this.render();
-
-
-                // Keyboard undo shortcut
-                document.addEventListener('keydown', (e) => {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'z' && this.currentView === 'timesheet') {
-                        e.preventDefault();
-                        this.undoTimesheet();
-                    }
-                });
+                this.currentTheme = localStorage.getItem('app_theme') || 'default';
+                this.applyTheme(this.currentTheme);
 
                 this.db.moveUncompletedTasks();
                 this.initEventListeners();
@@ -5615,6 +5734,28 @@
                         this.renderAllTasks();
                     }
                 }, 60000); // Update every 60 seconds
+            }
+
+            setTheme(themeName) {
+                this.currentTheme = themeName;
+                localStorage.setItem('app_theme', themeName);
+                this.applyTheme(themeName);
+                this.render();
+            }
+
+            toggleTheme() {
+                const nextTheme = this.currentTheme === 'kawaii' ? 'default' : 'kawaii';
+                this.setTheme(nextTheme);
+            }
+
+            applyTheme(themeName) {
+                if (themeName === 'kawaii') {
+                    document.documentElement.setAttribute('data-theme', 'kawaii');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+                const label = document.getElementById('sidebar-theme-label');
+                if (label) label.textContent = themeName === 'kawaii' ? 'Kawaii 🌸' : 'Default ☀️';
             }
 
             populateAllTimeSelects() {
@@ -5901,7 +6042,8 @@
                 const idx = this.TAB_ORDER.indexOf(this.currentView);
                 const slider = document.getElementById('views-slider');
                 if (slider) {
-                    slider.style.transform = `translate3d(-${idx * (100 / 12)}%, 0, 0)`;
+                    const tabCount = this.TAB_ORDER ? this.TAB_ORDER.length : 13;
+                    slider.style.transform = `translate3d(-${idx * (100 / tabCount)}%, 0, 0)`;
                 }
 
                 // Update nav indicator for bottom nav tabs (first 6 tabs)
@@ -8240,6 +8382,30 @@
                     </div>
 
                     <div style="padding: 0 var(--spacing-lg) 80px;">
+                        <!-- Theme & Appearance Section -->
+                        <div style="margin-bottom: 24px; margin-top: 10px;">
+                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;">🎨 App Theme & Appearance</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+                                <!-- Default Modern Light Card -->
+                                <div onclick="app.setTheme('default')" style="background: ${this.currentTheme === 'default' ? 'var(--surface-elevated)' : 'var(--surface)'}; border: 2px solid ${this.currentTheme === 'default' ? 'var(--accent-primary)' : 'var(--border-subtle)'}; border-radius: var(--radius-lg); padding: 16px; cursor: pointer; transition: all 0.2s ease;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <b style="font-size: 15px; color: var(--text-primary);">☀️ Modern Light</b>
+                                        ${this.currentTheme === 'default' ? '<span style="font-size: 11px; font-weight: 700; background: var(--accent-primary); color: white; padding: 2px 8px; border-radius: 10px;">Active</span>' : ''}
+                                    </div>
+                                    <p class="text-xs text-secondary" style="margin: 0; line-height: 1.4;">Clean, modern tech-inspired interface with crisp indigo highlights.</p>
+                                </div>
+
+                                <!-- Kawaii Theme Card -->
+                                <div onclick="app.setTheme('kawaii')" style="background: ${this.currentTheme === 'kawaii' ? '#f3eee6' : '#fffdf9'}; border: 2px solid ${this.currentTheme === 'kawaii' ? '#8abfb0' : '#e6ded4'}; border-radius: var(--radius-lg); padding: 16px; cursor: pointer; transition: all 0.2s ease;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <b style="font-size: 15px; font-family: 'Playfair Display', Georgia, serif; color: #2c2825;">🌸 Kawaii Aesthetic</b>
+                                        ${this.currentTheme === 'kawaii' ? '<span style="font-size: 11px; font-weight: 700; background: #8abfb0; color: #2c2825; padding: 2px 8px; border-radius: 10px;">Active</span>' : ''}
+                                    </div>
+                                    <p class="text-xs text-secondary" style="margin: 0; line-height: 1.4; color: #6b635b;">Cozy warm cream background, elegant serif headers, soft pastels & rounded pill controls.</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Routines Section -->
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; margin-top: 10px;">
                             <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary);">🔄 My Routines (${routines.length})</h3>
