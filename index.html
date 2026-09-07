@@ -3739,6 +3739,10 @@
                 <i class="fas fa-parking"></i>
                 <span>Parking Lot</span>
             </div>
+            <div class="sidebar-item" onclick="app.switchViewFromSidebar('notes')">
+                <i class="fas fa-note-sticky"></i>
+                <span>Notes & Ideas</span>
+            </div>
             <div class="sidebar-item" onclick="app.switchViewFromSidebar('manage')">
                 <i class="fas fa-cog"></i>
                 <span>Settings & Workspace</span>
@@ -3764,6 +3768,7 @@
             <div class="view-slide" id="view-targets"></div>
             <div class="view-slide" id="view-analytics"></div>
             <div class="view-slide" id="view-pomodoro"></div>
+            <div class="view-slide" id="view-notes"></div>
         </div>
     </div>
 
@@ -3917,7 +3922,6 @@
                     <label>Frequency</label>
                     <select id="inp-routine-freq">
                         <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
                         <option value="custom">Custom Days (Weekly)</option>
                         <option value="monthly">Custom Date of Month (Monthly)</option>
                     </select>
@@ -4322,6 +4326,92 @@
                 </div>
             </div>
             <button class="btn-primary" onclick="app.saveParkedTask()">Park It 🅿️ </button>
+        </div>
+    </div>
+
+    <!-- Edit Parked Task Modal -->
+    <div id="modal-edit-parked" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✏️ Edit Parked Task</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="hidden" id="edit-park-id">
+            <div class="form-group">
+                <label>Task Name</label>
+                <input type="text" id="edit-park-name" placeholder="What needs to be done?">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="edit-park-desc" rows="3" placeholder="Details, context, why it's parked..."
+                    style="width:100%;padding:12px;background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);font-family:inherit;font-size:14px;resize:vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <div class="autocomplete-wrap" id="edit-park-category-wrap">
+                    <input type="text" id="edit-park-category-search" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="edit-park-category">
+                    <div class="autocomplete-dropdown" id="edit-park-category-dropdown" style="display:none;"></div>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Estimated Time</label>
+                    <select id="edit-park-est-time">
+                        <option value="0.5">30 min</option>
+                        <option value="1">1 hour</option>
+                        <option value="1.5">1.5 hours</option>
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4">4 hours</option>
+                        <option value="6">6 hours</option>
+                        <option value="8">8 hours</option>
+                        <option value="16">2 days</option>
+                        <option value="40">1 week</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Tentative Deadline</label>
+                    <input type="date" id="edit-park-deadline">
+                </div>
+            </div>
+            <button class="btn-primary" onclick="app.saveEditParkedTask()">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Edit Note Modal -->
+    <div id="modal-edit-note" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 Edit Note</h3>
+                <button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button>
+            </div>
+            <input type="hidden" id="edit-note-id">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="edit-note-title" placeholder="Note title...">
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea id="edit-note-content" rows="5" placeholder="Write your thoughts..."
+                    style="width:100%;padding:12px;background:var(--surface-elevated);border:1px solid var(--border-medium);border-radius:var(--radius-md);color:var(--text-primary);font-family:inherit;font-size:14px;resize:vertical;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Note Color</label>
+                <div style="display:flex;gap:10px;margin-top:6px;" id="edit-note-color-options">
+                    <div class="note-color-chip selected" data-color="amber" style="background:#fef3c7;border:2px solid #f59e0b;width:32px;height:32px;border-radius:50%;cursor:pointer;"></div>
+                    <div class="note-color-chip" data-color="blue" style="background:#dbeafe;border:2px solid #3b82f6;width:32px;height:32px;border-radius:50%;cursor:pointer;"></div>
+                    <div class="note-color-chip" data-color="green" style="background:#dcfce7;border:2px solid #22c55e;width:32px;height:32px;border-radius:50%;cursor:pointer;"></div>
+                    <div class="note-color-chip" data-color="pink" style="background:#ffe4e6;border:2px solid #f43f5e;width:32px;height:32px;border-radius:50%;cursor:pointer;"></div>
+                    <div class="note-color-chip" data-color="purple" style="background:#f3e8ff;border:2px solid #a855f7;width:32px;height:32px;border-radius:50%;cursor:pointer;"></div>
+                    <div class="note-color-chip" data-color="default" style="background:var(--surface-elevated);border:2px solid var(--border-medium);width:32px;height:32px;border-radius:50%;cursor:pointer;"></div>
+                </div>
+            </div>
+            <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" id="edit-note-pinned" style="width:18px;height:18px;cursor:pointer;">
+                <label for="edit-note-pinned" style="cursor:pointer;margin:0;">Pin note to top 📌</label>
+            </div>
+            <button class="btn-primary" onclick="app.saveEditNote()">Save Note</button>
         </div>
     </div>
 
@@ -4757,6 +4847,7 @@
                 if (stored) {
                     let parsedData = JSON.parse(stored);
                     if (!parsedData.targets) parsedData.targets = [];
+                    if (!parsedData.notes) parsedData.notes = [];
                     return parsedData;
                 }
                 return {
@@ -4773,7 +4864,8 @@
                     parkedTasks: [],
                     habits: [],
                     habitLogs: {},
-                    targets: []
+                    targets: [],
+                    notes: []
                 };
             }
 
@@ -5033,7 +5125,10 @@
                         if (routine.exceptions && routine.exceptions.includes(date)) return false;
 
                         if (routine.freq === 'daily') return true;
-                        if (routine.freq === 'weekly') return dayOfWeek === 1;
+                        if (routine.freq === 'weekly') {
+                            if (routine.days && routine.days.length > 0) return routine.days.includes(dayOfWeek);
+                            return dayOfWeek === 1;
+                        }
                         if (routine.freq === 'custom' && routine.days) {
                             return routine.days.includes(dayOfWeek);
                         }
@@ -5184,6 +5279,32 @@
                 if (task) { Object.assign(task, updates); this.saveLocalData(); this.saveToFirebase(); }
             }
             getParkedTasks() { return this.data.parkedTasks || []; }
+
+            // ===== NOTES METHODS =====
+            addNote(note) {
+                note.id = Date.now().toString();
+                note.createdAt = new Date().toISOString();
+                note.updatedAt = new Date().toISOString();
+                if (!this.data.notes) this.data.notes = [];
+                this.data.notes.push(note);
+                this.saveLocalData();
+                this.saveToFirebase();
+                return note;
+            }
+            deleteNote(id) {
+                this.data.notes = (this.data.notes || []).filter(n => n.id !== id);
+                this.saveLocalData();
+                this.saveToFirebase();
+            }
+            updateNote(id, updates) {
+                const note = (this.data.notes || []).find(n => n.id === id);
+                if (note) {
+                    Object.assign(note, updates, { updatedAt: new Date().toISOString() });
+                    this.saveLocalData();
+                    this.saveToFirebase();
+                }
+            }
+            getNotes() { return this.data.notes || []; }
 
             // ===== HABIT METHODS =====
             addHabit(habit) {
@@ -5347,7 +5468,10 @@
 
                         let shouldAppear = false;
                         if (routine.freq === 'daily') shouldAppear = true;
-                        else if (routine.freq === 'weekly' && dayOfWeek === 1) shouldAppear = true;
+                        else if (routine.freq === 'weekly') {
+                            if (routine.days && routine.days.length > 0) shouldAppear = routine.days.includes(dayOfWeek);
+                            else shouldAppear = (dayOfWeek === 1);
+                        }
                         else if (routine.freq === 'custom' && routine.days?.includes(dayOfWeek)) shouldAppear = true;
                         else if (routine.freq === 'monthly') {
                             const dom = currentDate.getDate();
@@ -5461,8 +5585,12 @@
                 this.selectedRoutineMonthDays = [];
                 this.selectedHabitDays = [];
                 this.promotingParkedTaskId = null;
+                this.editingParkedTaskId = null;
+                this.editingNoteId = null;
+                this.notesSearchQuery = '';
+                this.selectedNoteColor = 'amber';
                 this.deletingHabitId = null;
-                this.TAB_ORDER = ['home', 'todo', 'alltasks', 'timesheet', 'habits', 'calendar', 'parking', 'manage', 'account', 'targets', 'analytics', 'pomodoro'];
+                this.TAB_ORDER = ['home', 'todo', 'alltasks', 'timesheet', 'habits', 'calendar', 'parking', 'manage', 'account', 'targets', 'analytics', 'pomodoro', 'notes'];
                 this.collapsedGroups = {}; // track which task groups are collapsed
 
                 this.render();
@@ -5578,7 +5706,7 @@
                     freqSelect.addEventListener('change', (e) => {
                         const customDaysGroup = document.getElementById('custom-days-group');
                         const customMonthGroup = document.getElementById('custom-month-group');
-                        if (e.target.value === 'custom') {
+                        if (e.target.value === 'custom' || e.target.value === 'weekly') {
                             if (customDaysGroup) customDaysGroup.style.display = 'block';
                             if (customMonthGroup) customMonthGroup.style.display = 'none';
                         } else if (e.target.value === 'monthly') {
@@ -5802,7 +5930,8 @@
                     const isTargets = it.innerText.includes('Targets') && this.currentView === 'targets';
                     const isParking = it.innerText.includes('Parking') && this.currentView === 'parking';
                     const isPomodoro = it.innerText.includes('Pomodoro') && this.currentView === 'pomodoro';
-                    it.classList.toggle('active', isManage || isAccount || isAnalytics || isTargets || isParking || isPomodoro);
+                    const isNotes = it.innerText.includes('Notes') && this.currentView === 'notes';
+                    it.classList.toggle('active', isManage || isAccount || isAnalytics || isTargets || isParking || isPomodoro || isNotes);
                 });
 
 
@@ -5811,6 +5940,7 @@
                 else if (this.currentView === 'alltasks') this.renderAllTasks();
                 else if (this.currentView === 'timesheet') this.renderTimesheet();
                 else if (this.currentView === 'parking') this.renderParking();
+                else if (this.currentView === 'notes') this.renderNotes();
                 else if (this.currentView === 'habits') this.renderHabits();
                 else if (this.currentView === 'analytics') this.renderAnalytics();
                 else if (this.currentView === 'manage') this.renderManage();
@@ -6111,7 +6241,10 @@
                 let html = `
                 <div class="tl-top-bar">
                     <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
-                    <div class="tl-month-title">${monthYear} <i class="fas fa-chevron-down" style="font-size:13px;opacity:0.5;margin-left:4px;"></i></div>
+                    <div class="tl-month-title" style="position:relative;cursor:pointer;" title="Click to change date/month">
+                        ${monthYear} <i class="fas fa-chevron-down" style="font-size:13px;opacity:0.5;margin-left:4px;"></i>
+                        <input type="date" value="${this.selectedDate}" onchange="app.selectDate(this.value)" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+                    </div>
                     <div style="width:40px;"></div>
                 </div>`;
 
@@ -6672,6 +6805,9 @@
                                     <button class="task-btn" style="background:var(--accent-primary);border-color:var(--accent-primary);color:white;width:auto;padding:0 12px;font-size:13px;" title="Promote: fill timesheet to complete" onclick="app.promoteParkedTask('${task.id}')">
                                         <i class="fas fa-rocket"></i> Promote
                                     </button>
+                                    <button class="task-btn" style="background:var(--surface-elevated);border:1px solid var(--border-medium);color:var(--text-primary);width:auto;padding:0 12px;font-size:13px;" title="Edit Parked Task" onclick="app.openEditParkedTaskModal('${task.id}')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
                                     <button class="task-btn delete-btn" title="Delete" onclick="app.deleteParkedTask('${task.id}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -6736,6 +6872,40 @@
                 this.render();
             }
 
+            openEditParkedTaskModal(id) {
+                const task = (this.db.getParkedTasks() || []).find(t => t.id === id);
+                if (!task) return;
+                this.editingParkedTaskId = id;
+                document.getElementById('edit-park-id').value = id;
+                document.getElementById('edit-park-name').value = task.name || '';
+                document.getElementById('edit-park-desc').value = task.description || '';
+                if (window.categoryAutocomplete) {
+                    window.categoryAutocomplete.setCategory('edit-park-category', task.categoryId || '');
+                } else {
+                    document.getElementById('edit-park-category').value = task.categoryId || '';
+                }
+                document.getElementById('edit-park-est-time').value = task.estimatedHours || 2;
+                document.getElementById('edit-park-deadline').value = task.deadline || '';
+                document.getElementById('modal-edit-parked').classList.add('open');
+            }
+
+            saveEditParkedTask() {
+                const id = this.editingParkedTaskId || document.getElementById('edit-park-id').value;
+                if (!id) return;
+                const name = document.getElementById('edit-park-name').value.trim();
+                if (!name) { alert('Task name is required'); return; }
+                if (window.taskAutocomplete) window.taskAutocomplete.learnName(name);
+                const description = document.getElementById('edit-park-desc').value.trim();
+                const categoryId = document.getElementById('edit-park-category').value;
+                const estimatedHours = parseFloat(document.getElementById('edit-park-est-time').value);
+                const deadline = document.getElementById('edit-park-deadline').value;
+
+                this.db.updateParkedTask(id, { name, description, categoryId, estimatedHours, deadline });
+                this.editingParkedTaskId = null;
+                this.closeModals();
+                this.render();
+            }
+
             deleteParkedTask(id) {
                 if (confirm('Delete this parked task?')) {
                     this.db.deleteParkedTask(id);
@@ -6768,6 +6938,217 @@
                         if (btn) btn.textContent = 'âœ… Complete & Fill Timesheet';
                     }
                 }, 100);
+            }
+
+            // ===== NOTES RENDER =====
+            renderNotes() {
+                const notes = this.db.getNotes();
+                const searchQuery = (this.notesSearchQuery || '').toLowerCase().trim();
+
+                const filtered = notes.filter(n => {
+                    if (!searchQuery) return true;
+                    return (n.title || '').toLowerCase().includes(searchQuery) || (n.content || '').toLowerCase().includes(searchQuery);
+                });
+
+                const sorted = [...filtered].sort((a, b) => {
+                    if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+                    return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+                });
+
+                const pinnedNotes = sorted.filter(n => n.isPinned);
+                const otherNotes = sorted.filter(n => !n.isPinned);
+
+                const getColorStyles = (color) => {
+                    switch (color) {
+                        case 'amber': return 'background:#fef3c7; border:1px solid #fde68a; color:#92400e;';
+                        case 'blue': return 'background:#dbeafe; border:1px solid #bfdbfe; color:#1e40af;';
+                        case 'green': return 'background:#dcfce7; border:1px solid #bbf7d0; color:#166534;';
+                        case 'pink': return 'background:#ffe4e6; border:1px solid #fecdd3; color:#9f1239;';
+                        case 'purple': return 'background:#f3e8ff; border:1px solid #e9d5ff; color:#6b21a8;';
+                        default: return 'background:var(--surface); border:1px solid var(--border-subtle); color:var(--text-primary);';
+                    }
+                };
+
+                const renderCard = (n) => {
+                    const style = getColorStyles(n.color);
+                    const formattedDate = new Date(n.updatedAt || n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    return `
+                        <div style="${style} border-radius:var(--radius-lg); padding:16px; position:relative; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:8px;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                                <div style="font-size:16px; font-weight:700; flex:1;">${n.title || 'Untitled Note'}</div>
+                                <button style="background:none; border:none; cursor:pointer; font-size:16px; color:${n.isPinned ? '#f59e0b' : 'var(--text-tertiary)'};" title="${n.isPinned ? 'Unpin' : 'Pin'}" onclick="app.togglePinNote('${n.id}')">
+                                    <i class="fas fa-thumbtack"></i>
+                                </button>
+                            </div>
+                            ${n.content ? `<div style="font-size:14px; white-space:pre-wrap; word-break:break-word; opacity:0.9; line-height:1.4;">${n.content}</div>` : ''}
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11px; opacity:0.75;">
+                                <span>${formattedDate}</span>
+                                <div style="display:flex; gap:8px;">
+                                    <button class="task-btn" style="background:rgba(255,255,255,0.6); border:1px solid rgba(0,0,0,0.1); color:inherit; padding:2px 8px; font-size:11px;" title="Edit" onclick="app.openEditNoteModal('${n.id}')">
+                                        <i class="fas fa-pen"></i> Edit
+                                    </button>
+                                    <button class="task-btn delete-btn" style="padding:2px 8px; font-size:11px;" title="Delete" onclick="app.deleteNote('${n.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+                };
+
+                let html = `
+                    <div class="dashboard-header">
+                        <div class="header-title-row">
+                            <button class="menu-btn" onclick="app.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                            <h2>📝 Notes & Ideas</h2>
+                        </div>
+                        <p class="text-secondary text-sm" style="margin-top:4px; margin-left:52px;">Jot down quick thoughts, ideas, and reminders</p>
+                    </div>
+                    
+                    <div style="padding: 0 var(--spacing-lg) var(--spacing-lg);">
+                        <!-- Quick Add Note Card -->
+                        <div style="background:var(--surface); border:1px solid var(--border-medium); border-radius:var(--radius-lg); padding:16px; margin-bottom:24px; box-shadow:var(--shadow-md);">
+                            <input type="text" id="quick-note-title" placeholder="Title..." style="width:100%; border:none; background:transparent; font-size:16px; font-weight:600; color:var(--text-primary); outline:none; margin-bottom:8px;">
+                            <textarea id="quick-note-content" rows="3" placeholder="Take a note or jot down an idea..." style="width:100%; border:none; background:transparent; font-size:14px; color:var(--text-primary); outline:none; resize:none; font-family:inherit;"></textarea>
+                            
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:8px; border-top:1px solid var(--border-subtle); flex-wrap:wrap; gap:12px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:12px; color:var(--text-secondary);">Color:</span>
+                                    <div style="display:flex; gap:6px;" id="quick-note-colors">
+                                        <div class="note-color-chip ${this.selectedNoteColor === 'amber' ? 'selected' : ''}" onclick="app.setNoteColor('amber')" style="background:#fef3c7; border:2px solid ${this.selectedNoteColor === 'amber' ? '#f59e0b' : 'transparent'}; width:22px; height:22px; border-radius:50%; cursor:pointer;"></div>
+                                        <div class="note-color-chip ${this.selectedNoteColor === 'blue' ? 'selected' : ''}" onclick="app.setNoteColor('blue')" style="background:#dbeafe; border:2px solid ${this.selectedNoteColor === 'blue' ? '#3b82f6' : 'transparent'}; width:22px; height:22px; border-radius:50%; cursor:pointer;"></div>
+                                        <div class="note-color-chip ${this.selectedNoteColor === 'green' ? 'selected' : ''}" onclick="app.setNoteColor('green')" style="background:#dcfce7; border:2px solid ${this.selectedNoteColor === 'green' ? '#22c55e' : 'transparent'}; width:22px; height:22px; border-radius:50%; cursor:pointer;"></div>
+                                        <div class="note-color-chip ${this.selectedNoteColor === 'pink' ? 'selected' : ''}" onclick="app.setNoteColor('pink')" style="background:#ffe4e6; border:2px solid ${this.selectedNoteColor === 'pink' ? '#f43f5e' : 'transparent'}; width:22px; height:22px; border-radius:50%; cursor:pointer;"></div>
+                                        <div class="note-color-chip ${this.selectedNoteColor === 'purple' ? 'selected' : ''}" onclick="app.setNoteColor('purple')" style="background:#f3e8ff; border:2px solid ${this.selectedNoteColor === 'purple' ? '#a855f7' : 'transparent'}; width:22px; height:22px; border-radius:50%; cursor:pointer;"></div>
+                                        <div class="note-color-chip ${this.selectedNoteColor === 'default' ? 'selected' : ''}" onclick="app.setNoteColor('default')" style="background:var(--surface-elevated); border:2px solid ${this.selectedNoteColor === 'default' ? 'var(--accent-primary)' : 'transparent'}; width:22px; height:22px; border-radius:50%; cursor:pointer;"></div>
+                                    </div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <label style="font-size:12px; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:4px;">
+                                        <input type="checkbox" id="quick-note-pin" style="cursor:pointer;"> 📌 Pin
+                                    </label>
+                                    <button class="btn-primary" style="padding:6px 16px; font-size:13px;" onclick="app.saveQuickNote()">Save Note</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div style="margin-bottom:20px; display:flex; align-items:center; background:var(--surface); border:1px solid var(--border-medium); border-radius:var(--radius-md); padding:8px 14px;">
+                            <i class="fas fa-search" style="color:var(--text-tertiary); margin-right:10px;"></i>
+                            <input type="text" placeholder="Search notes..." value="${this.notesSearchQuery || ''}" oninput="app.notesSearchQuery = this.value; app.renderNotes();" style="border:none; background:transparent; width:100%; color:var(--text-primary); outline:none; font-size:14px;">
+                        </div>`;
+
+                if (sorted.length === 0) {
+                    html += `
+                        <div class="text-center text-secondary p-4" style="margin-top:40px;">
+                            <i class="fas fa-sticky-note" style="font-size:3rem;opacity:0.3;margin-bottom:16px;display:block;"></i>
+                            <div>${searchQuery ? 'No notes matching search query.' : 'No notes yet. Add your first note above!'}</div>
+                        </div>`;
+                } else {
+                    if (pinnedNotes.length > 0) {
+                        html += `<div style="font-size:12px; font-weight:700; color:var(--text-secondary); letter-spacing:.08em; margin-bottom:12px; text-transform:uppercase;">📌 Pinned (${pinnedNotes.length})</div>`;
+                        html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px; margin-bottom:24px;">`;
+                        pinnedNotes.forEach(n => { html += renderCard(n); });
+                        html += `</div>`;
+                    }
+
+                    if (otherNotes.length > 0) {
+                        if (pinnedNotes.length > 0) {
+                            html += `<div style="font-size:12px; font-weight:700; color:var(--text-secondary); letter-spacing:.08em; margin-bottom:12px; text-transform:uppercase;">Others (${otherNotes.length})</div>`;
+                        }
+                        html += `<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">`;
+                        otherNotes.forEach(n => { html += renderCard(n); });
+                        html += `</div>`;
+                    }
+                }
+
+                html += `</div>`;
+                document.getElementById('view-notes').innerHTML = html;
+            }
+
+            setNoteColor(color) {
+                this.selectedNoteColor = color;
+                document.querySelectorAll('#quick-note-colors .note-color-chip').forEach(chip => {
+                    const isSel = chip.getAttribute('onclick').includes(color);
+                    chip.style.borderColor = isSel ? 'var(--accent-primary)' : 'transparent';
+                });
+            }
+
+            saveQuickNote() {
+                const title = document.getElementById('quick-note-title').value.trim();
+                const content = document.getElementById('quick-note-content').value.trim();
+                const isPinned = document.getElementById('quick-note-pin').checked;
+
+                if (!title && !content) {
+                    alert('Please enter a title or note content');
+                    return;
+                }
+
+                this.db.addNote({
+                    title,
+                    content,
+                    color: this.selectedNoteColor || 'amber',
+                    isPinned
+                });
+
+                this.renderNotes();
+            }
+
+            togglePinNote(id) {
+                const note = (this.db.getNotes() || []).find(n => n.id === id);
+                if (note) {
+                    this.db.updateNote(id, { isPinned: !note.isPinned });
+                    this.renderNotes();
+                }
+            }
+
+            deleteNote(id) {
+                if (confirm('Delete this note?')) {
+                    this.db.deleteNote(id);
+                    this.renderNotes();
+                }
+            }
+
+            openEditNoteModal(id) {
+                const note = (this.db.getNotes() || []).find(n => n.id === id);
+                if (!note) return;
+
+                this.editingNoteId = id;
+                document.getElementById('edit-note-id').value = id;
+                document.getElementById('edit-note-title').value = note.title || '';
+                document.getElementById('edit-note-content').value = note.content || '';
+                document.getElementById('edit-note-pinned').checked = !!note.isPinned;
+
+                const editColorOptions = document.querySelectorAll('#edit-note-color-options .note-color-chip');
+                editColorOptions.forEach(chip => {
+                    chip.classList.toggle('selected', chip.dataset.color === (note.color || 'amber'));
+                    chip.onclick = () => {
+                        editColorOptions.forEach(c => c.classList.remove('selected'));
+                        chip.classList.add('selected');
+                    };
+                });
+
+                document.getElementById('modal-edit-note').classList.add('open');
+            }
+
+            saveEditNote() {
+                const id = this.editingNoteId || document.getElementById('edit-note-id').value;
+                if (!id) return;
+
+                const title = document.getElementById('edit-note-title').value.trim();
+                const content = document.getElementById('edit-note-content').value.trim();
+                const isPinned = document.getElementById('edit-note-pinned').checked;
+                const selChip = document.querySelector('#edit-note-color-options .note-color-chip.selected');
+                const color = selChip ? selChip.dataset.color : 'amber';
+
+                if (!title && !content) {
+                    alert('Please enter a title or note content');
+                    return;
+                }
+
+                this.db.updateNote(id, { title, content, isPinned, color });
+                this.editingNoteId = null;
+                this.closeModals();
+                this.renderNotes();
             }
 
             // ===== HABITS RENDER =====
@@ -8914,19 +9295,47 @@
                 // 1. Calculate Actual Effort
                 // Find tasks linked to this target
                 const linkedTasks = this.db.data.tasks.filter(t => t.targetId === targetId);
-                const linkedTaskIds = linkedTasks.map(t => t.id);
 
-                let actualEffortMins = 0;
-                if (this.db.data.timesheets) {
-                    Object.values(this.db.data.timesheets).forEach(daySheet => {
-                        Object.values(daySheet).forEach(entry => {
-                            if (entry.taskId && linkedTaskIds.includes(entry.taskId)) {
-                                actualEffortMins += 30; // each timesheet block is 30 mins
-                            }
+                const getTaskEffortHours = (t) => {
+                    let tsBlocks = 0;
+                    if (this.db.data.timesheets) {
+                        Object.values(this.db.data.timesheets).forEach(daySheet => {
+                            Object.values(daySheet).forEach(entry => {
+                                if (entry.taskId === t.id || (entry.taskId && entry.taskId.includes(t.id))) {
+                                    tsBlocks++;
+                                }
+                            });
                         });
-                    });
-                }
-                const actualEffortHours = (actualEffortMins / 60).toFixed(1);
+                    }
+                    const tsHours = tsBlocks * 0.5;
+
+                    let rangeHours = 0;
+                    if (t.timeFrom && t.timeTo) {
+                        let startM = timeToMinutes(t.timeFrom);
+                        let endM = timeToMinutes(t.timeTo);
+                        if (endM === 0 && startM > 0) endM = 1440;
+                        if (endM > startM) {
+                            rangeHours = (endM - startM) / 60;
+                        }
+                    }
+
+                    if (tsHours > 0) {
+                        return Math.max(tsHours, rangeHours);
+                    } else if (rangeHours > 0 && t.status === 'done') {
+                        return rangeHours;
+                    } else if (t.status === 'done') {
+                        return rangeHours > 0 ? rangeHours : 0.5;
+                    } else if (rangeHours > 0) {
+                        return rangeHours;
+                    }
+                    return 0;
+                };
+
+                let totalActualHours = 0;
+                linkedTasks.forEach(t => {
+                    totalActualHours += getTaskEffortHours(t);
+                });
+                const actualEffortHours = totalActualHours.toFixed(1);
 
                 // Calculate Progress
                 const totalValue = 10;
@@ -8960,14 +9369,7 @@
                 let linkedTasksHtml = linkedTasks.length === 0 ?
                     `<p style="color:var(--text-secondary); font-size:13px; padding: 10px;">No tasks referenced yet.</p>` :
                     linkedTasks.map(t => {
-                        let tHours = 0;
-                        if (this.db.data.timesheets) {
-                            Object.values(this.db.data.timesheets).forEach(daySheet => {
-                                Object.values(daySheet).forEach(entry => {
-                                    if (entry.taskId === t.id) tHours += 0.5;
-                                });
-                            });
-                        }
+                        const tHours = getTaskEffortHours(t);
                         return `<div style="padding: 10px; border-bottom: 1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center;">
                             <span style="font-size:14px; text-decoration: ${t.status === 'done' ? 'line-through' : 'none'}; opacity: ${t.status === 'done' ? 0.6 : 1};">${t.name}</span>
                             <div style="text-align:right;">
@@ -9399,12 +9801,16 @@
                         endDate
                     };
 
-                    if (freq === 'custom') {
-                        if (this.selectedRoutineDays.length === 0) {
+                    if (freq === 'custom' || freq === 'weekly') {
+                        if (this.selectedRoutineDays && this.selectedRoutineDays.length > 0) {
+                            routineData.days = [...this.selectedRoutineDays].sort((a, b) => a - b);
+                        } else if (freq === 'weekly') {
+                            const startDOW = new Date((startDate || this.selectedDate) + 'T00:00:00').getDay();
+                            routineData.days = [startDOW];
+                        } else {
                             alert('Please select at least one day for custom routine');
                             return;
                         }
-                        routineData.days = this.selectedRoutineDays;
                     } else if (freq === 'monthly') {
                         if (this.selectedRoutineMonthDays && this.selectedRoutineMonthDays.length > 0) {
                             routineData.monthDays = [...this.selectedRoutineMonthDays].sort((a, b) => a - b);
@@ -9729,6 +10135,7 @@
                     { search: 'edit-routine-category-search', hidden: 'edit-routine-category', dropdown: 'edit-routine-category-dropdown', wrap: 'edit-routine-category-wrap' },
                     { search: 'manual-category-search', hidden: 'manual-category', dropdown: 'manual-category-dropdown', wrap: 'manual-category-wrap' },
                     { search: 'park-category-search', hidden: 'park-category', dropdown: 'park-category-dropdown', wrap: 'park-category-wrap' },
+                    { search: 'edit-park-category-search', hidden: 'edit-park-category', dropdown: 'edit-park-category-dropdown', wrap: 'edit-park-category-wrap' },
                     { search: 'habit-category-search', hidden: 'habit-category', dropdown: 'habit-category-dropdown', wrap: 'habit-category-wrap' }
                 ];
                 this.topCategories = [];
@@ -10585,7 +10992,7 @@
         let newWorker;
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then((registration) => {
                         console.log('ServiceWorker registered:', registration.scope);
 
