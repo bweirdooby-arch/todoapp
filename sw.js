@@ -1,4 +1,4 @@
-const CACHE_NAME = 'productivity-planner-v7';
+const CACHE_NAME = 'productivity-planner-v8';
 const urlsToCache = [
   './',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
@@ -7,6 +7,7 @@ const urlsToCache = [
 
 // Install event - cache resources
 self.addEventListener('install', (event) => {
+  self.skipWaiting(); // Force new service worker to activate immediately on iOS & Android
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -17,7 +18,6 @@ self.addEventListener('install', (event) => {
         console.log('Cache failed:', err);
       })
   );
-  // REMOVED self.skipWaiting() to allow controlled updates
 });
 
 // Message handler (skipWaiting + 11 PM notification trigger)
@@ -70,8 +70,32 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - Network-First for HTML/navigation (critical for iOS updates), Cache-First for static assets
 self.addEventListener('fetch', (event) => {
+  const isHTMLRequest = event.request.mode === 'navigate' || 
+                        (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'));
+
+  if (isHTMLRequest) {
+    // Network-First for main page HTML so iOS devices immediately fetch code updates when online
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // Cache-First with Network Fallback for static assets
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
