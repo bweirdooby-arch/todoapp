@@ -11162,7 +11162,16 @@
                     .then((registration) => {
                         console.log('ServiceWorker registered:', registration.scope);
 
-                        // Listen for updates
+                        // Force explicit update check on page load (essential for iOS Safari / Standalone PWA)
+                        registration.update();
+
+                        // Check if a new worker is already waiting from a previous session
+                        if (registration.waiting) {
+                            newWorker = registration.waiting;
+                            showUpdateNotification();
+                        }
+
+                        // Listen for new updates
                         registration.addEventListener('updatefound', () => {
                             newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
@@ -11178,6 +11187,15 @@
                     .catch((error) => {
                         console.log('ServiceWorker registration failed:', error);
                     });
+            });
+
+            // Re-check for SW updates whenever app is resumed from background on iOS
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    navigator.serviceWorker.ready.then((registration) => {
+                        registration.update();
+                    });
+                }
             });
 
             // Reload page on new service worker takeover
@@ -11198,7 +11216,7 @@
                 toast.id = 'update-toast';
                 toast.className = 'update-toast';
                 toast.innerHTML = `
-                    <p>âœ¨ New version available!</p>
+                    <p>✨ New version available!</p>
                     <button class="update-btn" onclick="applyUpdate()">Update Now</button>
                 `;
                 document.body.appendChild(toast);
@@ -11211,6 +11229,8 @@
         function applyUpdate() {
             if (newWorker) {
                 newWorker.postMessage('skipWaiting');
+            } else {
+                window.location.reload();
             }
         }
 
